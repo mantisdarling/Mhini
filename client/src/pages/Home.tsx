@@ -3,6 +3,7 @@
  * Favor the telemetry spine, blade-thin dividers, generous black space, Mantis Red only for intent, and composed motion.
  */
 import { motion } from "framer-motion";
+import { trpc } from "@/lib/trpc";
 import { gsap } from "gsap";
 import { DrawSVGPlugin, ScrollTrigger, SplitText } from "gsap/all";
 import Lenis from "lenis";
@@ -33,9 +34,6 @@ gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 const ASSETS = {
   hero: "/manus-storage/mantis-hero-cinematic_ab3f20a9.jpg",
   mark: "/manus-storage/mantis-blade-mark_cdda3c42.png",
-  lattice: "/manus-storage/mantis-project-lattice_c7800bac.jpg",
-  signal: "/manus-storage/mantis-project-signal_41420e07.jpg",
-  forge: "/manus-storage/mantis-project-forge_609a6116.jpg",
 };
 
 const navItems = [
@@ -84,35 +82,15 @@ const skillGroups = [
   },
 ];
 
-const projects = [
-  {
-    number: "01",
-    image: ASSETS.lattice,
-    category: "EXPERIMENTAL WEB",
-    title: "Lattice / 01",
-    description:
-      "A narrative interface that gave a future-facing studio one sharp surface for an unusually dense point of view.",
-    tags: ["Strategy", "Art Direction", "Build"],
-  },
-  {
-    number: "02",
-    image: ASSETS.signal,
-    category: "DATA PLATFORM",
-    title: "Signal / 24",
-    description:
-      "A decision layer that turned fast operational data into a usable cadence for teams already in motion.",
-    tags: ["Systems", "Product", "Prototype"],
-  },
-  {
-    number: "03",
-    image: ASSETS.forge,
-    category: "BRAND SYSTEM",
-    title: "Forge / M",
-    description:
-      "A modular identity and launch toolkit that gave an ambitious product a durable operating system from day one.",
-    tags: ["Identity", "Direction", "Launch"],
-  },
-];
+type PortfolioProject = {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  imageUrl: string | null;
+  projectUrl: string | null;
+  tags: string[];
+};
 
 const timeline = [
   {
@@ -156,7 +134,7 @@ function BladeDivider() {
   );
 }
 
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({ project, index }: { project: PortfolioProject; index: number }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   function handleMove(event: MouseEvent<HTMLElement>) {
@@ -180,18 +158,20 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
       onMouseLeave={() => setTilt({ x: 0, y: 0 })}
     >
       <div className="project-image-wrap">
-        <img src={project.image} alt="" loading="lazy" />
+        {project.imageUrl ? <img src={project.imageUrl} alt="" loading="lazy" /> : <div className="project-image-placeholder"><span>NO COVER FRAME</span></div>}
         <div className="project-image-scrim" />
-        <span className="project-number">{project.number}</span>
+        <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
         <span className="project-view">VIEW</span>
       </div>
       <div className="project-meta">
         <p className="project-category">{project.category}</p>
         <div className="project-title-row">
           <h3>{project.title}</h3>
-          <motion.span whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}>
-            <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
-          </motion.span>
+          {project.projectUrl ? (
+            <motion.a href={project.projectUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`} whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}>
+              <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
+            </motion.a>
+          ) : <motion.span whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}><ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" /></motion.span>}
         </div>
         <p className="project-description">{project.description}</p>
         <div className="project-tags" aria-label="Project disciplines">
@@ -208,6 +188,7 @@ export default function Home() {
   const [introVisible, setIntroVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(railSections[0]);
+  const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
   const cursorLabel = useRef<HTMLSpanElement>(null);
@@ -631,11 +612,16 @@ export default function Home() {
             </div>
           </div>
           <div className="project-grid">
-            {projects.map((project) => <ProjectCard project={project} key={project.number} />)}
+            {publicProjectsQuery.data?.length ? publicProjectsQuery.data.map((project, index) => <ProjectCard project={project} index={index} key={project.id} />) : (
+              <div className="project-empty-state">
+                <span>NO PUBLIC RUNS LOGGED</span>
+                <p>{publicProjectsQuery.isLoading ? "Synchronizing the project archive." : "The selected-work archive is waiting for its first real release."}</p>
+              </div>
+            )}
           </div>
           <div className="record-footer reveal">
-            <span>03 SELECTED ENTRIES</span>
-            <p>Field notes from systems built to create clarity, carry a point of view, and keep their composure under load.</p>
+            <span>{String(publicProjectsQuery.data?.length ?? 0).padStart(2, "0")} PUBLISHED ENTRIES</span>
+            <p>{publicProjectsQuery.data?.length ? "Field notes from systems built to create clarity, carry a point of view, and keep their composure under load." : "New work appears here as it is published from the private project console."}</p>
           </div>
           <BladeDivider />
         </section>

@@ -1,3 +1,10 @@
 - [x] Replace the contact email address with mantisdarling@proton.me.
 - [x] Add GitHub, X, Bluesky, Google Developer Program, LinkedIn, and Instagram links to the contact section.
 - [x] Verify the revised page and save an updated checkpoint.
+- [x] Confirm whether projects should be edited through a persistent private manager or directly in the site source.
+- [x] Upgrade the project with private user authentication and persistent data storage.
+- [x] Model projects and build the private create, edit, reorder, and delete workflow.
+- [x] Replace the placeholder public cards with managed project data.
+- [x] Verify public project display, private sign-in gate, type checks, unit tests, and production build.
+- [ ] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio (deferred until Mantis signs in).
+- [x] Save a project-manager checkpoint after the non-authenticated build validation.

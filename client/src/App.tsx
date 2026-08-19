@@ -8,11 +8,14 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import ProjectConsole from "./pages/ProjectConsole";
 
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/studio" component={ProjectConsole} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
