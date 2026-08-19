@@ -9,7 +9,10 @@ import Lenis from "lenis";
 import {
   ArrowDown,
   ArrowUpRight,
+  BadgeCheck,
+  Cloud,
   Github,
+  Instagram,
   Linkedin,
   Mail,
   Menu,
@@ -669,9 +672,9 @@ export default function Home() {
             <p className="contact-label">PIT STOP / START A CONVERSATION</p>
             <h2>Bring the hard<br />problem <em>closer.</em></h2>
             <p className="contact-copy">Start with the question that will not leave your head. We will trace the pressure point and decide what deserves to be built.</p>
-            <motion.a className="contact-link" href="mailto:inbox@mantis.build" whileHover={{ x: 8 }} whileTap={{ scale: 0.98 }}>
+            <motion.a className="contact-link" href="mailto:mantisdarling@proton.me" whileHover={{ x: 8 }} whileTap={{ scale: 0.98 }}>
               <Mail size={20} strokeWidth={1.4} aria-hidden="true" />
-              <span>inbox@mantis.build</span>
+              <span>mantisdarling@proton.me</span>
               <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
             </motion.a>
           </div>
@@ -682,8 +685,12 @@ export default function Home() {
               <span>RESPONSE WINDOW / 48H</span>
             </div>
             <div className="social-row" aria-label="Professional networks">
-              <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={20} /></a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>
+              <a href="https://github.com/mantisdarling" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={20} /></a>
+              <a href="https://x.com/mantisxdarling" target="_blank" rel="noreferrer" aria-label="X"><span className="social-x">X</span></a>
+              <a href="https://bsky.app/profile/mantisdarling.bsky.social" target="_blank" rel="noreferrer" aria-label="Bluesky"><Cloud size={20} /></a>
+              <a href="https://me.developers.google.com/u/mantisdarling" target="_blank" rel="noreferrer" aria-label="Google Developer Program"><BadgeCheck size={20} /></a>
+              <a href="https://www.linkedin.com/in/mantisdarling/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>
+              <a href="https://www.instagram.com/mantisdarling/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={20} /></a>
             </div>
           </div>
         </section>

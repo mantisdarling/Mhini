@@ -280,9 +280,10 @@ a { text-decoration: none; }
 .side-stats { display: grid; gap: 0.55rem; color: #aaa59e; font-size: 0.58rem; }
 .side-stats span:first-child { display: flex; align-items: center; gap: 0.5rem; }
 .side-stats i { display: inline-block; width: 6px; height: 6px; background: var(--red); border-radius: 50%; }
-.social-row { display: flex; gap: 0.55rem; margin-top: 0.35rem; }
+.social-row { display: flex; flex-wrap: wrap; gap: 0.55rem; max-width: 210px; margin-top: 0.35rem; }
 .social-row a { display: grid; place-items: center; width: 33px; height: 33px; border: 1px solid rgba(242,239,233,0.48); transition: background 180ms ease, color 180ms ease, transform 180ms ease; }
 .social-row a:hover { background: var(--red); color: var(--ivory); border-color: var(--red); transform: translateY(-3px); }
+.social-x { font-family: "Cabinet Grotesk", sans-serif; font-size: 0.9rem; font-weight: 700; line-height: 1; }
 
 .site-footer { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.4rem var(--page-padding) 1.4rem calc(var(--page-padding) + var(--rail-width)); background: #090909; }
 .footer-brand .brand-wordmark { font-size: 0.68rem; }
