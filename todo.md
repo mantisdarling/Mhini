@@ -8,3 +8,7 @@
 - [x] Verify public project display, private sign-in gate, type checks, unit tests, and production build.
 - [ ] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio (deferred until Mantis signs in).
 - [x] Save a project-manager checkpoint after the non-authenticated build validation.
+- [x] Design the cinematic blade-draw, sword-cut, and impact choreography for the public portfolio.
+- [x] Implement the enhanced motion system with reduced-motion safeguards.
+- [x] Validate the upgraded animation experience across desktop and mobile, including live desktop draw/impact and runtime reduced-motion checks, type checks, unit tests, production build, and clean browser-console output.
+- [x] Save a motion-system checkpoint.

@@ -71,3 +71,15 @@ The wordmark is a sharply spaced, custom-cut **MANTIS** wordmark with one angled
 - **Copy voice rule:** Every line reads like a calm instrument readout or terse field note. Generic welcome copy and literal placeholder language are excluded from the site.
 - **Red usage rule:** Mantis Red #C81E1E is a signal for action, speed marks, emphasis, and decisive transitions. Near-black remains the dominant material; red appears as a charged plane, line, or ignition event rather than a default background wash.
 - **Brand mark rule:** The blade-M monogram and split MANTIS wordmark use deliberate angled cuts and disciplined spacing in the header, footer, and entry sequence. They are treated as engineered assets rather than a standard-font nameplate.
+
+## Motion Upgrade — Blade Discipline
+
+The enhanced choreography follows a controlled three-beat sword-draw rhythm: **stillness, draw, impact**. The loading sequence now carries a diagonal steel-and-red cut before the monogram is traced. The hero is scored by a drawn katana arc and a brief optical strike ahead of the type reveal. On scroll, sections receive a small calibrated cut mark and project covers are revealed through a directional slice rather than a generic fade. The motion remains abstract: it borrows the economy, force, and timing of a sword cut without illustrating weapons or using a character.
+
+### Live motion check
+
+Desktop browser validation confirmed that the intro resolves cleanly from the draw sequence into the hero, with the katana arc remaining as a restrained diagonal trace once the wordmark has landed. The visual language remains readable after the impact rather than obscuring the primary call to action.
+
+The Track Record empty state was refined and rechecked as a full-width locked archive: its cropped border, red diagonal signal, archive coordinate, and standby label now occupy the entire project bay instead of leaving unused neutral space.
+
+The runtime motion-off verification confirmed that the page applies the accessibility state, removes the intro overlay, and leaves the complete hero visible. The same behavior is used for the operating system’s reduced-motion preference; `?motion=off` is retained as a testable equivalent.

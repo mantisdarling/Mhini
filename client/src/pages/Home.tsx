@@ -36,6 +36,10 @@ const ASSETS = {
   mark: "/manus-storage/mantis-blade-mark_cdda3c42.png",
 };
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches || new URLSearchParams(window.location.search).get("motion") === "off";
+}
+
 const navItems = [
   ["Discipline", "#discipline"],
   ["Arsenal", "#arsenal"],
@@ -131,6 +135,16 @@ function BladeDivider() {
     <svg className="blade-divider" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 6H1148L1200 1" />
     </svg>
+ );
+}
+
+function SectionCut() {
+  return (
+    <div className="section-cut" aria-hidden="true">
+      <span className="section-cut-glint" />
+      <i />
+      <b />
+    </div>
   );
 }
 
@@ -160,6 +174,7 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
       <div className="project-image-wrap">
         {project.imageUrl ? <img src={project.imageUrl} alt="" loading="lazy" /> : <div className="project-image-placeholder"><span>NO COVER FRAME</span></div>}
         <div className="project-image-scrim" />
+        <div className="project-blade-flash" aria-hidden="true" />
         <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
         <span className="project-view">VIEW</span>
       </div>
@@ -196,23 +211,27 @@ export default function Home() {
   const appRef = useRef<HTMLDivElement>(null);
   const hasDismissedIntro = useRef(false);
 
+  useEffect(() => {
+    const motionOff = prefersReducedMotion();
+    document.documentElement.classList.toggle("motion-off", motionOff);
+    return () => document.documentElement.classList.remove("motion-off");
+  }, []);
+
   function dismissIntro() {
     if (hasDismissedIntro.current) return;
     hasDismissedIntro.current = true;
     const intro = document.querySelector<HTMLElement>(".intro-screen");
     if (intro) {
-      gsap.to(intro, {
-        autoAlpha: 0,
-        duration: 0.45,
-        ease: "power3.inOut",
-        onComplete: () => setIntroVisible(false),
-      });
+      gsap.timeline({ onComplete: () => setIntroVisible(false) })
+        .to(".intro-exit-cut", { scaleX: 1, duration: 0.24, ease: "power4.in" })
+        .to(intro, { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", autoAlpha: 0, duration: 0.5, ease: "power4.inOut" }, "<0.05");
     } else {
       setIntroVisible(false);
     }
   }
 
   useEffect(() => {
+    if (prefersReducedMotion()) return;
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,
@@ -259,7 +278,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = prefersReducedMotion();
     if (reduceMotion) {
       setIntroVisible(false);
       hasDismissedIntro.current = true;
@@ -269,12 +288,17 @@ export default function Home() {
     const ctx = gsap.context(() => {
       gsap.set(".intro-progress-fill", { scaleX: 0, transformOrigin: "left center" });
       gsap.set(".intro-word", { autoAlpha: 0, y: 14 });
+      gsap.set(".intro-entry-cut", { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(".intro-exit-cut", { scaleX: 0, transformOrigin: "right center" });
+      gsap.set(".intro-sabre-ridge", { drawSVG: "0%" });
       const introTimeline = gsap.timeline({ delay: 0.12 });
       introTimeline
+        .to(".intro-entry-cut", { scaleX: 1, duration: 0.24, ease: "power4.in" })
+        .to(".intro-entry-cut", { scaleX: 0, duration: 0.28, transformOrigin: "right center", ease: "power3.out" })
         .fromTo(
-          ".intro-blade",
+          ".intro-blade, .intro-sabre-ridge",
           { drawSVG: "0%", autoAlpha: 1 },
-          { drawSVG: "100%", duration: 0.68, ease: "power3.inOut" },
+          { drawSVG: "100%", duration: 0.68, stagger: 0.08, ease: "power3.inOut" },
         )
         .to(".intro-progress-fill", { scaleX: 1, duration: 1.1, ease: "power2.inOut" }, "<0.05")
         .to(".intro-word", { autoAlpha: 1, y: 0, duration: 0.34, stagger: 0.08, ease: "power3.out" }, "<0.18")
@@ -328,7 +352,7 @@ export default function Home() {
 
   useLayoutEffect(() => {
     if (introVisible) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
     const ctx = gsap.context(() => {
       if (reduced) {
         gsap.set(".reveal, .section-line, .skill-fill", { clearProps: "all" });
@@ -339,10 +363,16 @@ export default function Home() {
       const deep = new SplitText(".tagline-deep", { type: "chars" });
       const build = new SplitText(".tagline-build", { type: "chars" });
       gsap.set([name.chars, deep.chars, build.chars], { autoAlpha: 0, yPercent: 110 });
+      gsap.set(".hero-katana-core, .hero-katana-thread", { drawSVG: "0%" });
+      gsap.set(".hero-cut-flash", { scaleX: 0, transformOrigin: "left center" });
 
       const heroTimeline = gsap.timeline({ delay: 0.08 });
       heroTimeline
-        .to(name.chars, { autoAlpha: 1, yPercent: 0, duration: 0.68, stagger: 0.036, ease: "power3.out" })
+        .to(".hero-cut-flash", { scaleX: 1, duration: 0.28, ease: "power4.in" })
+        .to(".hero-cut-flash", { scaleX: 0, duration: 0.32, transformOrigin: "right center", ease: "power3.out" })
+        .to(".hero-katana-core", { drawSVG: "100%", duration: 0.72, ease: "power3.inOut" }, "<0.03")
+        .to(".hero-katana-thread", { drawSVG: "100%", duration: 0.42, ease: "power2.out" }, "<0.1")
+        .to(name.chars, { autoAlpha: 1, yPercent: 0, duration: 0.68, stagger: 0.036, ease: "power3.out" }, "<0.08")
         .to(deep.chars, { autoAlpha: 1, yPercent: 0, duration: 0.9, stagger: 0.025, ease: "power2.out" }, "<0.05")
         .to({}, { duration: 0.34 })
         .to(build.chars, { autoAlpha: 1, yPercent: 0, duration: 0.42, stagger: 0.025, ease: "power4.out" })
@@ -363,6 +393,38 @@ export default function Home() {
               start: "top 83%",
               once: true,
             },
+          },
+        );
+      });
+
+      gsap.utils.toArray<HTMLElement>(".section-pad").forEach((section) => {
+        const cut = section.querySelector<HTMLElement>(".section-cut");
+        if (!cut) return;
+        gsap.fromTo(
+          cut,
+          { autoAlpha: 0, scaleX: 0, transformOrigin: "left center" },
+          {
+            autoAlpha: 1,
+            scaleX: 1,
+            duration: 0.62,
+            ease: "power4.out",
+            scrollTrigger: { trigger: section, start: "top 80%", once: true },
+          },
+        );
+      });
+
+      gsap.utils.toArray<HTMLElement>(".project-card").forEach((card, index) => {
+        const image = card.querySelector<HTMLElement>(".project-image-wrap");
+        if (!image) return;
+        gsap.fromTo(
+          image,
+          { clipPath: "inset(0 100% 0 0)" },
+          {
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.9,
+            delay: index * 0.09,
+            ease: "power4.out",
+            scrollTrigger: { trigger: card, start: "top 86%", once: true },
           },
         );
       });
@@ -431,6 +493,14 @@ export default function Home() {
         scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.75 },
       });
 
+      gsap.to(".hero-katana", {
+        yPercent: -12,
+        xPercent: 4,
+        rotate: -2,
+        ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.85 },
+      });
+
       return () => {
         name.revert();
         deep.revert();
@@ -445,6 +515,8 @@ export default function Home() {
     <div className="site-shell" ref={appRef}>
       {introVisible && (
         <section className="intro-screen" aria-label="Site loading sequence">
+          <div className="intro-entry-cut" aria-hidden="true" />
+          <div className="intro-exit-cut" aria-hidden="true" />
           <button className="intro-skip" onClick={dismissIntro} type="button">
             Skip intro <span aria-hidden="true">↗</span>
           </button>
@@ -452,6 +524,7 @@ export default function Home() {
             <svg className="intro-monogram" viewBox="0 0 132 112" aria-hidden="true">
               <path className="intro-blade" d="M17 94L52 18L70 58L108 12" />
               <path className="intro-blade" d="M49 96L72 50L115 95" />
+              <path className="intro-sabre-ridge" d="M6 103C48 76 88 45 126 9" />
             </svg>
             <div className="intro-words" aria-hidden="true">
               <span className="intro-word">DEEP</span>
@@ -516,6 +589,19 @@ export default function Home() {
         <section className="hero" id="top">
           <img className="hero-art" src={ASSETS.hero} alt="" fetchPriority="high" />
           <div className="hero-shade" aria-hidden="true" />
+          <div className="hero-cut-flash" aria-hidden="true" />
+          <svg className="hero-katana" viewBox="0 0 1440 820" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="katanaSteel" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#f2efe9" stopOpacity="0" />
+                <stop offset="0.42" stopColor="#f2efe9" stopOpacity="0.82" />
+                <stop offset="0.6" stopColor="#d4af37" stopOpacity="0.9" />
+                <stop offset="1" stopColor="#c81e1e" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path className="hero-katana-core" d="M-110 704C278 475 776 244 1546 20" />
+            <path className="hero-katana-thread" d="M-160 735C318 524 835 298 1555 72" />
+          </svg>
           <div className="hero-speed-lines" aria-hidden="true">
             <i />
             <i />
@@ -545,6 +631,7 @@ export default function Home() {
         </section>
 
         <section className="discipline section-pad" id="discipline">
+          <SectionCut />
           <div className="section-grid">
             <div className="section-aside reveal">
               <SectionEyebrow index="01" label="THE DISCIPLINE" />
@@ -573,6 +660,7 @@ export default function Home() {
         </section>
 
         <section className="arsenal section-pad" id="arsenal">
+          <SectionCut />
           <div className="section-grid">
             <div className="section-aside reveal">
               <SectionEyebrow index="02" label="THE ARSENAL" />
@@ -604,6 +692,7 @@ export default function Home() {
         </section>
 
         <section className="track-record section-pad" id="track-record">
+          <SectionCut />
           <div className="section-heading-wide reveal">
             <SectionEyebrow index="03" label="TRACK RECORD" />
             <div>
@@ -614,8 +703,11 @@ export default function Home() {
           <div className="project-grid">
             {publicProjectsQuery.data?.length ? publicProjectsQuery.data.map((project, index) => <ProjectCard project={project} index={index} key={project.id} />) : (
               <div className="project-empty-state">
-                <span>NO PUBLIC RUNS LOGGED</span>
-                <p>{publicProjectsQuery.isLoading ? "Synchronizing the project archive." : "The selected-work archive is waiting for its first real release."}</p>
+                <div className="archive-coordinate">ARCHIVE / 00</div>
+                <div className="archive-scan" aria-hidden="true"><i /></div>
+                <span>{publicProjectsQuery.isLoading ? "SYNCHRONIZING ARCHIVE" : "NO PUBLIC RUNS LOGGED"}</span>
+                <p>{publicProjectsQuery.isLoading ? "Calibrating the selected-work archive." : "The selected-work archive is armed for its first real release."}</p>
+                <small>LOCK / STANDBY / M-04</small>
               </div>
             )}
           </div>
@@ -627,6 +719,7 @@ export default function Home() {
         </section>
 
         <section className="run-log section-pad" id="run-log">
+          <SectionCut />
           <div className="section-grid">
             <div className="section-aside reveal">
               <SectionEyebrow index="04" label="RUN LOG" />
