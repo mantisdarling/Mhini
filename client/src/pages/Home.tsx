@@ -2,7 +2,7 @@
  * Mantis design reminder: cinematic brutalism meets Japanese precision engineering.
  * Favor the telemetry spine, blade-thin dividers, generous black space, Mantis Red only for intent, and composed motion.
  */
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { gsap } from "gsap";
 import { DrawSVGPlugin, ScrollTrigger, SplitText } from "gsap/all";
@@ -120,6 +120,12 @@ const timeline = [
   },
 ];
 
+const archiveModes = [
+  { id: "scan", label: "SCAN", line: "Signal sweep is active. The release bay is waiting for its first published record." },
+  { id: "stage", label: "STAGE", line: "Three calibrated slots are ready for the next field release and its operating notes." },
+  { id: "dispatch", label: "DISPATCH", line: "Open the private console to log the project, choose its signal, and publish when ready." },
+];
+
 function SectionEyebrow({ index, label }: { index: string; label: string }) {
   return (
     <div className="section-eyebrow" aria-label={`${index} ${label}`}>
@@ -148,7 +154,7 @@ function SectionCut() {
   );
 }
 
-function ProjectCard({ project, index }: { project: PortfolioProject; index: number }) {
+function ProjectCard({ project, index, onOpen }: { project: PortfolioProject; index: number; onOpen: (project: PortfolioProject) => void }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   function handleMove(event: MouseEvent<HTMLElement>) {
@@ -170,6 +176,11 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
       }
       onMouseMove={handleMove}
       onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+      onClick={() => onOpen(project)}
+      onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onOpen(project); } }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open project dossier for ${project.title}`}
     >
       <div className="project-image-wrap">
         {project.imageUrl ? <img src={project.imageUrl} alt="" loading="lazy" /> : <div className="project-image-placeholder"><span>NO COVER FRAME</span></div>}
@@ -183,7 +194,7 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
         <div className="project-title-row">
           <h3>{project.title}</h3>
           {project.projectUrl ? (
-            <motion.a href={project.projectUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`} whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}>
+            <motion.a href={project.projectUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`} whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }} onClick={event => event.stopPropagation()}>
               <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
             </motion.a>
           ) : <motion.span whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}><ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" /></motion.span>}
@@ -203,19 +214,45 @@ export default function Home() {
   const [introVisible, setIntroVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(railSections[0]);
+  const [archiveMode, setArchiveMode] = useState("scan");
+  const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
   const cursorLabel = useRef<HTMLSpanElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const hasDismissedIntro = useRef(false);
+  const selectedArchiveMode = archiveModes.find(mode => mode.id === archiveMode) ?? archiveModes[0];
 
   useEffect(() => {
     const motionOff = prefersReducedMotion();
     document.documentElement.classList.toggle("motion-off", motionOff);
     return () => document.documentElement.classList.remove("motion-off");
   }, []);
+
+  function trackHeroPointer(event: MouseEvent<HTMLElement>) {
+    if (!window.matchMedia("(pointer: fine)").matches || prefersReducedMotion()) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--pointer-x", `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+    event.currentTarget.style.setProperty("--pointer-y", `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+  }
+
+  function resetHeroPointer() {
+    heroRef.current?.style.setProperty("--pointer-x", "63%");
+    heroRef.current?.style.setProperty("--pointer-y", "42%");
+  }
+
+  function moveMagnetic(event: MouseEvent<HTMLElement>) {
+    if (!window.matchMedia("(pointer: fine)").matches || prefersReducedMotion()) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    gsap.to(event.currentTarget, { x: (event.clientX - (bounds.left + bounds.width / 2)) * 0.18, y: (event.clientY - (bounds.top + bounds.height / 2)) * 0.18, duration: 0.28, ease: "power3.out", overwrite: true });
+  }
+
+  function resetMagnetic(event: MouseEvent<HTMLElement>) {
+    gsap.to(event.currentTarget, { x: 0, y: 0, duration: 0.55, ease: "elastic.out(1, 0.45)" });
+  }
 
   function dismissIntro() {
     if (hasDismissedIntro.current) return;
@@ -501,6 +538,18 @@ export default function Home() {
         scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.85 },
       });
 
+      gsap.to(".kinetic-track", {
+        xPercent: -42,
+        ease: "none",
+        scrollTrigger: { trigger: ".kinetic-stage", start: "top top", end: "bottom bottom", scrub: 0.72 },
+      });
+      gsap.to(".kinetic-orbit", {
+        rotate: 160,
+        ease: "none",
+        scrollTrigger: { trigger: ".kinetic-stage", start: "top bottom", end: "bottom top", scrub: 0.65 },
+      });
+      gsap.fromTo(".kinetic-index", { autoAlpha: 0, x: -28 }, { autoAlpha: 1, x: 0, duration: 0.7, ease: "power3.out", scrollTrigger: { trigger: ".kinetic-stage", start: "top 68%", once: true } });
+
       return () => {
         name.revert();
         deep.revert();
@@ -586,9 +635,10 @@ export default function Home() {
       </aside>
 
       <main>
-        <section className="hero" id="top">
+        <section className="hero" id="top" ref={heroRef} onMouseMove={trackHeroPointer} onMouseLeave={resetHeroPointer}>
           <img className="hero-art" src={ASSETS.hero} alt="" fetchPriority="high" />
           <div className="hero-shade" aria-hidden="true" />
+          <div className="hero-field" aria-hidden="true"><i /><b /><span /></div>
           <div className="hero-cut-flash" aria-hidden="true" />
           <svg className="hero-katana" viewBox="0 0 1440 820" preserveAspectRatio="none" aria-hidden="true">
             <defs>
@@ -617,7 +667,7 @@ export default function Home() {
             </div>
             <div className="hero-support">
               <p>I work where the signal is faint and the stakes are high. Find the underlying system. Build the next decisive move.</p>
-              <motion.a href="#track-record" className="blade-button" whileHover={{ x: 5 }} whileTap={{ scale: 0.97 }}>
+              <motion.a href="#track-record" className="blade-button" data-cursor="PULL" whileTap={{ scale: 0.97 }} onMouseMove={moveMagnetic} onMouseLeave={resetMagnetic}>
                 <span>View selected work</span>
                 <MoveUpRight size={18} strokeWidth={1.4} aria-hidden="true" />
               </motion.a>
@@ -628,6 +678,16 @@ export default function Home() {
             <ArrowDown size={17} strokeWidth={1.4} aria-hidden="true" />
           </a>
           <div className="hero-coordinate" aria-hidden="true">35° 41' N / 139° 41' E</div>
+          <div className="hero-readout" aria-hidden="true"><span>POINTER / SIGNAL</span><b>ACTIVE</b></div>
+        </section>
+
+        <section className="kinetic-stage" aria-label="Operating principle">
+          <div className="kinetic-sticky">
+            <p className="kinetic-index">M / MOTION STUDY / 01</p>
+            <div className="kinetic-orbit" aria-hidden="true"><i /><i /><i /></div>
+            <div className="kinetic-track" aria-hidden="true"><span>FIND THE SIGNAL</span><em>—</em><span>HOLD THE LINE</span><em>—</em><span>MAKE THE MOVE</span></div>
+            <p className="kinetic-caption">Scroll to calibrate the field.</p>
+          </div>
         </section>
 
         <section className="discipline section-pad" id="discipline">
@@ -701,12 +761,17 @@ export default function Home() {
             </div>
           </div>
           <div className="project-grid">
-            {publicProjectsQuery.data?.length ? publicProjectsQuery.data.map((project, index) => <ProjectCard project={project} index={index} key={project.id} />) : (
-              <div className="project-empty-state">
+            {publicProjectsQuery.data?.length ? publicProjectsQuery.data.map((project, index) => <ProjectCard project={project} index={index} onOpen={setSelectedProject} key={project.id} />) : (
+              <div className={`project-empty-state archive-mode-${archiveMode}`}>
                 <div className="archive-coordinate">ARCHIVE / 00</div>
                 <div className="archive-scan" aria-hidden="true"><i /></div>
-                <span>{publicProjectsQuery.isLoading ? "SYNCHRONIZING ARCHIVE" : "NO PUBLIC RUNS LOGGED"}</span>
-                <p>{publicProjectsQuery.isLoading ? "Calibrating the selected-work archive." : "The selected-work archive is armed for its first real release."}</p>
+                <div className="archive-slots" aria-hidden="true"><i>01</i><i>02</i><i>03</i></div>
+                <span>{publicProjectsQuery.isLoading ? "SYNCHRONIZING ARCHIVE" : `${selectedArchiveMode.label} / RELEASE BAY`}</span>
+                <p>{publicProjectsQuery.isLoading ? "Calibrating the selected-work archive." : selectedArchiveMode.line}</p>
+                <div className="archive-controls" role="tablist" aria-label="Archive interaction modes">
+                  {archiveModes.map(mode => <button key={mode.id} type="button" role="tab" aria-selected={archiveMode === mode.id} className={archiveMode === mode.id ? "is-active" : ""} onClick={() => setArchiveMode(mode.id)} data-cursor={mode.label}>{mode.label}</button>)}
+                </div>
+                <a className="archive-console-link" href="/studio" data-cursor="CONSOLE" onMouseMove={moveMagnetic} onMouseLeave={resetMagnetic}>OPEN PROJECT CONSOLE <ArrowUpRight size={14} /></a>
                 <small>LOCK / STANDBY / M-04</small>
               </div>
             )}
@@ -774,6 +839,28 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div className="project-dossier-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}>
+            <motion.article className="project-dossier" role="dialog" aria-modal="true" aria-label={`${selectedProject.title} project dossier`} initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 28, scale: 0.98 }} transition={{ duration: 0.34, ease: [0.23, 1, 0.32, 1] }} onClick={event => event.stopPropagation()}>
+              <button className="dossier-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={19} /></button>
+              <div className="dossier-visual">{selectedProject.imageUrl ? <img src={selectedProject.imageUrl} alt="" /> : <div className="dossier-fallback">M / PROJECT DOSSIER</div>}</div>
+              <div className="dossier-content">
+                <p>{selectedProject.category} / FIELD DOSSIER</p>
+                <h2>{selectedProject.title}</h2>
+                <div className="dossier-rule" aria-hidden="true" />
+                <p className="dossier-description">{selectedProject.description}</p>
+                <div className="dossier-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+                <div className="dossier-actions">
+                  {selectedProject.projectUrl && <a href={selectedProject.projectUrl} target="_blank" rel="noreferrer">OPEN LIVE PROJECT <ArrowUpRight size={16} /></a>}
+                  <button type="button" onClick={() => setSelectedProject(null)}>RETURN TO TRACK</button>
+                </div>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <footer className="site-footer">
         <a className="footer-brand" href="#top"><img src={ASSETS.mark} alt="" /><span className="brand-wordmark" aria-hidden="true"><b>MAN</b><i /><b>TIS</b></span></a>

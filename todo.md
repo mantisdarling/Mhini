@@ -12,3 +12,9 @@
 - [x] Implement the enhanced motion system with reduced-motion safeguards.
 - [x] Validate the upgraded animation experience across desktop and mobile, including live desktop draw/impact and runtime reduced-motion checks, type checks, unit tests, production build, and clean browser-console output.
 - [x] Save a motion-system checkpoint.
+- [x] Define the visible Awwwards-style interaction system for hero, cursor, navigation, sections, and project display.
+- [x] Build high-impact interactive hero, magnetic cursor controls, and scroll-led kinetic typography.
+- [x] Replace the static empty project state with an interactive gallery-style experience and project-detail controls.
+- [x] Verify visible motion on desktop and mobile, including the pointer scanner, kinetic scroll stage, archive state controls, console reload, type checks, unit tests, production build, and clean browser-console output.
+- [ ] Verify the project dossier with the first real published project (deferred until Mantis signs in and adds project content).
+- [x] Save an experiential-interaction checkpoint.

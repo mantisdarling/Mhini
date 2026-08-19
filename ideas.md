@@ -83,3 +83,21 @@ Desktop browser validation confirmed that the intro resolves cleanly from the dr
 The Track Record empty state was refined and rechecked as a full-width locked archive: its cropped border, red diagonal signal, archive coordinate, and standby label now occupy the entire project bay instead of leaving unused neutral space.
 
 The runtime motion-off verification confirmed that the page applies the accessibility state, removes the intro overlay, and leaves the complete hero visible. The same behavior is used for the operating system’s reduced-motion preference; `?motion=off` is retained as a testable equivalent.
+
+## Experience Upgrade — Signal Theatre
+
+The next interaction layer must be **obvious at first touch**, not only visible in an animation inspection. The hero will become a responsive signal field: the pointer drives a red-and-gold scanner glow, background strata drift at different rates, a live coordinate readout follows the cursor, and the main action behaves magnetically. Scroll will trigger a kinetic word-stage and sectional calibration shifts that make the page feel choreographed rather than merely revealed. The empty work archive will become an interactive dispatch bay with a responsive scanner, parked release slots, and a direct route to the private project console. The visual language stays technical and graphic—more precision instrument than generic 3D showcase.
+
+The system’s behaviors are explicitly assigned. **Hero:** pointer-driven scanner field, concentric sight rings, magnetic primary action, and a live signal readout. **Cursor:** expands into intentional action labels over clickable controls and supports magnetic movement only for high-value calls to action. **Navigation:** retains the fixed telemetry rail as the continuous scroll state and adds a larger kinetic scroll landmark directly after the hero. **Sections:** use sticky horizontal type and orbital geometry to make scroll position obvious before returning to readable content. **Project display:** real published entries retain their tilt, hover, and blade impact; the no-project state becomes a selectable scan/stage/dispatch bay with an owner-console escape route.
+
+### Live interaction observation
+
+The revised desktop hero visibly carries the signal field above the source art: red scanner light and concentric targeting rings now remain present after the entry sequence, alongside the live pointer status readout. The new kinetic stage and archive controls are exposed in the document flow, confirming that the interaction layer is no longer limited to a transient page-load effect.
+
+Pointer testing confirmed that the scanner field visibly repositions with the desktop cursor. The Track Record bay now renders three parked release slots around a central control stack; the scan/stage/dispatch buttons provide a directly observable interaction loop before real work is published.
+
+The stage mode was exercised live: it changed both the central release-bay copy and the highlighted control state while promoting the middle parked slot in the surrounding composition. The active telemetry rail also shifted to the Track Record coordinate during this interaction.
+
+The kinetic landmark was observed across two scroll positions. Its headline visibly advanced from **FIND THE SIGNAL** to **HOLD THE LINE** while the orbital instrument rotated and the following content entered beneath it. This establishes an immediately perceivable scroll-linked interaction rather than a hidden transition.
+
+The refreshed interactive archive loaded without browser-console output after the visible-motion implementation. The stage-mode state remained intact on direct navigation to the Track Record section.
