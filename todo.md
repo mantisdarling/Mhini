@@ -22,3 +22,9 @@
 - [x] Refine scroll interpolation, section handoffs, motion easing, and interactive controls for a smoother editorial feel.
 - [x] Validate desktop and mobile smoothness through live anchor/scroll handoffs, active navigation and telemetry states, mobile visual review, clean console output, type checks, unit tests, and production build.
 - [x] Save a motion-polish checkpoint.
+- [x] Extract every portfolio-relevant project, description, link, skill, certification, membership, course, bio detail, and technology item from the PDF, ignoring Section 16’s proposed site structure.
+- [x] Include BEYOND SIGMA while removing only the words “Map Of AI” from portfolio content.
+- [x] Replace existing placeholder portfolio content and add necessary AI-systems sections with the PDF’s exact source data.
+- [x] Populate or prepare all real project records from the PDF, including their supplied descriptions and links.
+- [x] Verify complete PDF data coverage, content accuracy, and presentation through live public page, project-dossier, desktop/mobile visual, type, unit, production-build, and clean-console checks.
+- [x] Save the complete PDF-data integration checkpoint.

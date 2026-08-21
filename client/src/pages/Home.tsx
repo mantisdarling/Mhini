@@ -4,6 +4,8 @@
  */
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
+import { CredentialsSection, EcosystemSection, PersonalSignalSection, ProfileIdentitySection, TechnologySection } from "@/components/ProfileDataSections";
+import { profile, projects as profileProjects } from "@/data/profileData";
 import { gsap } from "gsap";
 import { DrawSVGPlugin, ScrollTrigger, SplitText } from "gsap/all";
 import Lenis from "lenis";
@@ -41,49 +43,23 @@ function prefersReducedMotion() {
 }
 
 const navItems = [
-  ["Discipline", "#discipline"],
-  ["Arsenal", "#arsenal"],
-  ["Track Record", "#track-record"],
-  ["Run Log", "#run-log"],
+  ["Identity", "#identity"],
+  ["Technology", "#technology"],
+  ["Work", "#track-record"],
+  ["Credentials", "#credentials"],
+  ["Network", "#network"],
 ];
 
 const railSections = [
   { id: "top", code: "M / 01", label: "ORIGIN" },
-  { id: "discipline", code: "M / 02", label: "DISCIPLINE" },
-  { id: "arsenal", code: "M / 03", label: "ARSENAL" },
-  { id: "track-record", code: "M / 04", label: "TRACK RECORD" },
-  { id: "run-log", code: "M / 05", label: "RUN LOG" },
-  { id: "pit-stop", code: "M / 06", label: "PIT STOP" },
-];
-
-const skillGroups = [
-  {
-    coordinate: "01 / THINK",
-    title: "Strategy & systems",
-    skills: [
-      ["Product strategy", 94],
-      ["Systems thinking", 91],
-      ["Research synthesis", 88],
-    ],
-  },
-  {
-    coordinate: "02 / MAKE",
-    title: "Design & build",
-    skills: [
-      ["Experience design", 93],
-      ["Creative development", 89],
-      ["Design systems", 86],
-    ],
-  },
-  {
-    coordinate: "03 / SHIP",
-    title: "Operations & growth",
-    skills: [
-      ["Launch direction", 87],
-      ["Team alignment", 84],
-      ["Iteration loops", 90],
-    ],
-  },
+  { id: "identity", code: "M / 02", label: "IDENTITY" },
+  { id: "technology", code: "M / 03", label: "TECHNOLOGY" },
+  { id: "track-record", code: "M / 04", label: "PROJECTS" },
+  { id: "credentials", code: "M / 05", label: "CREDENTIALS" },
+  { id: "network", code: "M / 06", label: "NETWORK" },
+  { id: "research", code: "M / 07", label: "RESEARCH" },
+  { id: "vision", code: "M / 08", label: "VISION" },
+  { id: "pit-stop", code: "M / 09", label: "PIT STOP" },
 ];
 
 type PortfolioProject = {
@@ -94,31 +70,29 @@ type PortfolioProject = {
   imageUrl: string | null;
   projectUrl: string | null;
   tags: string[];
+  tagline?: string;
+  problem?: string;
+  solution?: string;
+  highlights?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
 };
 
-const timeline = [
-  {
-    period: "CURRENT / 2026",
-    role: "Independent builder",
-    company: "Mantis / Field Operations",
-    summary:
-      "Working beside focused teams when the problem has consequences: find the signal, design the system, move the work forward.",
-  },
-  {
-    period: "2023 — 2026",
-    role: "Product & design lead",
-    company: "Arc / Product Unit",
-    summary:
-      "Set product direction across research, prototype, and release — keeping the room aligned when the map was still being drawn.",
-  },
-  {
-    period: "2020 — 2023",
-    role: "Creative technologist",
-    company: "Pulse / Creative Lab",
-    summary:
-      "Built digital experiments and visual operating systems for technology, culture, and independent ventures with something to prove.",
-  },
-];
+const resumeProjects: PortfolioProject[] = profileProjects.map((project, index) => ({
+  id: -(index + 1),
+  title: project.name,
+  category: project.role ? `${project.status} / ${project.role}` : project.status,
+  description: project.description,
+  imageUrl: null,
+  projectUrl: project.liveUrl ?? project.githubUrl ?? null,
+  tags: [...project.technologies],
+  tagline: project.tagline,
+  problem: project.problem,
+  solution: project.solution,
+  highlights: [...project.highlights],
+  githubUrl: project.githubUrl,
+  liveUrl: project.liveUrl,
+}));
 
 const archiveModes = [
   { id: "scan", label: "SCAN", line: "Signal sweep is active. The release bay is waiting for its first published record." },
@@ -199,6 +173,7 @@ function ProjectCard({ project, index, onOpen }: { project: PortfolioProject; in
             </motion.a>
           ) : <motion.span whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}><ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" /></motion.span>}
         </div>
+        {project.tagline && <p className="project-tagline">{project.tagline}</p>}
         <p className="project-description">{project.description}</p>
         <div className="project-tags" aria-label="Project disciplines">
           {project.tags.map((tag) => (
@@ -217,6 +192,7 @@ export default function Home() {
   const [archiveMode, setArchiveMode] = useState("scan");
   const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
+  const displayedProjects: PortfolioProject[] = [...resumeProjects, ...(publicProjectsQuery.data ?? [])];
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
   const cursorLabel = useRef<HTMLSpanElement>(null);
@@ -678,22 +654,22 @@ export default function Home() {
             <i />
           </div>
           <div className="hero-content">
-            <p className="hero-kicker"><span /> INDEPENDENT BUILDER / 2026</p>
+            <p className="hero-kicker"><span /> FOUNDER @ MANTIS / IIT MADRAS CS</p>
             <h1 className="hero-name">MANTIS</h1>
-            <div className="tagline" aria-label="I go deep, then I build">
-              <span className="tagline-deep">I GO DEEP</span>
+            <div className="tagline" aria-label={profile.positioning}>
+              <span className="tagline-deep">I AM AN AI SYSTEMS</span>
               <span className="tagline-divider">/</span>
-              <span className="tagline-build">THEN I BUILD</span>
+              <span className="tagline-build">BUILDER WHO SHIPS REAL PRODUCTS.</span>
             </div>
             <div className="hero-support">
-              <p>I work where the signal is faint and the stakes are high. Find the underlying system. Build the next decisive move.</p>
+              <p>{profile.shortBio}</p>
               <motion.a href="#track-record" className="blade-button" data-cursor="PULL" whileTap={{ scale: 0.97 }} onMouseMove={moveMagnetic} onMouseLeave={resetMagnetic}>
                 <span>View selected work</span>
                 <MoveUpRight size={18} strokeWidth={1.4} aria-hidden="true" />
               </motion.a>
             </div>
           </div>
-          <a className="scroll-pulse" href="#discipline" aria-label="Scroll to The Discipline section">
+          <a className="scroll-pulse" href="#identity" aria-label="Scroll to Identity">
             <span>SCROLL TO ENGAGE</span>
             <ArrowDown size={17} strokeWidth={1.4} aria-hidden="true" />
           </a>
@@ -710,66 +686,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="discipline section-pad" id="discipline">
-          <SectionCut />
-          <div className="section-grid">
-            <div className="section-aside reveal">
-              <SectionEyebrow index="01" label="THE DISCIPLINE" />
-              <p className="brush-note">深く、正確に</p>
-            </div>
-            <div className="discipline-main">
-              <p className="large-statement reveal">
-                I make room for the hard part: the pattern behind the ask, the system behind the screen, the conviction behind the release.
-              </p>
-              <div className="discipline-detail reveal">
-                <p>
-                  Most work breaks at the handoff between meaning and motion. I begin there: absorb the conditions, name the force at play, and turn a crowded field into an executable line.
-                </p>
-                <p>
-                  The practice moves between product, visual direction, and implementation. Not to create more surface area — to create one sharper point of contact with the work ahead.
-                </p>
-                <div className="stat-strip">
-                  <div><strong className="stat-count" data-count="4" data-pad="true">00</strong><span>operating modes</span></div>
-                  <div><strong className="stat-count" data-count="12">0</strong><span>signal checks per sprint</span></div>
-                  <div><strong className="stat-count" data-count="1">0</strong><span>decisive next move</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <BladeDivider />
-        </section>
+        <ProfileIdentitySection />
 
-        <section className="arsenal section-pad" id="arsenal">
-          <SectionCut />
-          <div className="section-grid">
-            <div className="section-aside reveal">
-              <SectionEyebrow index="02" label="THE ARSENAL" />
-              <p className="aside-copy">Calibrated tools for moving from signal to action.</p>
-            </div>
-            <div className="skills-wrap">
-              {skillGroups.map((group) => (
-                <article className="skill-group reveal" key={group.coordinate}>
-                  <div className="skill-group-heading">
-                    <span>{group.coordinate}</span>
-                    <h3>{group.title}</h3>
-                  </div>
-                  <div className="skill-list">
-                    {group.skills.map(([name, value]) => (
-                      <div className="skill-row" key={name}>
-                        <div className="skill-name-line">
-                          <span>{name}</span>
-                          <strong>{value}<small>%</small></strong>
-                        </div>
-                        <div className="skill-track"><i className="skill-fill" style={{ width: `${value}%` }} /></div>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-          <BladeDivider />
-        </section>
+        <TechnologySection />
 
         <section className="track-record section-pad" id="track-record">
           <SectionCut />
@@ -781,7 +700,7 @@ export default function Home() {
             </div>
           </div>
           <div className="project-grid">
-            {publicProjectsQuery.data?.length ? publicProjectsQuery.data.map((project, index) => <ProjectCard project={project} index={index} onOpen={setSelectedProject} key={project.id} />) : (
+            {displayedProjects.length ? displayedProjects.map((project, index) => <ProjectCard project={project} index={index} onOpen={setSelectedProject} key={project.id} />) : (
               <div className={`project-empty-state archive-mode-${archiveMode}`}>
                 <div className="archive-coordinate">ARCHIVE / 00</div>
                 <div className="archive-scan" aria-hidden="true"><i /></div>
@@ -797,50 +716,28 @@ export default function Home() {
             )}
           </div>
           <div className="record-footer reveal">
-            <span>{String(publicProjectsQuery.data?.length ?? 0).padStart(2, "0")} PUBLISHED ENTRIES</span>
-            <p>{publicProjectsQuery.data?.length ? "Field notes from systems built to create clarity, carry a point of view, and keep their composure under load." : "New work appears here as it is published from the private project console."}</p>
+            <span>{String(displayedProjects.length).padStart(2, "0")} PROJECT RECORDS</span>
+            <p>Finished projects first. In-progress systems follow. Every record is sourced from Harshit Kumar’s portfolio data document.</p>
           </div>
           <BladeDivider />
         </section>
 
-        <section className="run-log section-pad" id="run-log">
-          <SectionCut />
-          <div className="section-grid">
-            <div className="section-aside reveal">
-              <SectionEyebrow index="04" label="RUN LOG" />
-              <p className="aside-copy">An evolving record of roles, release cycles, and directional shifts.</p>
-            </div>
-            <div className="timeline-wrap">
-              <svg className="timeline-svg" viewBox="0 0 2 670" preserveAspectRatio="none" aria-hidden="true"><path className="timeline-line" d="M1 0V670" /></svg>
-              <div className="timeline-list">
-                {timeline.map((item, index) => (
-                  <article className="timeline-entry reveal" key={item.period}>
-                    <span className="timeline-dot" aria-hidden="true">0{index + 1}</span>
-                    <div className="timeline-period">{item.period}</div>
-                    <div className="timeline-content">
-                      <h3>{item.role}</h3>
-                      <p className="timeline-company">{item.company}</p>
-                      <p>{item.summary}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-          <BladeDivider />
-        </section>
+        <CredentialsSection />
+        <EcosystemSection />
+        <PersonalSignalSection />
 
         <section className="pit-stop" id="pit-stop">
           <div className="pit-stop-rail" aria-hidden="true"><span>05</span><i /></div>
           <div className="pit-stop-content reveal">
             <p className="contact-label">PIT STOP / START A CONVERSATION</p>
             <h2>Bring the hard<br />problem <em>closer.</em></h2>
-            <p className="contact-copy">Start with the question that will not leave your head. We will trace the pressure point and decide what deserves to be built.</p>
-            <motion.a className="contact-link" href="mailto:mantisdarling@proton.me" whileHover={{ x: 8 }} whileTap={{ scale: 0.98 }}>
+            <p className="contact-copy">Open to collaborations, internships, and interesting conversations. {profile.location}.</p>
+            <motion.a className="contact-link" href={`mailto:${profile.primaryEmail}`} whileHover={{ x: 8 }} whileTap={{ scale: 0.98 }}>
               <Mail size={20} strokeWidth={1.4} aria-hidden="true" />
-              <span>mantisdarling@proton.me</span>
+              <span>{profile.primaryEmail}</span>
               <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
             </motion.a>
+            <a className="contact-link contact-link-secondary" href={`mailto:${profile.secondaryEmail}`}>{profile.secondaryEmail}<ArrowUpRight size={16} /></a>
           </div>
           <div className="pit-stop-side reveal">
             <p>THE GARAGE IS OPEN</p>
@@ -850,9 +747,11 @@ export default function Home() {
             </div>
             <div className="social-row" aria-label="Professional networks">
               <a href="https://github.com/mantisdarling" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={20} /></a>
+              <a href="https://github.com/XY-COMBINATOR" target="_blank" rel="noreferrer" aria-label="XY-COMBINATOR GitHub Organization"><Github size={20} /></a>
               <a href="https://x.com/mantisxdarling" target="_blank" rel="noreferrer" aria-label="X"><span className="social-x">X</span></a>
               <a href="https://bsky.app/profile/mantisdarling.bsky.social" target="_blank" rel="noreferrer" aria-label="Bluesky"><Cloud size={20} /></a>
-              <a href="https://me.developers.google.com/u/mantisdarling" target="_blank" rel="noreferrer" aria-label="Google Developer Program"><BadgeCheck size={20} /></a>
+              <a href="https://g.dev/mantisdarling" target="_blank" rel="noreferrer" aria-label="Google Developer Profile"><BadgeCheck size={20} /></a>
+              <a href="https://forums.developer.nvidia.com" target="_blank" rel="noreferrer" aria-label="NVIDIA Developer Forums"><Cloud size={20} /></a>
               <a href="https://www.linkedin.com/in/mantisdarling/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>
               <a href="https://www.instagram.com/mantisdarling/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={20} /></a>
             </div>
@@ -869,11 +768,17 @@ export default function Home() {
               <div className="dossier-content">
                 <p>{selectedProject.category} / FIELD DOSSIER</p>
                 <h2>{selectedProject.title}</h2>
+                {selectedProject.tagline && <p className="dossier-tagline">{selectedProject.tagline}</p>}
                 <div className="dossier-rule" aria-hidden="true" />
                 <p className="dossier-description">{selectedProject.description}</p>
+                {selectedProject.problem && <div className="dossier-brief"><p>PROBLEM IT SOLVES</p><span>{selectedProject.problem}</span></div>}
+                {selectedProject.solution && <div className="dossier-brief"><p>SOLUTION</p><span>{selectedProject.solution}</span></div>}
+                {selectedProject.highlights?.length ? <div className="dossier-highlights"><p>KEY HIGHLIGHTS</p>{selectedProject.highlights.map(highlight => <span key={highlight}>{highlight}</span>)}</div> : null}
                 <div className="dossier-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
                 <div className="dossier-actions">
-                  {selectedProject.projectUrl && <a href={selectedProject.projectUrl} target="_blank" rel="noreferrer">OPEN LIVE PROJECT <ArrowUpRight size={16} /></a>}
+                  {selectedProject.liveUrl && <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer">OPEN LIVE PROJECT <ArrowUpRight size={16} /></a>}
+                  {selectedProject.githubUrl && <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer">OPEN GITHUB <ArrowUpRight size={16} /></a>}
+                  {!selectedProject.liveUrl && !selectedProject.githubUrl && selectedProject.projectUrl && <a href={selectedProject.projectUrl} target="_blank" rel="noreferrer">OPEN PROJECT <ArrowUpRight size={16} /></a>}
                   <button type="button" onClick={() => setSelectedProject(null)}>RETURN TO TRACK</button>
                 </div>
               </div>

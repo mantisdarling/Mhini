@@ -1,0 +1,436 @@
+Project P7: Buzz — AI Misinformation Detector
+[Name]
+Buzz — AI Misinformation Detector
+[Status]
+In Progress
+[Tagline]
+Multi-model AI ensemble for detecting fake news and misinformation
+[Problem It Solves]
+Misinformation spreads faster than fact-checkers can respond. Existing tools are opaque black boxes with no
+explainability.
+[Solution]
+A multi-model AI ensemble combining DistilBERT, spaCy stylometry, and TF-IDF with word-level explainability —
+showing exactly WHY a claim is flagged.
+[Full Description]
+Buzz is a multi-model AI ensemble platform designed to detect misinformation, fake news, and manipulated text in
+digital media. Combines fine-tuned DistilBERT NLP transformer embeddings, spaCy stylometric linguistic pattern
+analysis, and N-Gram TF-IDF statistical baseline models for high-precision claim verification. Delivers word-level
+highlighted reasoning showing exactly which words influenced the truthfulness score. Accepts direct article URLs
+scraped asynchronously via Trafilatura and Celery, or raw text snippets. Backend: FastAPI with JWT
+authentication, Redis caching, SlowAPI rate limiting, Sentry SDK error tracking, and an admin analytics dashboard.
+Full production Docker Compose setup with Nginx reverse proxy, PostgreSQL, Redis, and Celery workers.
+Frontend: Next.js 15 App Router dashboard styled with Tailwind CSS, Recharts visual signals, and Framer Motion
+micro-animations.
+[Tech Stack]
+Next.js 15 | FastAPI | PyTorch | HuggingFace Transformers | DistilBERT | spaCy | scikit-learn | ONNX Runtime |
+Celery | Redis | PostgreSQL | Docker Compose | Nginx | Trafilatura | JWT | Sentry | Recharts | Framer Motion
+[Live URL]
+https://buzz-rose-rho.vercel.app
+[GitHub URL]
+https://github.com/mantisdarling/Buzz
+[Key Highlights]
+  • Multi-model ensemble: DistilBERT + spaCy stylometry + TF-IDF
+  • Word-level explainability — highlights exactly which words flag misinformation
+  • Async URL scraping via Trafilatura and Celery
+  • Full production Docker Compose: Nginx + PostgreSQL + Redis + Celery
+  • Admin analytics dashboard with Recharts visualizations
+
+
+7. OPEN SOURCE AND CONTRIBUTIONS
+
+[Name]
+SSoC S5 — Social Summer of Code Season 5
+[Role]
+Project Admin
+[Description]
+Project Admin at India's largest open source program. Responsible for mentoring contributors, reviewing pull
+requests, and managing project direction for real-world open source repositories. Part of an initiative to strengthen
+India's open source ecosystem.
+
+[Name]
+OSCI 26 — Open Source Connect India 2026
+[Role]
+Registered Participant
+[Description]
+India's premier open source conference bringing together 10,000+ developers, maintainers, startup founders,
+technology companies, and open source communities to learn, collaborate, and build together. Focus on
+connecting contribution with career opportunity.
+
+[Name]
+Odysseus — Self-hosted AI Workspace
+[Role]
+Contributor
+[Description]
+Free, open-source, self-hosted AI workspace. Applied personal modifications and feature additions to extend
+default capabilities with custom tooling optimized for individual AI research and development workflows.
+[URL]
+https://github.com/odysseus-dev/odysseus
+
+[Name]
+Athena OS — Cybersecurity Linux Distribution
+[Role]
+Contributor
+[Description]
+Cybersecurity-focused Arch Linux-based distribution. Implemented custom configurations, tooling adjustments,
+and system-level modifications tailored for AI and security research workflows.
+
+
+
+8. CERTIFICATIONS AND CREDENTIALS
+
+[Name]
+Google GEAR — Gemini Enterprise Agent Ready
+[Issuing Organization]
+Google
+[Status]
+Active Member
+[Description]
+Officially selected program member for Google's Gemini Enterprise Agent Ready (GEAR) skilling initiative. Actively
+leveraging cloud-hosted sandboxes and monthly developer allocations to transition from theoretical ML models to
+production-ready enterprise AI architectures. Core skills: Agent Engineering with Google ADK, Orchestration with
+Vertex AI reasoning loops, Integration of LLMs with external APIs securely.
+[Skills]
+Artificial Intelligence, Generative AI, Python, Google Cloud Platform, Vertex AI
+[Credential URL]
+https://g.dev/mantisdarling
+
+[Name]
+Advanced Diploma in Engineering Thermodynamics
+[Issuing Organization]
+Alison / IIT Kanpur Courseware
+[Status]
+Completed
+[Description]
+Advanced thermodynamics curriculum completed through an intensive technical program featuring official
+open-courseware content developed by IIT Kanpur professors. Covered fundamental laws of thermodynamics,
+system analysis, entropy, and advanced power cycles.
+[Skills]
+Engineering Thermodynamics
+[Credential URL]
+https://alison.com/verify/7ce0c80398
+[Credential ID]
+2245-50994808
+
+[Name]
+SEO with Squarespace
+[Issuing Organization]
+Coursera / United Latino Students Association
+[Status]
+Completed
+[Date]
+August 2025
+[Description]
+Project-based certification applied to a live Squarespace website. Covered keyword research and integration,
+on-page SEO including meta tags, headings, and content structure, performance analysis, and SEO strategy
+implementation.
+[Skills]
+Search Engine Optimization, On-page SEO, Keyword Research, Web Analytics
+[Credential URL]
+https://coursera.org/account/accomplishments/records/CITWE1F1HW88
+[Credential ID]
+CITWE1F1HW88
+
+
+
+9. COURSES AND LEARNING
+
+[Name]
+Securing Agents with NemoClaw and OpenShell
+[Provider]
+NVIDIA
+[Status]
+Enrolled — In Progress
+[Subject]
+Generative AI / LLM
+[Description]
+Covers building agent loops from scratch and identifying core components, reliable tool use and function calling
+within agent systems, designing and coordinating multi-agent systems using structured routing patterns, utilizing
+OpenShell to configure agent identities and ensure safe sandboxed operations, and deploying and managing
+autonomous agents while building persistent skill libraries. Uses NVIDIA NemoClaw as reference stack and
+OpenShell as secure sandbox environment.
+
+[Name]
+Deploy Faster Generative AI Models with NVIDIA NIM on GKE
+[Provider]
+Google Cloud + NVIDIA
+[Status]
+Enrolled — In Progress
+[Subject]
+Cloud AI / MLOps
+[Description]
+Hands-on experience with Google Kubernetes Engine (GKE) and NVIDIA NIM for AI inference tasks. Covers
+streamlining AI model deployment, optimizing inference performance on NVIDIA GPUs, and managing scalable AI
+workloads on Kubernetes.
+
+[Name]
+Accelerated Machine Learning with Google Cloud and NVIDIA
+[Provider]
+Google Cloud + NVIDIA
+[Status]
+Enrolled — In Progress
+[Subject]
+Machine Learning / GPU Acceleration
+[Description]
+Learn to use NVIDIA cuDF and cuML within a Google Cloud Colab Enterprise environment to dramatically
+accelerate end-to-end machine learning workflows with zero code changes. Covers GPU-accelerated DataFrame
+operations and ML model training.
+
+[Name]
+Beyond Sigma — Map of AI
+[Provider]
+Not Your College
+[Status]
+Enrolled — In Progress
+[Subject]
+AI Systems / Applied AI
+[Description]
+Structural framework covering the modern AI ecosystem from memory footprints to model training. Provides clear
+curriculum covering everything from model architecture to agentic engineering. Applied immediately by building
+custom AI from scratch combining NVIDIA NIM inference endpoints with pre-built agentic skills to engineer
+enterprise-scale solutions.
+[URL]
+https://notyourcollege.com/courses/beyondsigma
+
+[Name]
+Build My First Agent with Agent Development Kit (ADK)
+[Provider]
+Google
+[Status]
+Completed
+[Subject]
+AI Agent Engineering
+[Description]
+Hands-on training on Google Skills covering cloud technology and agent development using Google's Agent
+Development Kit (ADK). Covers building AI agents that can reason, plan, and take actions using Google Cloud
+infrastructure.
+
+
+
+10. HACKATHONS AND COMPETITIONS
+
+[Name]
+All Things Agentic Hackathon
+[Status]
+Registered
+[Description]
+Build next-generation agents that run in the background, handle the heavy lifting of massive datasets, and
+automate complex workflows asynchronously. Focused on agentic AI architectures designed for real-world
+production deployment.
+
+[Name]
+Build with AI: Code for Communities — Second Edition
+[Status]
+Registered
+[Organizer]
+Google Cloud
+[Description]
+Google Cloud hackathon bringing together developers from across India to build AI-powered solutions for
+challenges shared across BRICS nations including healthcare supply chains, climate resilience, food security, and
+digital public infrastructure. Mission: mobilise India's developer ecosystem to build scalable, AI-driven solutions that
+address real socioeconomic, environmental, and governance challenges across BRICS nations.
+
+[Name]
+Google Solution Challenge
+[Status]
+Preparing
+[Organizer]
+Google
+[Description]
+Global annual competition run by Google for university students. Mission: build a working software prototype that
+solves one or more of the United Nations 17 Sustainable Development Goals (SDGs) using Google technology
+including Gemini and Google Cloud.
+
+
+
+11. COMMUNITY AND MEMBERSHIPS
+
+[Organization]
+NVIDIA Developer Program
+[Role]
+Member
+[Description]
+Active contributor on NVIDIA Developer Forums, networking with GPU experts, engaging in technical discussions,
+and contributing to the community. Active user of NVIDIA NGC enterprise portal for end-to-end AI and digital twin
+workflows.
+[URL]
+https://forums.developer.nvidia.com
+
+[Organization]
+Google Cloud and NVIDIA Community
+[Role]
+Member
+[Description]
+Active member of the joint Google Cloud and NVIDIA developer community, engaging with cloud-native AI tooling,
+GPU-accelerated computing resources, and collaborative developer events.
+
+[Organization]
+Google GEAR Program
+[Role]
+Official Selected Member
+[Description]
+Officially selected for Google's Gemini Enterprise Agent Ready program. Building production-ready enterprise AI
+systems using Vertex AI and Agent Development Kit.
+[URL]
+https://g.dev/mantisdarling
+
+[Organization]
+GDG Atlanta — Google Developer Group
+[Role]
+Member
+[Description]
+Attended Google DevFest Atlanta 2026: Empowering Developers and Builders in the Agentic Era.
+
+[Organization]
+GDG on Campus — Singapore Institute of Technology
+[Role]
+Member
+[Location]
+Singapore
+
+[Organization]
+GDG on Campus — Technical University of Munich
+[Role]
+Member
+[Location]
+Munich, Germany
+
+[Organization]
+GDG on Campus — ETH Zurich
+[Role]
+Member
+[Location]
+Zurich, Switzerland
+
+[Organization]
+GDG on Campus — Hult International Business School
+[Role]
+Member
+[Location]
+Cambridge, United States
+
+[Organization]
+GDG on Campus — Chennai Institute of Technology
+[Role]
+Member
+[Location]
+Chennai, India
+
+
+
+12. WRITING AND RESEARCH
+
+[Title]
+Ethical Implications and Human Agency in the Age of Artificial Intelligence
+[Platform]
+LinkedIn Pulse
+[URL]
+https://www.linkedin.com/pulse/ethical-implications-human-agency-age-artificial-intelligence--joo2f/
+[Description]
+Published article exploring the ethical dimensions of AI development, human agency in automated
+decision-making systems, and the responsibilities of AI practitioners in shaping the future of technology and
+society. Covers topics including algorithmic bias, transparency, accountability, and the evolving relationship
+between human judgment and AI systems.
+13. LANGUAGES
+
+[Hindi]
+Native
+[English]
+Proficient
+[Russian]
+Learning
+
+
+14. INTERESTS AND HOBBIES
+
+[Chess]
+Plays competitively
+[Checkers]
+Recreational
+[Sudoku]
+Recreational
+[AI Agents]
+Experiments with and builds AI agent systems
+[Open Source]
+Active contributor and project admin
+[Football]
+Plays recreationally
+[Geopolitics]
+Strong interest in global affairs, diplomacy, and national security
+
+
+15. VISION AND GOALS
+
+[Core Positioning]
+I want to be known as an AI systems builder who ships real products.
+[Short Term Goals]
+  • Ship MANTIS to production and onboard first 100 mentors and learners
+  • Complete Google GEAR program and earn enterprise AI agent certification
+  • Participate in and complete All Things Agentic and Google Cloud BRICS hackathons
+  • Contribute meaningfully to open source through SSoC S5 and OSCI 26
+  • Build and launch personal portfolio website showcasing all projects
+
+[Long Term Vision]
+  • Build systems where human expertise and AI work as one — starting with MANTIS
+  • Design and implement a custom programming language
+  • Build a custom operating system from scratch
+  • Become a leading voice in AI systems engineering from India
+  • Scale MANTIS into the go-to platform for expert-led learning globally
+
+[What I Want People to Know When They Land on My Website]
+I am not a tutorial follower. I build real systems that solve real problems. From an OS kernel with a neural network
+scheduler to a full-stack AI mentorship platform — I ship at every layer of the stack. I am a 1st year CS student at
+IIT Madras and I am already building production-grade software. Come build with me.
+
+
+16. SUGGESTED WEBSITE STRUCTURE FOR MANUS AI
+
+The following is a suggested structure for Harshit's personal portfolio website based on all data above. Use this as
+the primary guide when building the site.
+
+
+Hero Section
+Full screen. Name large. Tagline: "AI systems builder who ships real products." Subtitle with current role. Two CTA
+buttons: "See My Work" and "Contact Me". Animated background or subtle particle effect. Links to GitHub,
+LinkedIn, Twitter.
+
+About Section
+Two column: photo placeholder on left, bio on right. Use the Medium Bio. Add quick stat cards: 7 Projects, 3
+Certifications, 9 GDG Memberships, 1826+ words of documentation. Highlight: IIT Madras CS student, Founder of
+MANTIS, Google GEAR Member, NVIDIA Developer.
+
+Projects Section
+Card grid. Finished projects first, then In Progress. Each card: project name, status badge (Live / In Progress),
+tagline, 2-line description, tech stack chips, GitHub button, Live Demo button. Featured project (largest card):
+MANTIS or NeuroSched.
+
+Skills Section
+Grouped by category using the exact 7 categories from Section 5. Display each skill as a chip/tag. Consider
+animated progress or just clean grouped display.
+
+Certifications Section
+Three cards. Each: cert name, issuer logo/name, status badge, short description, credential link.
+
+Open Source Section
+Timeline or card list of contributions: SSoC S5, OSCI 26, Odysseus, Athena OS.
+
+Community Section
+Logo wall or list of memberships. Group: Google (GEAR, GDG), NVIDIA (Dev Program, NGC), Open Source
+(SSoC, OSCI).
+
+Hackathons Section
+Small cards or list. Each: hackathon name, organizer, status badge, one-line description.
+
+Writing Section
+Single card for the LinkedIn Pulse article with title, platform, short description, and link.
+
+Contact Section
+Clean contact form or just contact links: Gmail, ProtonMail, GitHub, LinkedIn, Twitter. Short line: "Open to
+collaborations, internships, and interesting conversations."
+DOCUMENT NOTES
+
+This document was generated in August 2026. All information is current and accurate. All project descriptions are
+uncompressed and in full detail. All URLs are real and active unless marked otherwise. The positioning statement
+"AI systems builder who ships real products" should be used as the primary theme across all website copy. Font
+suggestion for website: Inter or Geist for body, Poppins or Cal Sans for headings. Color suggestion: Forest green
+accent (#059669) on dark (#0F0F1A) or light (#F9FAFB) background.
+

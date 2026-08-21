@@ -111,3 +111,9 @@ The refreshed hero completed its entry sequence cleanly and settled into the int
 Anchor navigation moved the page into Track Record with the matching header cue and telemetry coordinate. Continuing one smooth scroll handoff advanced the active instrument state to Run Log without disrupting the fixed rail or the surrounding visual rhythm.
 
 The corrected Run Log continuity layer now sits behind the content rather than vanishing below the section background; text remains legible and the active header cue is visible. The browser console remained clean after the refined section transition.
+
+### PDF data integration — live validation
+
+The identity section now renders Harshit Kumar’s headline, social and professional links, short bio, profile statements, full bio, and education data in the Mantis visual system. The Track Record grid is populated from the seven supplied projects rather than placeholder projects. Opening the Cosmic dossier exposed its exact full description, problem statement, solution, key highlights, technology list, live URL, and GitHub URL within the interaction layer.
+
+The completed portfolio reload presents all seven supplied project records along with the identity, technology, credential, community, research, vision, and contact information. No browser-console output appeared after loading the fully populated public experience.
