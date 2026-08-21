@@ -35,3 +35,6 @@
 - [x] Refine section compositions, visual performance plates, and responsive storytelling for a more crafted Awwwards-style result.
 - [x] Validate the redesigned data distribution across desktop and mobile, including type checks, unit tests, production build, and live browser checks.
 - [x] Save a data-distribution refinement checkpoint.
+- [ ] Inspect the local repository and target GitHub repository state for mantisdarling/Mhini.
+- [ ] Push the complete current portfolio codebase to mantisdarling/Mhini.
+- [ ] Verify the GitHub remote branch and repository contents.
