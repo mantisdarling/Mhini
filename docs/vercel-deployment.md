@@ -19,7 +19,7 @@ This repository is now prepared for a **Vercel Vite frontend plus Express Functi
 
 ## Repository Configuration
 
-The repository root now contains `vercel.json`. It defines the `pnpm vercel:build` command, serves `dist/public`, applies an SPA rewrite that excludes `/api`, and schedules the daily recovery snapshot at `03:00 UTC`. Vercel invokes cron paths with HTTP `GET`; the handler compares `Authorization: Bearer <CRON_SECRET>` before it creates a snapshot. Vercel automatically supplies this header when `CRON_SECRET` is configured. [1]
+The repository root now contains `vercel.json`. It defines the `pnpm vercel:build` command, serves `dist/public`, rewrites `/healthz` and `/readyz` to Express function aliases under `/api`, applies an SPA rewrite that excludes `/api`, and schedules the daily recovery snapshot at `03:00 UTC`. Vercel invokes cron paths with HTTP `GET`; the handler compares `Authorization: Bearer <CRON_SECRET>` before it creates a snapshot. Vercel automatically supplies this header when `CRON_SECRET` is configured. [1]
 
 The production build command is:
 

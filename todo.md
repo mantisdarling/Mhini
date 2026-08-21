@@ -77,3 +77,4 @@
 - [ ] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
 - [x] Bridge Vercel’s automatically supplied Supabase integration namespace into the Vite client configuration without duplicating secret values.
 - [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
+- [ ] Correct and verify Vercel API routing so production health, readiness, and Supabase-backed tRPC endpoints reach the serverless function.

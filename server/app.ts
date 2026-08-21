@@ -20,10 +20,10 @@ export function createApplication(options: ApplicationOptions = {}) {
   app.set("trust proxy", 1);
   app.use(express.json({ limit: scalePolicy.jsonPayloadLimit }));
   app.use(express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true }));
-  app.get("/healthz", (_req, res) => {
+  app.get(["/healthz", "/api/healthz"], (_req, res) => {
     res.status(acceptingTraffic ? 200 : 503).json({ ok: acceptingTraffic });
   });
-  app.get("/readyz", async (_req, res) => {
+  app.get(["/readyz", "/api/readyz"], async (_req, res) => {
     if (!acceptingTraffic) {
       res.status(503).json({ ok: false, reason: "shutting down" });
       return;
