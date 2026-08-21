@@ -8,6 +8,8 @@ build/
 *.dist
 api/[...route].js
 api/[...route].js.map
+api/trpc/[procedure].js
+api/trpc/[procedure].js.map
 
 # Environment variables
 .env

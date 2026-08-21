@@ -2,7 +2,7 @@
 
 ## Deployment Position
 
-This repository is now prepared for a **Vercel Vite frontend plus Express Function** deployment. The visual portfolio is emitted to `dist/public`; API, OAuth callback, tRPC procedures, health checks, and scheduled recovery work are served through the generated `api/[...route].js` function. The Vercel build first bundles the Express application into that self-contained function so its server modules are available at runtime; the entry point does not bind a port or depend on a long-lived process.
+This repository is now prepared for a **Vercel Vite frontend plus Express Function** deployment. The visual portfolio is emitted to `dist/public`; API, OAuth callback, health checks, and scheduled recovery work are served through the generated `api/[...route].js` function, while tRPC procedures use the generated `api/trpc/[procedure].js` function to support dotted procedure names. The Vercel build first bundles the Express application into these self-contained functions so server modules are available at runtime; the entry points do not bind a port or depend on a long-lived process.
 
 > **Important:** This is a deployment-ready application revision, not a claim that any platform can guarantee zero downtime or zero data loss. Reliability at 50,000 users depends on the external database, private object storage, CDN/WAF, rate limiting, region selection, and load-test evidence described below.
 

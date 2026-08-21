@@ -74,8 +74,11 @@
 - [x] Save and synchronize the independent-backend readiness revision as mantisdarling.
 - [x] Create and link a Supabase Free project to the existing Vercel mhini deployment without selecting a paid plan.
 - [x] Apply the non-destructive independent-backend SQL migration and configure Supabase Auth redirect URLs.
-- [ ] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
+- [x] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
 - [x] Bridge Vercel’s automatically supplied Supabase integration namespace into the Vite client configuration without duplicating secret values.
 - [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
 - [ ] Correct and verify Vercel API routing so production health, readiness, and Supabase-backed tRPC endpoints reach the serverless function.
-- [ ] Diagnose and correct the Vercel serverless-function startup crash exposed by the live health check.
+- [x] Diagnose and correct the Vercel serverless-function startup crash exposed by the live health check.
+- [ ] Verify a live deployed tRPC authentication request reaches the Vercel serverless function and returns the expected unauthenticated result.
+- [ ] Correct the Vercel catch-all routing rule so dotted deployed tRPC procedure paths such as `/api/trpc/auth.me` reach the function.
+- [ ] Send and verify the deployed owner Magic Link request without server errors before deferring the owner click-through and CRUD checks.

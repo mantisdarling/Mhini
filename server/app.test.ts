@@ -23,12 +23,14 @@ describe("Vercel Express application", () => {
   it("exposes health while retaining a non-SPA API boundary", async () => {
     const health = await fetch(`${baseUrl}/healthz`);
     const vercelHealth = await fetch(`${baseUrl}/api/healthz`);
+    const trpcAuth = await fetch(`${baseUrl}/api/trpc/auth.me?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%7D%7D`);
     const missingApi = await fetch(`${baseUrl}/api/not-a-route`);
 
     expect(health.status).toBe(200);
     await expect(health.json()).resolves.toEqual({ ok: true });
     expect(vercelHealth.status).toBe(200);
     await expect(vercelHealth.json()).resolves.toEqual({ ok: true });
+    expect(trpcAuth.status).not.toBe(404);
     expect(missingApi.status).toBe(404);
   });
 
