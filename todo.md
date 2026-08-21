@@ -46,3 +46,4 @@
 - [x] Replace the hero statement with “I GO DEEP AND THEN I BUILD.”
 - [x] Remove em dash characters from visible website copy without losing portfolio meaning or links.
 - [x] Validate the revised wording, visual presentation, application checks, and save a character-cleanup checkpoint.
+- [ ] Verify the latest local portfolio revision is synchronized to mantisdarling/Mhini on the main branch.
