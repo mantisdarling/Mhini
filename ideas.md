@@ -101,3 +101,13 @@ The stage mode was exercised live: it changed both the central release-bay copy 
 The kinetic landmark was observed across two scroll positions. Its headline visibly advanced from **FIND THE SIGNAL** to **HOLD THE LINE** while the orbital instrument rotated and the following content entered beneath it. This establishes an immediately perceivable scroll-linked interaction rather than a hidden transition.
 
 The refreshed interactive archive loaded without browser-console output after the visible-motion implementation. The stage-mode state remained intact on direct navigation to the Track Record section.
+
+### Smoothness refinement — Continuity pass
+
+The refinement pass will reduce the sense of isolated visual tricks by treating the portfolio as a single moving instrument. Lenis should decelerate more deliberately at scroll endpoints, anchor navigation should inherit the same scroll curve, the hero scanner should be frame-throttled, and ambient colour should travel between active sections rather than abruptly appearing. Navigation receives a progress underline driven by the telemetry state, while project hover depth uses a slower, physically credible settle.
+
+The refreshed hero completed its entry sequence cleanly and settled into the interactive field without a visible state jump. The fixed navigation and telemetry rail remained stable during the introduction, preserving the composed baseline needed for the slower scroll interpolation.
+
+Anchor navigation moved the page into Track Record with the matching header cue and telemetry coordinate. Continuing one smooth scroll handoff advanced the active instrument state to Run Log without disrupting the fixed rail or the surrounding visual rhythm.
+
+The corrected Run Log continuity layer now sits behind the content rather than vanishing below the section background; text remains legible and the active header cue is visible. The browser console remained clean after the refined section transition.

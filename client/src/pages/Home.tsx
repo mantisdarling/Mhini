@@ -223,6 +223,8 @@ export default function Home() {
   const progressRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const heroPointerFrame = useRef<number | null>(null);
+  const pendingHeroPointer = useRef({ x: 63, y: 42 });
   const hasDismissedIntro = useRef(false);
   const selectedArchiveMode = archiveModes.find(mode => mode.id === archiveMode) ?? archiveModes[0];
 
@@ -235,11 +237,21 @@ export default function Home() {
   function trackHeroPointer(event: MouseEvent<HTMLElement>) {
     if (!window.matchMedia("(pointer: fine)").matches || prefersReducedMotion()) return;
     const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty("--pointer-x", `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
-    event.currentTarget.style.setProperty("--pointer-y", `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+    pendingHeroPointer.current = {
+      x: ((event.clientX - bounds.left) / bounds.width) * 100,
+      y: ((event.clientY - bounds.top) / bounds.height) * 100,
+    };
+    if (heroPointerFrame.current) return;
+    heroPointerFrame.current = window.requestAnimationFrame(() => {
+      heroRef.current?.style.setProperty("--pointer-x", `${pendingHeroPointer.current.x}%`);
+      heroRef.current?.style.setProperty("--pointer-y", `${pendingHeroPointer.current.y}%`);
+      heroPointerFrame.current = null;
+    });
   }
 
   function resetHeroPointer() {
+    if (heroPointerFrame.current) window.cancelAnimationFrame(heroPointerFrame.current);
+    heroPointerFrame.current = null;
     heroRef.current?.style.setProperty("--pointer-x", "63%");
     heroRef.current?.style.setProperty("--pointer-y", "42%");
   }
@@ -270,12 +282,16 @@ export default function Home() {
   useEffect(() => {
     if (prefersReducedMotion()) return;
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 1.25,
+      easing: (time) => Math.min(1, 1.001 - Math.pow(2, -10 * time)),
       smoothWheel: true,
-      wheelMultiplier: 0.92,
-      touchMultiplier: 1.3,
+      wheelMultiplier: 0.84,
+      touchMultiplier: 1.05,
+      anchors: { offset: -76, duration: 1.2 },
+      autoRaf: false,
     });
     const tick = (time: number) => lenis.raf(time * 1000);
+    let settleTimer: number | undefined;
     const onScroll = () => {
       ScrollTrigger.update();
       if (progressRef.current) {
@@ -283,6 +299,8 @@ export default function Home() {
       }
       const skew = Math.max(-2.5, Math.min(2.5, lenis.velocity * 0.035));
       document.documentElement.style.setProperty("--scroll-skew", `${skew}deg`);
+      if (settleTimer) window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => document.documentElement.style.setProperty("--scroll-skew", "0deg"), 120);
     };
 
     lenis.on("scroll", onScroll);
@@ -292,6 +310,7 @@ export default function Home() {
     return () => {
       lenis.destroy();
       gsap.ticker.remove(tick);
+      if (settleTimer) window.clearTimeout(settleTimer);
     };
   }, []);
 
@@ -561,7 +580,7 @@ export default function Home() {
   }, [introVisible]);
 
   return (
-    <div className="site-shell" ref={appRef}>
+    <div className={`site-shell stage-${activeSection.id}`} ref={appRef}>
       {introVisible && (
         <section className="intro-screen" aria-label="Site loading sequence">
           <div className="intro-entry-cut" aria-hidden="true" />
@@ -589,6 +608,7 @@ export default function Home() {
       )}
 
       <div className="noise-overlay" aria-hidden="true" />
+      <div className="ambient-sweep" aria-hidden="true" />
       <div className="cursor-dot" ref={cursorDot} aria-hidden="true" />
       <div className="cursor-ring" ref={cursorRing} aria-hidden="true">
         <span ref={cursorLabel} />
@@ -601,7 +621,7 @@ export default function Home() {
         </a>
         <nav className={`main-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
           {navItems.map(([label, href], index) => (
-            <a href={href} key={href} onClick={() => setMenuOpen(false)}>
+            <a href={href} key={href} className={href === `#${activeSection.id}` ? "is-active" : ""} onClick={() => setMenuOpen(false)}>
               <small>0{index + 1}</small>
               {label}
             </a>
@@ -610,7 +630,7 @@ export default function Home() {
             Pit stop <ArrowUpRight size={16} />
           </a>
         </nav>
-        <a className="header-contact" href="#pit-stop">
+        <a className={`header-contact ${activeSection.id === "pit-stop" ? "is-active" : ""}`} href="#pit-stop">
           <span>Make contact</span>
           <ArrowUpRight size={15} strokeWidth={1.5} aria-hidden="true" />
         </a>

@@ -18,3 +18,7 @@
 - [x] Verify visible motion on desktop and mobile, including the pointer scanner, kinetic scroll stage, archive state controls, console reload, type checks, unit tests, production build, and clean browser-console output.
 - [ ] Verify the project dossier with the first real published project (deferred until Mantis signs in and adds project content).
 - [x] Save an experiential-interaction checkpoint.
+- [x] Audit current scroll, transition, and hover behavior for uneven motion or redundant effects.
+- [x] Refine scroll interpolation, section handoffs, motion easing, and interactive controls for a smoother editorial feel.
+- [x] Validate desktop and mobile smoothness through live anchor/scroll handoffs, active navigation and telemetry states, mobile visual review, clean console output, type checks, unit tests, and production build.
+- [x] Save a motion-polish checkpoint.
