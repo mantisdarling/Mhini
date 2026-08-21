@@ -6,6 +6,8 @@
 dist/
 build/
 *.dist
+api/[...route].js
+api/[...route].js.map
 
 # Environment variables
 .env

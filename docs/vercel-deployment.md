@@ -2,7 +2,7 @@
 
 ## Deployment Position
 
-This repository is now prepared for a **Vercel Vite frontend plus Express Function** deployment. The visual portfolio is emitted to `dist/public`; API, OAuth callback, tRPC procedures, health checks, and scheduled recovery work are served through `api/[...route].ts`. The Vercel entry point exports the Express application directly, so it does not bind a port or depend on a long-lived process.
+This repository is now prepared for a **Vercel Vite frontend plus Express Function** deployment. The visual portfolio is emitted to `dist/public`; API, OAuth callback, tRPC procedures, health checks, and scheduled recovery work are served through the generated `api/[...route].js` function. The Vercel build first bundles the Express application into that self-contained function so its server modules are available at runtime; the entry point does not bind a port or depend on a long-lived process.
 
 > **Important:** This is a deployment-ready application revision, not a claim that any platform can guarantee zero downtime or zero data loss. Reliability at 50,000 users depends on the external database, private object storage, CDN/WAF, rate limiting, region selection, and load-test evidence described below.
 
@@ -19,7 +19,7 @@ This repository is now prepared for a **Vercel Vite frontend plus Express Functi
 
 ## Repository Configuration
 
-The repository root now contains `vercel.json`. It defines the `pnpm vercel:build` command, serves `dist/public`, rewrites `/healthz` and `/readyz` to Express function aliases under `/api`, applies an SPA rewrite that excludes `/api`, and schedules the daily recovery snapshot at `03:00 UTC`. Vercel invokes cron paths with HTTP `GET`; the handler compares `Authorization: Bearer <CRON_SECRET>` before it creates a snapshot. Vercel automatically supplies this header when `CRON_SECRET` is configured. [1]
+The repository root now contains `vercel.json`. It defines the `pnpm vercel:build` command, which first runs the dedicated esbuild function-bundle script, serves `dist/public`, rewrites `/healthz` and `/readyz` to Express function aliases under `/api`, applies an SPA rewrite that excludes `/api`, and schedules the daily recovery snapshot at `03:00 UTC`. Vercel invokes cron paths with HTTP `GET`; the handler compares `Authorization: Bearer <CRON_SECRET>` before it creates a snapshot. Vercel automatically supplies this header when `CRON_SECRET` is configured. [1]
 
 The production build command is:
 
