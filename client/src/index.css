@@ -485,6 +485,8 @@ html.motion-off .hero-art, html.motion-off .project-card { transform: none !impo
 html.motion-off .hero-katana, html.motion-off .hero-cut-flash, html.motion-off .section-cut, html.motion-off .project-blade-flash, html.motion-off .archive-scan i { animation: none !important; }
 html.motion-off .hero-field { display: none; }
 
+.project-console-heading { margin-top: 0.75rem; font-family: "Cabinet Grotesk", sans-serif; font-size: 3rem; font-weight: 600; letter-spacing: -0.055em; }.project-console-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 0.85fr); gap: 2rem; }.project-console-form-grid { display: grid; grid-template-columns: minmax(0, 1fr) 150px 140px; gap: 1.25rem; }.project-console-list-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 1rem; border: 1px solid hsl(var(--border)); background: hsl(var(--card) / 0.3); padding: 1rem; }
+
 /* Structured AI-systems profile data */
 .data-section { position: relative; background: #0b0b0b; }
 .data-section:nth-of-type(even) { background: #0e0e0d; }
@@ -502,3 +504,4 @@ html.motion-off .hero-field { display: none; }
 
 @media (max-width: 980px) { .identity-layout, .personal-grid { grid-template-columns: 1fr; }.credential-grid, .membership-grid, .hackathon-grid { grid-template-columns: 1fr 1fr; }.course-row { grid-template-columns: 38px minmax(200px, 0.8fr) minmax(0, 1.2fr); }.course-row .data-external { grid-column: 2; } }
 @media (max-width: 760px) { .data-section-heading { display: grid; gap: 1.25rem; margin-bottom: 2.5rem; }.data-section-heading h2 { max-width: 100%; font-size: clamp(2.9rem, 15vw, 5rem); text-align: left; }.identity-layout { gap: 2rem; }.identity-side p { font-size: 1.55rem; }.systems-index-grid, .education-grid, .credential-grid, .membership-grid, .hackathon-grid, .personal-grid { grid-template-columns: 1fr; }.systems-index-card { min-height: 150px; }.education-card { min-height: 0; }.technology-group { grid-template-columns: 1fr; gap: 1.1rem; padding: 1.1rem; }.course-row { grid-template-columns: 28px 1fr; gap: 0.9rem; }.course-row .course-description { grid-column: 2; }.course-row .data-external { grid-column: 2; }.open-source-row { grid-template-columns: 30px 1fr; gap: 0.75rem; }.writing-card h3 { font-size: clamp(2.3rem, 12vw, 4rem); }.goal-columns { grid-template-columns: 1fr; gap: 1rem; }.credential-card { min-height: 0; } }
+@media (max-width: 760px) { .project-console-heading { font-size: 2.35rem; }.project-console-layout, .project-console-form-grid, .project-console-list-row { grid-template-columns: 1fr; }.project-console-list-row { align-items: start; } }

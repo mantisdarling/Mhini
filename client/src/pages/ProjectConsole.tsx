@@ -1,7 +1,7 @@
 /**
  * Mantis design reminder: this private console is a calm instrument panel, not a generic admin screen.
  */
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -146,14 +146,14 @@ function ProjectConsoleContent() {
       <header className="flex flex-col justify-between gap-5 border-b border-border pb-7 sm:flex-row sm:items-end">
         <div>
           <p className="font-mono text-[0.65rem] font-medium tracking-[0.18em] text-primary">M / 06 — PRIVATE PROJECT CONSOLE</p>
-          <h1 className="mt-3 font-[Cabinet_Grotesk] text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">Control the<br /><span className="text-primary">run log.</span></h1>
+          <h1 className="project-console-heading">Control the<br /><span className="text-primary">run log.</span></h1>
         </div>
         <a href="/" className="inline-flex items-center gap-2 border border-border px-4 py-2 font-mono text-xs tracking-[0.1em] transition-colors hover:border-primary hover:text-primary">
           VIEW PUBLIC PORTFOLIO <ExternalLink size={14} />
         </a>
       </header>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.85fr)]">
+      <section className="project-console-layout">
         <div className="border border-border bg-card/40 p-5 sm:p-7">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -173,7 +173,7 @@ function ProjectConsoleContent() {
               <FormField label="Cover image URL (optional)"><Input type="url" value={draft.imageUrl} onChange={e => updateDraft("imageUrl", e.target.value)} placeholder="https://…" /></FormField>
               <FormField label="Project URL (optional)"><Input type="url" value={draft.projectUrl} onChange={e => updateDraft("projectUrl", e.target.value)} placeholder="https://…" /></FormField>
             </div>
-            <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_150px_140px]">
+            <div className="project-console-form-grid">
               <FormField label="Tags, separated by commas"><Input value={draft.tags} onChange={e => updateDraft("tags", e.target.value)} placeholder="Strategy, Build, Launch" /></FormField>
               <FormField label="Status"><select className="h-10 w-full border border-input bg-background px-3 text-sm outline-none focus:border-primary" value={draft.status} onChange={e => updateDraft("status", e.target.value as ProjectDraft["status"])}><option value="draft">Draft</option><option value="published">Published</option></select></FormField>
               <FormField label="Track position"><Input type="number" min="0" value={draft.sortOrder || ""} onChange={e => updateDraft("sortOrder", Number(e.target.value))} placeholder={String(nextOrder)} /></FormField>
@@ -210,7 +210,7 @@ function ProjectConsoleContent() {
         ) : (
           <div className="grid gap-3">
             {projects.map((project, index) => (
-              <article key={project.id} className="grid gap-4 border border-border bg-card/30 p-4 sm:grid-cols-[52px_minmax(0,1fr)_auto] sm:items-center">
+              <article key={project.id} className="project-console-list-row">
                 <div className="font-mono text-lg text-primary">{String(index + 1).padStart(2, "0")}</div>
                 <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-base font-medium">{project.title}</h3><span className={`border px-2 py-0.5 font-mono text-[0.55rem] tracking-[0.12em] ${project.status === "published" ? "border-primary/60 text-primary" : "border-border text-muted-foreground"}`}>{project.status.toUpperCase()}</span></div><p className="mt-1 truncate text-sm text-muted-foreground">{project.category} · {project.tags.join(" / ") || "No tags"}</p></div>
                 <div className="flex items-center gap-1"><Button variant="ghost" size="icon" className="h-8 w-8" disabled={index === 0 || reorderMutation.isPending} onClick={() => moveProject(index, -1)} aria-label={`Move ${project.title} up`}><ArrowUp size={16} /></Button><Button variant="ghost" size="icon" className="h-8 w-8" disabled={index === projects.length - 1 || reorderMutation.isPending} onClick={() => moveProject(index, 1)} aria-label={`Move ${project.title} down`}><ArrowDown size={16} /></Button><Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => editProject(project)} aria-label={`Edit ${project.title}`}><Pencil size={15} /></Button><Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" disabled={removeMutation.isPending} onClick={() => { if (window.confirm(`Remove ${project.title} from the run log?`)) removeMutation.mutate({ id: project.id }); }} aria-label={`Delete ${project.title}`}><Trash2 size={15} /></Button></div>

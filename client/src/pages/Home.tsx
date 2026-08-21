@@ -34,8 +34,8 @@ import {
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 
 const ASSETS = {
-  hero: "/manus-storage/mantis-hero-cinematic_ab3f20a9.jpg",
-  mark: "/manus-storage/mantis-blade-mark_cdda3c42.png",
+  hero: "/manus-storage/mantis-hero-cinematic%5Fab3f20a9.jpg",
+  mark: "/manus-storage/mantis-blade-mark%5Fcdda3c42.png",
 };
 
 function prefersReducedMotion() {
@@ -168,7 +168,7 @@ function ProjectCard({ project, index, onOpen }: { project: PortfolioProject; in
         <div className="project-title-row">
           <h3>{project.title}</h3>
           {project.projectUrl ? (
-            <motion.a href={project.projectUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`} whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }} onClick={event => event.stopPropagation()}>
+            <motion.a href={project.projectUrl} aria-label={`Open ${project.title}`} whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }} onClick={event => event.stopPropagation()}>
               <ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" />
             </motion.a>
           ) : <motion.span whileHover={{ x: 4, y: -4 }} transition={{ duration: 0.2 }}><ArrowUpRight size={21} strokeWidth={1.4} aria-hidden="true" /></motion.span>}
@@ -657,9 +657,9 @@ export default function Home() {
             <p className="hero-kicker"><span /> FOUNDER @ MANTIS / IIT MADRAS CS</p>
             <h1 className="hero-name">MANTIS</h1>
             <div className="tagline" aria-label={profile.positioning}>
-              <span className="tagline-deep">I AM AN AI SYSTEMS</span>
+              <span className="tagline-deep">FROM KERNELS</span>
               <span className="tagline-divider">/</span>
-              <span className="tagline-build">BUILDER WHO SHIPS REAL PRODUCTS.</span>
+              <span className="tagline-build">TO INTELLIGENCE.</span>
             </div>
             <div className="hero-support">
               <p>{profile.shortBio}</p>
@@ -746,14 +746,14 @@ export default function Home() {
               <span>RESPONSE WINDOW / 48H</span>
             </div>
             <div className="social-row" aria-label="Professional networks">
-              <a href="https://github.com/mantisdarling" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={20} /></a>
-              <a href="https://github.com/XY-COMBINATOR" target="_blank" rel="noreferrer" aria-label="XY-COMBINATOR GitHub Organization"><Github size={20} /></a>
-              <a href="https://x.com/mantisxdarling" target="_blank" rel="noreferrer" aria-label="X"><span className="social-x">X</span></a>
-              <a href="https://bsky.app/profile/mantisdarling.bsky.social" target="_blank" rel="noreferrer" aria-label="Bluesky"><Cloud size={20} /></a>
-              <a href="https://g.dev/mantisdarling" target="_blank" rel="noreferrer" aria-label="Google Developer Profile"><BadgeCheck size={20} /></a>
-              <a href="https://forums.developer.nvidia.com" target="_blank" rel="noreferrer" aria-label="NVIDIA Developer Forums"><Cloud size={20} /></a>
-              <a href="https://www.linkedin.com/in/mantisdarling/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>
-              <a href="https://www.instagram.com/mantisdarling/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={20} /></a>
+              <a href="https://github.com/mantisdarling" aria-label="GitHub"><Github size={20} /></a>
+              <a href="https://github.com/XY-COMBINATOR" aria-label="XY-COMBINATOR GitHub Organization"><Github size={20} /></a>
+              <a href="https://x.com/mantisxdarling" aria-label="X"><span className="social-x">X</span></a>
+              <a href="https://bsky.app/profile/mantisdarling.bsky.social" aria-label="Bluesky"><Cloud size={20} /></a>
+              <a href="https://g.dev/mantisdarling" aria-label="Google Developer Profile"><BadgeCheck size={20} /></a>
+              <a href="https://forums.developer.nvidia.com" aria-label="NVIDIA Developer Forums"><Cloud size={20} /></a>
+              <a href="https://www.linkedin.com/in/mantisdarling/" aria-label="LinkedIn"><Linkedin size={20} /></a>
+              <a href="https://www.instagram.com/mantisdarling/" aria-label="Instagram"><Instagram size={20} /></a>
             </div>
           </div>
         </section>
@@ -776,9 +776,9 @@ export default function Home() {
                 {selectedProject.highlights?.length ? <div className="dossier-highlights"><p>KEY HIGHLIGHTS</p>{selectedProject.highlights.map(highlight => <span key={highlight}>{highlight}</span>)}</div> : null}
                 <div className="dossier-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
                 <div className="dossier-actions">
-                  {selectedProject.liveUrl && <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer">OPEN LIVE PROJECT <ArrowUpRight size={16} /></a>}
-                  {selectedProject.githubUrl && <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer">OPEN GITHUB <ArrowUpRight size={16} /></a>}
-                  {!selectedProject.liveUrl && !selectedProject.githubUrl && selectedProject.projectUrl && <a href={selectedProject.projectUrl} target="_blank" rel="noreferrer">OPEN PROJECT <ArrowUpRight size={16} /></a>}
+                  {selectedProject.liveUrl && <a href={selectedProject.liveUrl}>OPEN LIVE PROJECT <ArrowUpRight size={16} /></a>}
+                  {selectedProject.githubUrl && <a href={selectedProject.githubUrl}>OPEN GITHUB <ArrowUpRight size={16} /></a>}
+                  {!selectedProject.liveUrl && !selectedProject.githubUrl && selectedProject.projectUrl && <a href={selectedProject.projectUrl}>OPEN PROJECT <ArrowUpRight size={16} /></a>}
                   <button type="button" onClick={() => setSelectedProject(null)}>RETURN TO TRACK</button>
                 </div>
               </div>

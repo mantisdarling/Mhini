@@ -26,7 +26,7 @@ function SignalHeading({ index, label, title, accent }: { index: string; label: 
 
 function ExternalLink({ url, children }: { url?: string; children: React.ReactNode }) {
   if (!url) return null;
-  return <a href={url} target="_blank" rel="noreferrer" className="data-external">{children}<ArrowUpRight size={14} /></a>;
+  return <a href={url} className="data-external">{children}<ArrowUpRight size={14} /></a>;
 }
 
 export function ProfileIdentitySection() {
@@ -37,7 +37,7 @@ export function ProfileIdentitySection() {
       <section className="data-section identity-section section-pad" id="identity">
         <SignalHeading index="01" label="IDENTITY / OPERATING SYSTEM" title="Built across the" accent="whole stack." />
         <div className="identity-layout">
-          <div className="identity-side reveal"><BrainCircuit size={28} /><p>{profile.fullName}</p><small>{profile.oneLineBio}</small><div className="identity-link-list">{profile.links.map(link => <a key={link.label} href={link.url} target="_blank" rel="noreferrer">{link.label}<ArrowUpRight size={12} /></a>)}</div></div>
+          <div className="identity-side reveal"><BrainCircuit size={28} /><p>{profile.fullName}</p><small>{profile.oneLineBio}</small><div className="identity-link-list">{profile.links.map(link => <a key={link.label} href={link.url}>{link.label}<ArrowUpRight size={12} /></a>)}</div></div>
           <div className="identity-copy reveal"><div className="identity-record"><p>{profile.headline}</p><p>{profile.linkedInHeadline}</p><p>{profile.xBio}</p><p>{profile.microBio}</p></div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
         </div>
       </section>

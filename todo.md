@@ -38,3 +38,7 @@
 - [x] Inspect the local repository and target GitHub repository state for mantisdarling/Mhini.
 - [x] Push the complete current portfolio codebase to mantisdarling/Mhini.
 - [x] Verify the GitHub remote branch and repository contents.
+- [x] Audit underscore characters in visible copy and project-authored application source, distinguishing framework-required paths from editable code.
+- [x] Replace the disliked hero statement with a stronger AI-systems portfolio message.
+- [x] Remove underscore characters from visible copy and project-authored code wherever preserving application behavior permits.
+- [x] Validate the revised copy and code integrity, then save a cleanup checkpoint.
