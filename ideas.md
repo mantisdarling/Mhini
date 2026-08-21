@@ -117,3 +117,7 @@ The corrected Run Log continuity layer now sits behind the content rather than v
 The identity section now renders Harshit Kumar’s headline, social and professional links, short bio, profile statements, full bio, and education data in the Mantis visual system. The Track Record grid is populated from the seven supplied projects rather than placeholder projects. Opening the Cosmic dossier exposed its exact full description, problem statement, solution, key highlights, technology list, live URL, and GitHub URL within the interaction layer.
 
 The completed portfolio reload presents all seven supplied project records along with the identity, technology, credential, community, research, vision, and contact information. No browser-console output appeared after loading the fully populated public experience.
+
+### Data-distribution refinement — live validation
+
+The refined narrative now introduces a derived field index between identity and education, showing the current counts of live systems, active builds, credentials, and memberships before the detailed source data. The requested T.M. Bhagalpur University institution text is absent from the second education card while its degree, date, status, and supplied explanatory note remain intact. The live browser console stayed clean after the adjusted section rendered.

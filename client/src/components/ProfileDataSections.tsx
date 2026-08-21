@@ -8,6 +8,7 @@ import {
   memberships,
   openSource,
   profile,
+  projects as projectRecords,
   technologyGroups,
   vision,
   writing,
@@ -29,6 +30,8 @@ function ExternalLink({ url, children }: { url?: string; children: React.ReactNo
 }
 
 export function ProfileIdentitySection() {
+  const liveProjects = projectRecords.filter(project => project.status === "Live").length;
+  const inProgressProjects = projectRecords.filter(project => project.status === "In Progress").length;
   return (
     <>
       <section className="data-section identity-section section-pad" id="identity">
@@ -39,13 +42,23 @@ export function ProfileIdentitySection() {
         </div>
       </section>
 
+      <section className="systems-index section-pad" aria-label="AI systems field index">
+        <div className="systems-index-intro reveal"><p>FIELD INDEX / 2026</p><h2>Serious systems<br />leave <em>evidence.</em></h2><span>{profile.positioning}</span></div>
+        <div className="systems-index-grid">
+          <article className="systems-index-card reveal"><strong>{String(liveProjects).padStart(2, "0")}</strong><span>LIVE SYSTEMS</span><p>Finished projects currently available in the field.</p></article>
+          <article className="systems-index-card reveal"><strong>{String(inProgressProjects).padStart(2, "0")}</strong><span>IN DEVELOPMENT</span><p>AI systems moving through active build cycles.</p></article>
+          <article className="systems-index-card reveal"><strong>{String(credentials.length).padStart(2, "0")}</strong><span>CREDENTIALS</span><p>Active and completed technical credentials.</p></article>
+          <article className="systems-index-card reveal"><strong>{String(memberships.length).padStart(2, "0")}</strong><span>MEMBERSHIPS</span><p>Developer communities and global campus networks.</p></article>
+        </div>
+      </section>
+
       <section className="data-section education-section section-pad" id="education">
         <SignalHeading index="02" label="EDUCATION" title="Learning in" accent="public." />
         <div className="education-grid">
           {education.map((entry, index) => <article className="education-card reveal" key={entry.degree}>
             <span>0{index + 1}</span><GraduationCap size={22} />
             <p className="data-status">{entry.status}</p>
-            <h3>{entry.degree}</h3><p className="education-institution">{entry.institution}</p><p className="education-date">{entry.dates}</p>
+            <h3>{entry.degree}</h3>{entry.degree === "BA in Industrial Relations and Personnel Management" ? null : <p className="education-institution">{entry.institution}</p>}<p className="education-date">{entry.dates}</p>
             {entry.focusAreas && <p className="education-focus">{entry.focusAreas}</p>}<p className="education-note">{entry.note}</p>
           </article>)}
         </div>
