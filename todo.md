@@ -71,8 +71,9 @@
 - [x] Select and document a no-cost starter architecture for database, authentication, storage, and protected studio access.
 - [x] Implement portable configuration and migration readiness without creating a paid external service or migrating live data.
 - [x] Validate the independent-backend code path and document the user-operated free service setup and Vercel checks.
-- [ ] Save and synchronize the independent-backend readiness revision as mantisdarling.
-- [ ] Create and link a Supabase Free project to the existing Vercel mhini deployment without selecting a paid plan.
-- [ ] Apply the non-destructive independent-backend SQL migration and configure Supabase Auth redirect URLs.
+- [x] Save and synchronize the independent-backend readiness revision as mantisdarling.
+- [x] Create and link a Supabase Free project to the existing Vercel mhini deployment without selecting a paid plan.
+- [x] Apply the non-destructive independent-backend SQL migration and configure Supabase Auth redirect URLs.
 - [ ] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
+- [x] Bridge Vercel’s automatically supplied Supabase integration namespace into the Vite client configuration without duplicating secret values.
 - [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.

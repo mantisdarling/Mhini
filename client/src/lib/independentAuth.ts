@@ -1,6 +1,7 @@
 const provider = import.meta.env.VITE_AUTH_PROVIDER ?? "manus";
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? "";
-const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.SUPABASE_VITE_SUPABASE_URL ?? "";
+const supabasePublishableKey =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.SUPABASE_VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
 const sessionKey = "independent-access-token";
 
 export function independentAuthEnabled() {

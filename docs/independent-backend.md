@@ -22,7 +22,7 @@ The independent Supabase identity is stored as `supabase:<uuid>` in the existing
 
 ## Required Owner-Operated Setup
 
-The user must create the Supabase project in the Free tier, then provide its values through secure Vercel environment settings. Server secrets must never be placed in source code or a public `VITE_` variable. The current code does not use `POSTGRES_URL`; if the Vercel integration adds one automatically, it may remain unused but is not required for this application path.
+The user must create the Supabase project in the Free tier, then provide its values through secure Vercel environment settings. Server secrets must never be placed in source code or a public `VITE_` variable. The current code does not use `POSTGRES_URL`; if the Vercel integration adds one automatically, it may remain unused but is not required for this application path. Vercel’s Supabase integration already supplies the server-side `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY` values, plus public names under the `SUPABASE_VITE_` namespace.
 
 | Setting | Scope | Purpose |
 |---|---|---|
@@ -33,8 +33,8 @@ The user must create the Supabase project in the Free tier, then provide its val
 | `SUPABASE_PUBLISHABLE_KEY` | Server | Publishable key for server-side token-verification requests. |
 | `SUPABASE_SECRET_KEY` | Server only | Secret key used only by the server-side Supabase database adapter. |
 | `VITE_AUTH_PROVIDER=supabase` | Client build | Enables the Magic Link user interface and bearer-token forwarding. |
-| `VITE_SUPABASE_URL` | Client build | Same Supabase project URL, exposed only because the browser must request Magic Links. |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | Client build | Same Supabase publishable key, exposed only for Magic Link requests. |
+| `SUPABASE_VITE_SUPABASE_URL` | Client build | Supplied by the Vercel integration and exposed through the controlled `SUPABASE_VITE_` Vite prefix for Magic Link requests. |
+| `SUPABASE_VITE_SUPABASE_PUBLISHABLE_KEY` | Client build | Supplied by the Vercel integration and exposed through the controlled `SUPABASE_VITE_` Vite prefix for Magic Link requests. |
 | Supabase Site URL | Supabase dashboard | `https://mhini.vercel.app`. |
 | Supabase Redirect URLs | Supabase dashboard | `https://mhini.vercel.app/**` and `http://localhost:3000/**`. [3] |
 
@@ -51,12 +51,12 @@ First, the repository gains provider-aware configuration, the Supabase PostgREST
 | Create integration | A Supabase project on the Free plan is linked to `mhini`; no paid compute option is selected. | Vercel integration page and Supabase project name. |
 | Run migration | `users`, `projects`, and `recovery_snapshots` tables exist in the `public` schema with RLS enabled. | Successful SQL editor result and table list. |
 | Configure Auth | Site URL is `https://mhini.vercel.app`; redirect URLs include `https://mhini.vercel.app/**` and `http://localhost:3000/**`. | Supabase Authentication URL Configuration screen. |
-| Configure Vercel | All nine provider variables in the table above are set with server secrets kept server-only. | Vercel environment variable names and target environments. |
+| Configure Vercel | The integration-provided Supabase variables plus `AUTH_PROVIDER`, `DATABASE_PROVIDER`, `OWNER_EMAIL`, and `VITE_AUTH_PROVIDER` are set with server secrets kept server-only. | Vercel environment variable names and target environments. |
 | Redeploy | A fresh production deployment is built after the variables are saved. | Vercel deployment ID and status. |
 | Verify health | `https://mhini.vercel.app/healthz` returns HTTP 200; `readyz` returns HTTP 200 once Supabase is reachable. | Browser or request result. |
 | Verify studio gate | `/studio` displays the Magic Link form; submitting the owner email sends a link and the returning session is assigned `admin`. | Owner sign-in result. |
 
-At the time this document was corrected, the repository-side implementation was validated with 12 Vitest tests, a TypeScript check, and a Vercel frontend build. The external creation, migration, environment configuration, deployment, and owner Magic Link evidence remain to be recorded after the user-approved Supabase setup finishes.
+On 21 August 2026, the Vercel Supabase integration provisioned the `mhini-supabase` Free resource in Washington and connected it to Production and Preview for `mhini`. The reviewed migration was applied successfully and verified the `users`, `projects`, and `recovery_snapshots` tables. Supabase Authentication now uses `https://mhini.vercel.app` as the Site URL with production and local redirect allow-list entries. Vercel now has the required provider selectors and owner-email setting. The repository-side namespace bridge, 12 Vitest tests, TypeScript check, and Vercel frontend build have passed. A fresh production deployment and owner Magic Link sign-in remain to be verified.
 
 For the 50,000-user objective, Supabase Free should be treated strictly as an early validation environment. It pauses after inactivity and lacks automatic backups, so a production-scale upgrade requires measured load tests, managed database backups, a pooled connection configuration, observability, and an approved paid or self-hosted capacity plan. [1]
 
