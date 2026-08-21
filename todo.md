@@ -52,3 +52,4 @@
 - [x] Implement and test safe code-level reliability, security, performance, and observability improvements that fit the current project.
 - [x] Document required external infrastructure configuration, operational runbooks, and load-test criteria for the production rollout.
 - [x] Validate the scalability readiness revision and save a checkpoint.
+- [x] Run and verify one manual public-project recovery snapshot through the configured object-storage path.

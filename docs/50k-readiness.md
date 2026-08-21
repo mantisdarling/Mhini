@@ -83,6 +83,10 @@ Execute tests only in a staging environment with production-like database and ed
 
 Pass criteria are: no data corruption, no uncontrolled retry storm, liveness and readiness remain truthful, application instances recover through a rolling deployment, snapshot data restores with matching checksum and record count, and the agreed SLOs remain within target. Size the runtime from measured requests per second and database connection consumption, not a registered-user count alone.
 
+## Validation Evidence
+
+The recovery path was exercised once against the configured database and object-storage integration. The resulting `recoverySnapshots` record had ID `1`, a record count of `0` because no managed project entries existed, and a SHA-256 checksum of `21f21bbcdd753b07042ecf498b8914672c5446730ef6fddbe9bb4be7362d741a`. The object key was recorded successfully. The test verifies snapshot creation and metadata persistence; a full restore drill remains a required staging-gate before high-scale production launch.
+
 ## Implemented Files
 
 | File | Purpose |
