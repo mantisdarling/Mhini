@@ -76,6 +76,10 @@ Configure alerts for availability, function errors, timeout rate, database conne
 
 The Vercel frontend build, the standard full-stack build, TypeScript check, and nine automated tests have passed locally. The automated tests start the same reusable Express application exported by `api/[...route].ts`; they confirm `GET /healthz`, the non-SPA `/api` boundary, and rejection of an unsigned Vercel Cron request. The existing Manus preview still renders the public portfolio and both health endpoints return `200`.
 
+The first free-tier Vercel deployment completed successfully at [mhini.vercel.app](https://mhini.vercel.app). The Vercel deployment itself validates the repository packaging, `vercel.json`, Vite output, and serverless route inclusion. Live inspection confirmed that the two legacy `/manus-storage/...` image routes do not exist on Vercel, so the hero image and blade mark require the documented `VITE_HERO_ASSET_URL` and `VITE_MARK_ASSET_URL` CDN replacements. Post-deployment checks also include supplying production database, OAuth, object-storage, and cron secrets before enabling owner-only application features.
+
+With the user’s approval, a public Vercel Blob store named `mhini-assets` was created in the BOM1 region for these two non-sensitive public images only. The first storage view reported 1 GB storage, 10 GB data transfer, and 10,000 simple operations within the current allowance. The Vercel console’s file-picker control did not expose a usable automated upload target, so the existing images were instead copied to stable public CDN URLs and made the safe source-code defaults. `VITE_HERO_ASSET_URL` and `VITE_MARK_ASSET_URL` remain available as no-code Vercel overrides if the assets are later moved into the Blob store.
+
 An actual `vercel build` invocation requires a valid Vercel account token or a linked Vercel project. This sandbox does not have a valid Vercel credential, so the final packaging and production-preview validation must run after the repository is imported into the user's Vercel account. This is an external-account requirement, not an application build failure.
 
 ## Rollback and Recovery

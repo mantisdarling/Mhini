@@ -62,3 +62,6 @@
 - [x] Exercise the Vercel Express application path, API routing boundary, and authenticated cron handler through a serverless-compatible harness.
 - [x] Mock recovery side effects and verify a valid Vercel Cron authorization reaches the successful snapshot response path.
 - [x] Configure and verify the repository’s future Git commit author as mantisdarling before the next push.
+- [x] Diagnose the broken Manus-only image routes on the first Vercel deployment and create an approved free public asset store.
+- [x] Replace the Vercel asset fallbacks with stable public CDN defaults while retaining environment-variable overrides.
+- [ ] Redeploy the CDN-backed asset revision and verify the live Vercel page loads both images.

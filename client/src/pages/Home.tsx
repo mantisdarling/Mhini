@@ -34,8 +34,8 @@ import {
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 
 const ASSETS = {
-  hero: import.meta.env.VITE_HERO_ASSET_URL || "/manus-storage/mantis-hero-cinematic%5Fab3f20a9.jpg",
-  mark: import.meta.env.VITE_MARK_ASSET_URL || "/manus-storage/mantis-blade-mark%5Fcdda3c42.png",
+  hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
+  mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
 };
 
 function prefersReducedMotion() {
