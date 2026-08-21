@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildRecoveryPayload } from "./recoverySnapshot";
+import { buildRecoveryPayload, isAuthorizedVercelCron } from "./recoverySnapshot";
 
 describe("recovery snapshot format", () => {
   it("captures the core tables in a versioned recovery envelope", () => {
@@ -9,5 +9,11 @@ describe("recovery snapshot format", () => {
       createdAt: "2026-08-21T00:00:00.000Z",
       tables: { projects: [{ id: 2 }] },
     });
+  });
+
+  it("requires a matching bearer secret for Vercel cron execution", () => {
+    expect(isAuthorizedVercelCron("Bearer trusted", "trusted")).toBe(true);
+    expect(isAuthorizedVercelCron("Bearer wrong", "trusted")).toBe(false);
+    expect(isAuthorizedVercelCron(undefined, "trusted")).toBe(false);
   });
 });

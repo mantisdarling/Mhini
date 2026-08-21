@@ -53,3 +53,12 @@
 - [x] Document required external infrastructure configuration, operational runbooks, and load-test criteria for the production rollout.
 - [x] Validate the scalability readiness revision and save a checkpoint.
 - [x] Run and verify one manual public-project recovery snapshot through the configured object-storage path.
+- [x] Audit the current full-stack runtime and external dependencies for a Vercel deployment.
+- [x] Design the Vercel deployment architecture and define migration boundaries for database, storage, OAuth, backups, and scheduled work.
+- [x] Add Vercel configuration, serverless-compatible routing, and deployment documentation without removing the current Manus development path.
+- [ ] Validate the Vercel build and document all environment, deployment, and post-launch checks.
+- [ ] Save a Vercel deployment-readiness checkpoint and synchronize it to GitHub.
+- [ ] Run a Vercel packaging build that validates the serverless API entry and vercel.json configuration.
+- [x] Exercise the Vercel Express application path, API routing boundary, and authenticated cron handler through a serverless-compatible harness.
+- [x] Mock recovery side effects and verify a valid Vercel Cron authorization reaches the successful snapshot response path.
+- [x] Configure and verify the repository’s future Git commit author as mantisdarling before the next push.

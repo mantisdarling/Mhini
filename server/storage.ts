@@ -1,8 +1,51 @@
 // Preconfigured storage helpers for Manus WebDev templates
-// Uploads via Forge Server presigned URL to S3 (PUT direct).
-// Downloads return /manus-storage/{key} paths served via 307 redirect.
+// Uploads use Vercel-compatible S3 credentials when supplied, otherwise the
+// existing Forge presigned URL integration remains available for Manus hosting.
 
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ENV } from "./_core/env";
+
+type ExternalStorageConfig = {
+  accessKeyId: string;
+  bucket: string;
+  endpoint?: string;
+  forcePathStyle: boolean;
+  region: string;
+  secretAccessKey: string;
+};
+
+let externalStorageClient: S3Client | null = null;
+
+function getExternalStorageConfig(): ExternalStorageConfig | null {
+  const bucket = process.env.S3_BUCKET;
+  const accessKeyId = process.env.S3_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
+  if (!bucket || !accessKeyId || !secretAccessKey) return null;
+  return {
+    accessKeyId,
+    bucket,
+    endpoint: process.env.S3_ENDPOINT,
+    forcePathStyle: process.env.S3_FORCE_PATH_STYLE === "true",
+    region: process.env.S3_REGION || "auto",
+    secretAccessKey,
+  };
+}
+
+function getExternalStorageClient(config: ExternalStorageConfig) {
+  if (!externalStorageClient) {
+    externalStorageClient = new S3Client({
+      region: config.region,
+      endpoint: config.endpoint,
+      forcePathStyle: config.forcePathStyle,
+      credentials: {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+      },
+    });
+  }
+  return externalStorageClient;
+}
 
 function getForgeConfig() {
   const forgeUrl = ENV.forgeApiUrl;
@@ -33,8 +76,27 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream",
 ): Promise<{ key: string; url: string }> {
-  const { forgeUrl, forgeKey } = getForgeConfig();
   const key = appendHashSuffix(normalizeKey(relKey));
+  const externalConfig = getExternalStorageConfig();
+  if (externalConfig) {
+    const client = getExternalStorageClient(externalConfig);
+    await client.send(new PutObjectCommand({
+      Bucket: externalConfig.bucket,
+      Key: key,
+      Body: data,
+      ContentType: contentType,
+    }));
+    return {
+      key,
+      url: await getSignedUrl(
+        client,
+        new GetObjectCommand({ Bucket: externalConfig.bucket, Key: key }),
+        { expiresIn: 900 },
+      ),
+    };
+  }
+
+  const { forgeUrl, forgeKey } = getForgeConfig();
 
   // 1. Get presigned PUT URL from Forge
   const presignUrl = new URL("v1/storage/presign/put", forgeUrl + "/");
@@ -73,10 +135,19 @@ export async function storagePut(
 
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const key = normalizeKey(relKey);
+  const externalConfig = getExternalStorageConfig();
+  if (externalConfig) {
+    return { key, url: await storageGetSignedUrl(key) };
+  }
   return { key, url: `/manus-storage/${key}` };
 }
 
 export async function storageGetSignedUrl(relKey: string): Promise<string> {
+  const externalConfig = getExternalStorageConfig();
+  if (externalConfig) {
+    const client = getExternalStorageClient(externalConfig);
+    return getSignedUrl(client, new GetObjectCommand({ Bucket: externalConfig.bucket, Key: normalizeKey(relKey) }), { expiresIn: 900 });
+  }
   const { forgeUrl, forgeKey } = getForgeConfig();
   const key = normalizeKey(relKey);
 
