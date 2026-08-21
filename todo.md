@@ -42,3 +42,7 @@
 - [x] Replace the disliked hero statement with a stronger AI-systems portfolio message.
 - [x] Remove underscore characters from visible copy and project-authored code wherever preserving application behavior permits.
 - [x] Validate the revised copy and code integrity, then save a cleanup checkpoint.
+- [x] Audit all visible portfolio copy for em dash characters and identify every required wording revision.
+- [x] Replace the hero statement with “I GO DEEP AND THEN I BUILD.”
+- [x] Remove em dash characters from visible website copy without losing portfolio meaning or links.
+- [x] Validate the revised wording, visual presentation, application checks, and save a character-cleanup checkpoint.

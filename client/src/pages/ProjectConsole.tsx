@@ -145,7 +145,7 @@ function ProjectConsoleContent() {
     <div className="mx-auto max-w-6xl space-y-10 py-4">
       <header className="flex flex-col justify-between gap-5 border-b border-border pb-7 sm:flex-row sm:items-end">
         <div>
-          <p className="font-mono text-[0.65rem] font-medium tracking-[0.18em] text-primary">M / 06 — PRIVATE PROJECT CONSOLE</p>
+          <p className="font-mono text-[0.65rem] font-medium tracking-[0.18em] text-primary">M / 06, PRIVATE PROJECT CONSOLE</p>
           <h1 className="project-console-heading">Control the<br /><span className="text-primary">run log.</span></h1>
         </div>
         <a href="/" className="inline-flex items-center gap-2 border border-border px-4 py-2 font-mono text-xs tracking-[0.1em] transition-colors hover:border-primary hover:text-primary">

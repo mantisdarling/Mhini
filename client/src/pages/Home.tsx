@@ -591,7 +591,7 @@ export default function Home() {
       </div>
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Mantis — return to top">
+        <a className="brand" href="#top" aria-label="Mantis, return to top">
           <img src={ASSETS.mark} alt="Mantis blade monogram" />
           <span className="brand-wordmark" aria-hidden="true"><b>MAN</b><i /><b>TIS</b></span>
         </a>
@@ -656,10 +656,9 @@ export default function Home() {
           <div className="hero-content">
             <p className="hero-kicker"><span /> FOUNDER @ MANTIS / IIT MADRAS CS</p>
             <h1 className="hero-name">MANTIS</h1>
-            <div className="tagline" aria-label={profile.positioning}>
-              <span className="tagline-deep">FROM KERNELS</span>
-              <span className="tagline-divider">/</span>
-              <span className="tagline-build">TO INTELLIGENCE.</span>
+            <div className="tagline" aria-label="I GO DEEP AND THEN I BUILD">
+              <span className="tagline-deep">I GO DEEP</span>
+              <span className="tagline-build">AND THEN I BUILD</span>
             </div>
             <div className="hero-support">
               <p>{profile.shortBio}</p>
@@ -681,7 +680,7 @@ export default function Home() {
           <div className="kinetic-sticky">
             <p className="kinetic-index">M / MOTION STUDY / 01</p>
             <div className="kinetic-orbit" aria-hidden="true"><i /><i /><i /></div>
-            <div className="kinetic-track" aria-hidden="true"><span>FIND THE SIGNAL</span><em>—</em><span>HOLD THE LINE</span><em>—</em><span>MAKE THE MOVE</span></div>
+            <div className="kinetic-track" aria-hidden="true"><span>FIND THE SIGNAL</span><em>THEN</em><span>HOLD THE LINE</span><em>THEN</em><span>MAKE THE MOVE</span></div>
             <p className="kinetic-caption">Scroll to calibrate the field.</p>
           </div>
         </section>
@@ -695,7 +694,7 @@ export default function Home() {
           <div className="section-heading-wide reveal">
             <SectionEyebrow index="03" label="TRACK RECORD" />
             <div>
-              <p className="section-caption">SELECTED SYSTEMS / 2023—26</p>
+              <p className="section-caption">SELECTED SYSTEMS 2023 TO 2026</p>
               <h2>Built to<br /><em>hold pressure.</em></h2>
             </div>
           </div>
