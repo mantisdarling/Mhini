@@ -20,6 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
+import { independentAuthEnabled, requestIndependentMagicLink } from "@/lib/independentAuth";
 import { useIsMobile } from "@/hooks/useMobile";
 import { ExternalLink, Gauge, LogOut, PanelLeft } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
@@ -47,6 +48,8 @@ export default function DashboardLayout({
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
   });
   const { loading, user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [sendingLink, setSendingLink] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
@@ -57,6 +60,7 @@ export default function DashboardLayout({
   }
 
   if (!user) {
+    const independent = independentAuthEnabled();
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
@@ -65,16 +69,28 @@ export default function DashboardLayout({
               Sign in to continue
             </h1>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+              {independent ? "Use your owner email to receive a one-time secure sign-in link." : "Access to this dashboard requires authentication. Continue to launch the login flow."}
             </p>
           </div>
-          <Button
-            onClick={() => startLogin()}
-            size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all"
-          >
-            Sign in
-          </Button>
+          {independent ? (
+            <form className="flex w-full flex-col gap-3" onSubmit={async event => {
+              event.preventDefault();
+              setSendingLink(true);
+              try {
+                await requestIndependentMagicLink(email.trim());
+                window.alert("A secure sign-in link was sent. Open it in this browser to continue.");
+              } catch (error) {
+                window.alert(error instanceof Error ? error.message : "Could not send the sign-in link.");
+              } finally {
+                setSendingLink(false);
+              }
+            }}>
+              <input className="h-11 w-full border border-border bg-background px-3 text-sm" type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="owner@example.com" required />
+              <Button type="submit" disabled={sendingLink} size="lg" className="w-full shadow-lg hover:shadow-xl transition-all">{sendingLink ? "Sending secure link…" : "Send secure sign-in link"}</Button>
+            </form>
+          ) : (
+            <Button onClick={() => startLogin()} size="lg" className="w-full shadow-lg hover:shadow-xl transition-all">Sign in</Button>
+          )}
         </div>
       </div>
     );

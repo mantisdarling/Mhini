@@ -1,8 +1,7 @@
 import express, { type RequestHandler } from "express";
-import { sql } from "drizzle-orm";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./routers";
-import { getDb } from "./db";
+import { isDatabaseReady } from "./db";
 import { runScheduledRecoverySnapshot, runVercelRecoverySnapshot } from "./recoverySnapshot";
 import { registerOAuthRoutes } from "./_core/oauth";
 import { registerStorageProxy } from "./_core/storageProxy";
@@ -30,9 +29,7 @@ export function createApplication(options: ApplicationOptions = {}) {
       return;
     }
     try {
-      const db = await getDb();
-      if (!db) throw new Error("database unavailable");
-      await db.execute(sql`SELECT 1`);
+      if (!(await isDatabaseReady())) throw new Error("database unavailable");
       res.status(200).json({ ok: true });
     } catch {
       res.status(503).json({ ok: false, reason: "database unavailable" });

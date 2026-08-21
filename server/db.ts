@@ -1,30 +1,62 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertProject, InsertUser, Project, projects, users } from "../drizzle/schema";
+import {
+  InsertProject,
+  InsertUser,
+  Project,
+  projects,
+  recoverySnapshots,
+  RecoverySnapshot,
+  users,
+} from "../drizzle/schema";
 import { ENV } from "./_core/env";
 import { scalePolicy } from "../shared/scalePolicy";
+import * as supabaseDb from "./supabaseDb";
 
-let _db: ReturnType<typeof drizzle> | null = null;
+let mysqlDb: ReturnType<typeof drizzle> | null = null;
 let publishedProjectCache: { expiresAt: number; values: Project[] } | null = null;
+
+function useSupabase() {
+  return ENV.databaseProvider === "supabase";
+}
 
 function clearPublishedProjectCache() {
   publishedProjectCache = null;
 }
 
+function withDatabase<T>(db: T | null): T {
+  if (!db) throw new Error("Database is unavailable.");
+  return db;
+}
+
 export async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
+  if (useSupabase()) return null;
+  if (!mysqlDb && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      mysqlDb = drizzle(process.env.DATABASE_URL);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
-      _db = null;
+      mysqlDb = null;
     }
   }
-  return _db;
+  return mysqlDb;
+}
+
+export async function isDatabaseReady() {
+  if (useSupabase()) return supabaseDb.isReady();
+  const db = await getDb();
+  if (!db) return false;
+  try {
+    await db.execute(sql`SELECT 1`);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
+  if (useSupabase()) return supabaseDb.upsertUser(user);
   const db = await getDb();
   if (!db) return;
 
@@ -50,32 +82,26 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
   if (!values.lastSignedIn) values.lastSignedIn = new Date();
   if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
-
   await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
+  if (useSupabase()) return supabaseDb.getUserByOpenId(openId);
   const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result[0];
 }
 
-function withDatabase<T>(db: T | null): T {
-  if (!db) throw new Error("Database is unavailable.");
-  return db;
-}
-
 export async function getPublishedProjects() {
-  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) {
-    return publishedProjectCache.values;
-  }
-  const db = withDatabase(await getDb());
-  const values = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.status, "published"))
-    .orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
+  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) return publishedProjectCache.values;
+  const values = useSupabase()
+    ? await supabaseDb.getProjects("published")
+    : await withDatabase(await getDb())
+      .select()
+      .from(projects)
+      .where(eq(projects.status, "published"))
+      .orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
   publishedProjectCache = {
     values,
     expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs,
@@ -84,11 +110,16 @@ export async function getPublishedProjects() {
 }
 
 export async function getAllProjects() {
-  const db = withDatabase(await getDb());
-  return db.select().from(projects).orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
+  if (useSupabase()) return supabaseDb.getProjects();
+  return withDatabase(await getDb()).select().from(projects).orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
 }
 
 export async function createProject(values: InsertProject) {
+  if (useSupabase()) {
+    const created = await supabaseDb.createProject(values);
+    clearPublishedProjectCache();
+    return created;
+  }
   const db = withDatabase(await getDb());
   const result = await db.insert(projects).values(values);
   const id = Number(result[0].insertId);
@@ -98,6 +129,11 @@ export async function createProject(values: InsertProject) {
 }
 
 export async function updateProject(id: number, values: Partial<InsertProject>) {
+  if (useSupabase()) {
+    const updated = await supabaseDb.updateProject(id, values);
+    clearPublishedProjectCache();
+    return updated;
+  }
   const db = withDatabase(await getDb());
   await db.update(projects).set(values).where(eq(projects.id, id));
   const updated = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
@@ -106,6 +142,11 @@ export async function updateProject(id: number, values: Partial<InsertProject>) 
 }
 
 export async function deleteProject(id: number) {
+  if (useSupabase()) {
+    const result = await supabaseDb.deleteProject(id);
+    clearPublishedProjectCache();
+    return result;
+  }
   const db = withDatabase(await getDb());
   await db.delete(projects).where(eq(projects.id, id));
   clearPublishedProjectCache();
@@ -113,6 +154,11 @@ export async function deleteProject(id: number) {
 }
 
 export async function reorderProjects(items: Array<{ id: number; sortOrder: number }>) {
+  if (useSupabase()) {
+    const values = await supabaseDb.reorderProjects(items);
+    clearPublishedProjectCache();
+    return values;
+  }
   const db = withDatabase(await getDb());
   await db.transaction(async transaction => {
     for (const item of items) {
@@ -121,4 +167,24 @@ export async function reorderProjects(items: Array<{ id: number; sortOrder: numb
   });
   clearPublishedProjectCache();
   return getAllProjects();
+}
+
+export async function createRecoverySnapshotRecord(values: { storageKey: string; checksum: string; recordCount: number }) {
+  if (useSupabase()) return supabaseDb.createRecoverySnapshotRecord(values);
+  const db = withDatabase(await getDb());
+  const result = await db.insert(recoverySnapshots).values({
+    storageKey: values.storageKey,
+    checksum: values.checksum,
+    recordCount: values.recordCount,
+  });
+  const id = Number(result[0].insertId);
+  const rows = await db.select().from(recoverySnapshots).where(eq(recoverySnapshots.id, id)).limit(1);
+  if (!rows[0]) throw new Error("Recovery snapshot metadata was not created.");
+  return rows[0] as RecoverySnapshot;
+}
+
+export async function listRecoverySnapshotRecords(limit: number) {
+  if (useSupabase()) return supabaseDb.listRecoverySnapshots(limit);
+  const db = withDatabase(await getDb());
+  return db.select().from(recoverySnapshots).orderBy(desc(recoverySnapshots.createdAt)).limit(limit);
 }

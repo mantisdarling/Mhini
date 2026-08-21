@@ -1,5 +1,6 @@
 import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
+import { clearIndependentSession, independentAuthEnabled } from "@/lib/independentAuth";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
 
@@ -45,6 +46,7 @@ export function useAuth(options?: UseAuthOptions) {
       try {
         sessionStorage.removeItem("manus-cookie");
       } catch {}
+      clearIndependentSession();
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
     }
@@ -79,7 +81,7 @@ export function useAuth(options?: UseAuthOptions) {
     // Navigate at this moment only. startLogin() mints the nonce + cookie itself.
     if (redirectPath) {
       window.location.href = redirectPath;
-    } else {
+    } else if (!independentAuthEnabled()) {
       startLogin();
     }
   }, [

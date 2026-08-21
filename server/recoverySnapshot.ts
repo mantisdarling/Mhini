@@ -1,9 +1,7 @@
 import { createHash } from "crypto";
-import { desc } from "drizzle-orm";
 import type { Request, Response } from "express";
-import { projects, recoverySnapshots } from "../drizzle/schema";
 import { storagePut } from "./storage";
-import { getDb } from "./db";
+import { createRecoverySnapshotRecord, getAllProjects, listRecoverySnapshotRecords } from "./db";
 import { sdk } from "./_core/sdk";
 
 type RecoveryPayload = {
@@ -32,38 +30,29 @@ function recoveryKey(createdAt: string) {
 }
 
 export async function createRecoverySnapshot() {
-  const db = await getDb();
-  if (!db) throw new Error("Database is unavailable for recovery snapshot.");
-
-  const payload = await db.transaction(async transaction => {
-    const projectRows = await transaction.select().from(projects);
-    return buildRecoveryPayload(projectRows);
-  });
+  const payload = buildRecoveryPayload(await getAllProjects());
 
   const body = JSON.stringify(payload);
   const checksum = createHash("sha256").update(body).digest("hex");
   const recordCount = payload.tables.projects.length;
   const stored = await storagePut(recoveryKey(payload.createdAt), body, "application/json");
 
-  const result = await db.insert(recoverySnapshots).values({
+  const result = await createRecoverySnapshotRecord({
     checksum,
     recordCount,
     storageKey: stored.key,
   });
-  const id = Number(result[0].insertId);
   return {
     checksum,
     createdAt: payload.createdAt,
-    id,
+    id: result.id,
     recordCount,
     storageKey: stored.key,
   };
 }
 
 export async function listRecoverySnapshots(limit = 30) {
-  const db = await getDb();
-  if (!db) throw new Error("Database is unavailable for recovery snapshot listing.");
-  return db.select().from(recoverySnapshots).orderBy(desc(recoverySnapshots.createdAt)).limit(limit);
+  return listRecoverySnapshotRecords(limit);
 }
 
 export async function runScheduledRecoverySnapshot(req: Request, res: Response) {

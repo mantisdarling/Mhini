@@ -7,7 +7,10 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
+import { captureIndependentSessionFromUrl, getIndependentAccessToken, independentAuthEnabled } from "./lib/independentAuth";
 import "./index.css";
+
+captureIndependentSessionFromUrl();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +34,8 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
 
   if (!isUnauthorized) return;
+
+  if (independentAuthEnabled()) return;
 
   startLogin();
 };
@@ -57,6 +62,8 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       headers() {
+        const independentToken = getIndependentAccessToken();
+        if (independentToken) return { Authorization: `Bearer ${independentToken}` };
         // Preview auto-login fallback: when the browser blocks iframe cookies
         // (Safari ITP / private browsing / WebView), the runtime mirrors the
         // session into sessionStorage so we can forward it as a Bearer token.

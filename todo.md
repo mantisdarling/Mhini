@@ -67,3 +67,12 @@
 - [x] Redeploy the CDN-backed asset revision and verify the live Vercel page loads both images.
 - [x] Open the production alias after the CDN-backed redeploy and verify both images have non-zero natural dimensions.
 - [x] Confirm the production alias maps to the a4c5e34 deployment and record the evidence.
+- [x] Audit the current Manus-dependent database, authentication, storage, and owner-access paths for independent Vercel operation.
+- [x] Select and document a no-cost starter architecture for database, authentication, storage, and protected studio access.
+- [x] Implement portable configuration and migration readiness without creating a paid external service or migrating live data.
+- [x] Validate the independent-backend code path and document the user-operated free service setup and Vercel checks.
+- [ ] Save and synchronize the independent-backend readiness revision as mantisdarling.
+- [ ] Create and link a Supabase Free project to the existing Vercel mhini deployment without selecting a paid plan.
+- [ ] Apply the non-destructive independent-backend SQL migration and configure Supabase Auth redirect URLs.
+- [ ] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
+- [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
