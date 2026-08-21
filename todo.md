@@ -56,12 +56,14 @@
 - [x] Audit the current full-stack runtime and external dependencies for a Vercel deployment.
 - [x] Design the Vercel deployment architecture and define migration boundaries for database, storage, OAuth, backups, and scheduled work.
 - [x] Add Vercel configuration, serverless-compatible routing, and deployment documentation without removing the current Manus development path.
-- [ ] Validate the Vercel build and document all environment, deployment, and post-launch checks.
+- [x] Validate the Vercel build and document all environment, deployment, and post-launch checks.
 - [x] Save a Vercel deployment-readiness checkpoint and synchronize it to GitHub.
-- [ ] Run a Vercel packaging build that validates the serverless API entry and vercel.json configuration.
+- [x] Run a Vercel packaging build that validates the serverless API entry and vercel.json configuration.
 - [x] Exercise the Vercel Express application path, API routing boundary, and authenticated cron handler through a serverless-compatible harness.
 - [x] Mock recovery side effects and verify a valid Vercel Cron authorization reaches the successful snapshot response path.
 - [x] Configure and verify the repository’s future Git commit author as mantisdarling before the next push.
 - [x] Diagnose the broken Manus-only image routes on the first Vercel deployment and create an approved free public asset store.
 - [x] Replace the Vercel asset fallbacks with stable public CDN defaults while retaining environment-variable overrides.
-- [ ] Redeploy the CDN-backed asset revision and verify the live Vercel page loads both images.
+- [x] Redeploy the CDN-backed asset revision and verify the live Vercel page loads both images.
+- [x] Open the production alias after the CDN-backed redeploy and verify both images have non-zero natural dimensions.
+- [x] Confirm the production alias maps to the a4c5e34 deployment and record the evidence.
