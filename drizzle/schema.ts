@@ -33,7 +33,22 @@ export const projects = mysqlTable(
   }),
 );
 
+export const recoverySnapshots = mysqlTable(
+  "recovery_snapshots",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    storageKey: varchar("storageKey", { length: 512 }).notNull(),
+    checksum: varchar("checksum", { length: 64 }).notNull(),
+    recordCount: int("recordCount").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => ({
+    createdAtIdx: index("recovery_snapshots_created_at_idx").on(table.createdAt),
+  }),
+);
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
+export type RecoverySnapshot = typeof recoverySnapshots.$inferSelect;

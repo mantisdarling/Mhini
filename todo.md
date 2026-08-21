@@ -47,3 +47,8 @@
 - [x] Remove em dash characters from visible website copy without losing portfolio meaning or links.
 - [x] Validate the revised wording, visual presentation, application checks, and save a character-cleanup checkpoint.
 - [x] Verify the latest local portfolio revision is synchronized to mantisdarling/Mhini on the main branch.
+- [x] Audit the current application, database, deployment model, and critical data paths for 50,000-user readiness.
+- [x] Define a resilient 50,000-user target architecture with performance, availability, backup, and recovery controls.
+- [x] Implement and test safe code-level reliability, security, performance, and observability improvements that fit the current project.
+- [x] Document required external infrastructure configuration, operational runbooks, and load-test criteria for the production rollout.
+- [x] Validate the scalability readiness revision and save a checkpoint.

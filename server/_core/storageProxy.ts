@@ -1,5 +1,32 @@
 import type { Express } from "express";
 import { ENV } from "./env";
+import { scalePolicy } from "../../shared/scalePolicy";
+
+type CachedRedirect = { expiresAt: number; url: string };
+
+const redirectCache = new Map<string, CachedRedirect>();
+const maxRedirectCacheEntries = 1000;
+
+function cachedUrl(key: string) {
+  const value = redirectCache.get(key);
+  if (!value) return null;
+  if (value.expiresAt <= Date.now()) {
+    redirectCache.delete(key);
+    return null;
+  }
+  return value.url;
+}
+
+function cacheUrl(key: string, url: string) {
+  if (redirectCache.size >= maxRedirectCacheEntries) {
+    const oldestKey = redirectCache.keys().next().value;
+    if (typeof oldestKey === "string") redirectCache.delete(oldestKey);
+  }
+  redirectCache.set(key, {
+    url,
+    expiresAt: Date.now() + scalePolicy.storageRedirectCacheTtlMs,
+  });
+}
 
 export function registerStorageProxy(app: Express) {
   app.get("/manus-storage/*", async (req, res) => {
@@ -11,6 +38,13 @@ export function registerStorageProxy(app: Express) {
 
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
       res.status(500).send("Storage proxy not configured");
+      return;
+    }
+
+    const cached = cachedUrl(key);
+    if (cached) {
+      res.set("Cache-Control", scalePolicy.storageRedirectCacheControl);
+      res.redirect(307, cached);
       return;
     }
 
@@ -38,7 +72,8 @@ export function registerStorageProxy(app: Express) {
         return;
       }
 
-      res.set("Cache-Control", "no-store");
+      cacheUrl(key, url);
+      res.set("Cache-Control", scalePolicy.storageRedirectCacheControl);
       res.redirect(307, url);
     } catch (err) {
       console.error("[StorageProxy] failed:", err);

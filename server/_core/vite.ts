@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
+import { scalePolicy } from "../../shared/scalePolicy";
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -58,10 +59,24 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(
+    "/assets",
+    express.static(path.resolve(distPath, "assets"), {
+      immutable: true,
+      index: false,
+      maxAge: scalePolicy.staticAssetMaxAgeMs,
+    }),
+  );
+  app.use(
+    express.static(distPath, {
+      index: false,
+      maxAge: scalePolicy.staticFileMaxAgeMs,
+    }),
+  );
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
+    res.set("Cache-Control", scalePolicy.documentCacheControl);
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

@@ -1,9 +1,15 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertProject, InsertUser, projects, users } from "../drizzle/schema";
+import { InsertProject, InsertUser, Project, projects, users } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { scalePolicy } from "../shared/scalePolicy";
 
 let _db: ReturnType<typeof drizzle> | null = null;
+let publishedProjectCache: { expiresAt: number; values: Project[] } | null = null;
+
+function clearPublishedProjectCache() {
+  publishedProjectCache = null;
+}
 
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
@@ -61,12 +67,20 @@ function withDatabase<T>(db: T | null): T {
 }
 
 export async function getPublishedProjects() {
+  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) {
+    return publishedProjectCache.values;
+  }
   const db = withDatabase(await getDb());
-  return db
+  const values = await db
     .select()
     .from(projects)
     .where(eq(projects.status, "published"))
     .orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
+  publishedProjectCache = {
+    values,
+    expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs,
+  };
+  return values;
 }
 
 export async function getAllProjects() {
@@ -79,6 +93,7 @@ export async function createProject(values: InsertProject) {
   const result = await db.insert(projects).values(values);
   const id = Number(result[0].insertId);
   const created = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  clearPublishedProjectCache();
   return created[0];
 }
 
@@ -86,17 +101,24 @@ export async function updateProject(id: number, values: Partial<InsertProject>) 
   const db = withDatabase(await getDb());
   await db.update(projects).set(values).where(eq(projects.id, id));
   const updated = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  clearPublishedProjectCache();
   return updated[0];
 }
 
 export async function deleteProject(id: number) {
   const db = withDatabase(await getDb());
   await db.delete(projects).where(eq(projects.id, id));
+  clearPublishedProjectCache();
   return { id };
 }
 
 export async function reorderProjects(items: Array<{ id: number; sortOrder: number }>) {
   const db = withDatabase(await getDb());
-  await Promise.all(items.map(item => db.update(projects).set({ sortOrder: item.sortOrder }).where(eq(projects.id, item.id))));
+  await db.transaction(async transaction => {
+    for (const item of items) {
+      await transaction.update(projects).set({ sortOrder: item.sortOrder }).where(eq(projects.id, item.id));
+    }
+  });
+  clearPublishedProjectCache();
   return getAllProjects();
 }

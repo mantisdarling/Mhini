@@ -12,12 +12,17 @@ export async function createContext(
   opts: CreateExpressContextOptions
 ): Promise<TrpcContext> {
   let user: User | null = null;
+  const authorization = opts.req.headers.authorization;
+  const mayHaveSession = Boolean(opts.req.headers.cookie) ||
+    (typeof authorization === "string" && authorization.startsWith("Bearer "));
 
-  try {
-    user = await sdk.authenticateRequest(opts.req);
-  } catch (error) {
-    // Authentication is optional for public procedures.
-    user = null;
+  if (mayHaveSession) {
+    try {
+      user = await sdk.authenticateRequest(opts.req);
+    } catch (error) {
+      // Authentication is optional for public procedures.
+      user = null;
+    }
   }
 
   return {

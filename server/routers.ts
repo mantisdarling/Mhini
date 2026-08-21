@@ -10,6 +10,7 @@ import {
   reorderProjects,
   updateProject,
 } from "./db";
+import { createRecoverySnapshot, listRecoverySnapshots } from "./recoverySnapshot";
 import { projectInputSchema, projectReorderSchema, projectUpdateSchema, type ProjectInput } from "./projectSchemas";
 
 function normalizeTags(value: string) {
@@ -64,6 +65,10 @@ export const appRouter = router({
     }),
     remove: adminProcedure.input(projectUpdateSchema.pick({ id: true })).mutation(({ input }) => deleteProject(input.id)),
     reorder: adminProcedure.input(projectReorderSchema).mutation(({ input }) => reorderProjects(input.items)),
+  }),
+  recovery: router({
+    createSnapshot: adminProcedure.mutation(() => createRecoverySnapshot()),
+    listSnapshots: adminProcedure.query(() => listRecoverySnapshots()),
   }),
 });
 
