@@ -74,6 +74,20 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector("#evidence .rebuild-section-atmosphere")).toBeNull();
   });
 
+  it("keeps the Stack artwork in its background layer behind the foreground content", () => {
+    renderHome();
+    const stack = container?.querySelector<HTMLElement>("#stack");
+    const backdrop = stack?.querySelector(":scope > .cinematic-scene-backdrop");
+    const heading = stack?.querySelector(":scope > .rebuild-section-heading");
+    const list = stack?.querySelector(":scope > .rebuild-stack-list");
+    expect(backdrop).toBeTruthy();
+    expect(heading).toBeTruthy();
+    expect(list).toBeTruthy();
+    expect(backdrop?.parentElement).toBe(stack);
+    expect(heading?.parentElement).toBe(stack);
+    expect(list?.parentElement).toBe(stack);
+  });
+
   it("gives every project card a samurai visual and keeps the closing scene video-only", () => {
     renderHome();
     const cards = container?.querySelectorAll(".rebuild-project-card") ?? [];
