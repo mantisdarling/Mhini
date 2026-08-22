@@ -223,3 +223,6 @@
 - [x] Preserve the seven real project records and samurai visuals while tightening card rhythm across desktop, tablet, and phone.
 - [x] Validate card density, image crops, typography, row closure, accessibility, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and 390px phone plus 1280px desktop previews were reviewed.
 - [x] Commit, push, and checkpoint the project-card hollow-band correction as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Increase the evidence section background image visibility by approximately 20% without reducing copy readability. Effective opacity is now 0.50 on desktop and 0.47 on mobile.
+- [x] Verify the adjusted evidence backdrop on mobile and desktop, then run focused regression checks. Reviewed 390px and 1280px captures; 33 tests, TypeScript, production build, and high-severity audit passed.
+- [x] Save and push the evidence backdrop opacity refinement as mantisdarling. Checkpoint follows after commit.

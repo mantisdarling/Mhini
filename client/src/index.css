@@ -1187,8 +1187,8 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 .cinematic-section .cinematic-scene-backdrop { opacity: 0.44; }
 .cinematic-section#work .cinematic-scene-backdrop { opacity: 0.36; }
 .cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.48; }
-.cinematic-section#stack .cinematic-scene-backdrop,
-.cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.3; }
+.cinematic-section#stack .cinematic-scene-backdrop { opacity: 0.3; }
+.cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.5; }
 .rebuild-intro,
 .rebuild-work,
 .rebuild-stack,
@@ -1201,8 +1201,8 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 @media (max-width: 800px) {
   .cinematic-section .cinematic-scene-backdrop { opacity: 0.32; }
   .cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.4; }
-  .cinematic-section#stack .cinematic-scene-backdrop,
-  .cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.27; }
+  .cinematic-section#stack .cinematic-scene-backdrop { opacity: 0.27; }
+  .cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.47; }
   .rebuild-intro,
   .rebuild-work,
   .rebuild-stack,
