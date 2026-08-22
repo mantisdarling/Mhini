@@ -53,11 +53,11 @@ const ASSETS = {
     closingVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/qPIGKaMzyrRrveJB.mp4",
     heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/ZkrXSluZpNaFkhcC.jpg",
     mobile: {
-      motion: "/manus-storage/story-motion-mobile_ff0d0a4d.webp",
-      blade: "/manus-storage/story-blade-mobile_6e2c2d3c.webp",
-      descent: "/manus-storage/story-descent-mobile_73eebaf4.webp",
-      stillness: "/manus-storage/story-stillness-mobile_8962b25c.webp",
-      caseStudy: "/manus-storage/case-study-mobile_61f212a1.webp",
+      motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/sTadKupcVFDwguav.webp",
+      blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/FTbPLbavzYQOssdo.webp",
+      descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/nUUmQGGwbuDjMqAD.webp",
+      stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/prTZlVLRoZCIcWHZ.webp",
+      caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/yobFGNuwyHwrFsAO.webp",
     },
   },
 };

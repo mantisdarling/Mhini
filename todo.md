@@ -230,3 +230,7 @@
 - [x] Wire mobile derivatives into responsive scene, story, project, atmosphere, and dossier rendering through picture source media queries.
 - [x] Validate mobile derivative loading paths, visual fidelity, and project regression safety. All five uploaded paths return 200, 34 tests pass, TypeScript and production build pass, and no high-severity dependency vulnerabilities are reported.
 - [x] Commit, push, and checkpoint the mobile derivative optimization as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the real-phone responsive path for missing images, hidden content, overflow, and breakpoint regressions. Found mobile picture sources using a deployment-unreliable same-origin path while desktop mode used the stable CDN.
+- [x] Correct mobile media rendering and responsive composition while preserving all content, links, and desktop behavior. All mobile derivatives now use stable public CDN URLs and retain desktop originals.
+- [x] Verify phone, tablet, and desktop previews, asset requests, tests, types, build, and runtime errors. Reviewed 390x844, 768x1024, and 1280x720; 34 tests pass, TypeScript and build pass, asset paths resolve, audit is clear.
+- [x] Commit, push, and checkpoint the responsive repair as mantisdarling. Checkpoint follows after source cleanup.
