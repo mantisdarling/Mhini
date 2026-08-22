@@ -139,3 +139,6 @@
 - [x] Respect reduced-motion preferences and validate the transition with tests, type checks, build, and visual review.
 - [x] Add a custom route chunk error boundary with a branded fade-in recovery state and retry action.
 - [x] Add focused failure-path tests and validate reduced-motion behavior, type safety, production build, and route integration.
+- [x] Audit scroll, motion, touch, and responsive behavior across desktop, tablet, mobile, and reduced-motion paths.
+- [x] Improve cross-device smoothness with bounded motion, responsive input handling, and cleanup safeguards.
+- [x] Validate desktop, tablet, mobile, touch, reduced-motion, tests, type safety, and production build. Visual capture was attempted at desktop and mobile sizes but the preview service was unavailable.

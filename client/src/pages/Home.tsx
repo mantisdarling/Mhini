@@ -255,38 +255,52 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
+    useEffect(() => {
     if (prefersReducedMotion()) return;
+    const useLenis = window.matchMedia("(pointer: fine) and (min-width: 768px)").matches;
+    let settleTimer: number | undefined;
+    let lastScrollY = window.scrollY;
+    const updateTelemetry = (progress: number, velocity = 0) => {
+      ScrollTrigger.update();
+      progressRef.current?.style.setProperty("--progress", `${Math.max(0, Math.min(100, progress * 100))}%`);
+      const skew = Math.max(-2.5, Math.min(2.5, velocity * 0.035));
+      document.documentElement.style.setProperty("--scroll-skew", `${skew}deg`);
+      if (settleTimer) window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => document.documentElement.style.setProperty("--scroll-skew", "0deg"), 120);
+    };
+    if (!useLenis) {
+      const onNativeScroll = () => {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const currentScrollY = window.scrollY;
+        updateTelemetry(currentScrollY / maxScroll, currentScrollY - lastScrollY);
+        lastScrollY = currentScrollY;
+      };
+      window.addEventListener("scroll", onNativeScroll, { passive: true });
+      onNativeScroll();
+      return () => {
+        window.removeEventListener("scroll", onNativeScroll);
+        document.documentElement.style.setProperty("--scroll-skew", "0deg");
+        if (settleTimer) window.clearTimeout(settleTimer);
+      };
+    }
     const lenis = new Lenis({
       duration: 1.25,
       easing: (time) => Math.min(1, 1.001 - Math.pow(2, -10 * time)),
       smoothWheel: true,
       wheelMultiplier: 0.84,
-      touchMultiplier: 1.05,
       anchors: { offset: -76, duration: 1.2 },
       autoRaf: false,
     });
     const tick = (time: number) => lenis.raf(time * 1000);
-    let settleTimer: number | undefined;
-    const onScroll = () => {
-      ScrollTrigger.update();
-      if (progressRef.current) {
-        progressRef.current.style.setProperty("--progress", `${Math.max(0, lenis.progress * 100)}%`);
-      }
-      const skew = Math.max(-2.5, Math.min(2.5, lenis.velocity * 0.035));
-      document.documentElement.style.setProperty("--scroll-skew", `${skew}deg`);
-      if (settleTimer) window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(() => document.documentElement.style.setProperty("--scroll-skew", "0deg"), 120);
-    };
-
-    lenis.on("scroll", onScroll);
+    const onLenisScroll = () => updateTelemetry(lenis.progress, lenis.velocity);
+    lenis.on("scroll", onLenisScroll);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
-
     return () => {
       lenis.destroy();
       gsap.ticker.remove(tick);
       if (settleTimer) window.clearTimeout(settleTimer);
+      document.documentElement.style.setProperty("--scroll-skew", "0deg");
     };
   }, []);
 

@@ -758,3 +758,20 @@ html.motion-off .hero-field { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .route-chunk-error-enter { animation: none; }
 }
+
+
+html { overscroll-behavior-x: none; }
+
+@media (pointer: coarse), (hover: none) {
+  .cursor-dot,
+  .cursor-ring { display: none !important; }
+
+  .project-card {
+    transform: none !important;
+    transition: background 220ms ease, box-shadow 220ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { overscroll-behavior: auto; }
+}
