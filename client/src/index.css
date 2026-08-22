@@ -730,3 +730,51 @@ html.motion-off .hero-field { display: none; }
     transform: none;
   }
 }
+
+/* Focused hero calibration: one quiet readout, not another effect layer. */
+.hero-specs { display: grid; grid-template-columns: repeat(3, minmax(100px, 1fr)); width: min(100%, 610px); margin-top: clamp(1.8rem, 3.5vw, 3rem); border-top: 1px solid rgba(242, 239, 233, 0.18); border-bottom: 1px solid rgba(242, 239, 233, 0.1); }
+.hero-specs > span { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 0.18rem 0.65rem; align-items: center; min-height: 54px; padding: 0.7rem 0.85rem 0.7rem 0; }
+.hero-specs > span + span { padding-left: 0.85rem; border-left: 1px solid rgba(242, 239, 233, 0.12); }
+.hero-specs b { grid-row: span 2; color: var(--red); font-family: "Barlow Condensed", sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; }
+.hero-specs small, .hero-specs strong { font-family: "Barlow Condensed", sans-serif; letter-spacing: 0.12em; line-height: 1; }
+.hero-specs small { color: rgba(242, 239, 233, 0.48); font-size: 0.52rem; }
+.hero-specs strong { color: var(--ivory); font-size: 0.72rem; font-weight: 500; }
+.hero-specs > span::after { content: ""; position: absolute; right: 0.75rem; bottom: -1px; width: 22px; height: 2px; background: var(--red); transform: scaleX(0); transform-origin: left center; transition: transform 220ms var(--ease); }
+.hero-specs > span:hover::after { transform: scaleX(1); }
+@media (max-width: 760px) {
+  .hero-specs { width: 100%; margin-top: 1.65rem; }
+  .hero-specs > span { min-height: 48px; padding-right: 0.45rem; gap: 0.12rem 0.4rem; }
+  .hero-specs > span + span { padding-left: 0.45rem; }
+  .hero-specs b { font-size: 0.54rem; }
+  .hero-specs small { font-size: 0.44rem; letter-spacing: 0.08em; }
+  .hero-specs strong { font-size: 0.58rem; letter-spacing: 0.08em; }
+  .hero-specs > span::after { right: 0.4rem; width: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-specs > span::after { transition: none; }
+}
+
+/* Restored baseline polish: sharpen the instrument language without adding another canvas or motion layer. */
+.hero-content { position: relative; z-index: 2; max-width: 1120px; }
+.hero-kicker { color: rgba(242, 239, 233, 0.68); }
+.hero-kicker span { width: 42px; }
+.hero-name { text-shadow: 0 0 32px rgba(242, 239, 233, 0.04); }
+.tagline { max-width: 720px; text-wrap: balance; }
+.hero-support { max-width: 720px; }
+.hero-support p { max-width: 330px; }
+.hero-coordinate { position: absolute; right: var(--page-padding); bottom: 2.7rem; color: rgba(242, 239, 233, 0.48); font-family: "Barlow Condensed", sans-serif; font-size: 0.55rem; letter-spacing: 0.14em; writing-mode: vertical-rl; transform: rotate(180deg); }
+.hero-readout { position: absolute; right: var(--page-padding); bottom: 6.8rem; display: grid; gap: 0.3rem; width: 134px; padding: 0.7rem 0.8rem; border-left: 2px solid var(--red); background: rgba(10, 10, 10, 0.46); color: rgba(242, 239, 233, 0.55); font-family: "Barlow Condensed", sans-serif; font-size: 0.52rem; letter-spacing: 0.12em; }
+.hero-readout b { color: var(--gold); font-size: 0.72rem; font-weight: 500; }
+.section-eyebrow { color: rgba(242, 239, 233, 0.62); }
+.section-eyebrow i { background: var(--gold); }
+@supports not (backdrop-filter: blur(2px)) {
+  .site-header { background: rgba(10, 10, 10, 0.96); }
+  .project-dossier-backdrop { background: rgba(3, 3, 3, 0.96); }
+}
+@media (max-width: 760px) {
+  .hero-coordinate { right: 0.9rem; bottom: 1.5rem; font-size: 0.45rem; }
+  .hero-readout { right: 1rem; bottom: 4.4rem; width: 108px; padding: 0.55rem 0.6rem; font-size: 0.44rem; }
+  .hero-readout b { font-size: 0.6rem; }
+  .hero-support { gap: 1.35rem; }
+  .hero-support p { max-width: 340px; }
+}

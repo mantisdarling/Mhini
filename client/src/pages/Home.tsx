@@ -667,6 +667,11 @@ export default function Home() {
                 <MoveUpRight size={18} strokeWidth={1.4} aria-hidden="true" />
               </motion.a>
             </div>
+            <div className="hero-specs" aria-label="Mantis operating profile">
+              <span><b>01</b><small>DISCIPLINE</small><strong>BUSHIDO</strong></span>
+              <span><b>02</b><small>EDGE</small><strong>KATANA</strong></span>
+              <span><b>03</b><small>PACE</small><strong>F1 / 60 FPS</strong></span>
+            </div>
           </div>
           <a className="scroll-pulse" href="#identity" aria-label="Scroll to Identity">
             <span>SCROLL TO ENGAGE</span>
