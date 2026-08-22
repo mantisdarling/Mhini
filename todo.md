@@ -160,4 +160,4 @@
 - [x] Convert the supplied still images into deliberate scroll chapters that crossfade or transition behind the existing portfolio content instead of appearing as separate media cards.
 - [x] Replace broken media behavior with reliable production-safe sources, responsive video and image fallbacks, readable overlays, and no empty placeholder panels. Reuploaded the original scene stills, verified their HTTP responses, and added poster layers beneath both Pinterest embeds.
 - [x] Validate the video-first rebuild across desktop, tablet, phone, reduced motion, accessibility, content preservation, tests, type checks, production build, dependency safety, and browser behavior. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
-- [ ] Commit, push, and checkpoint the video-first cinematic rebuild as mantisdarling.
+- [x] Commit, push, and checkpoint the video-first cinematic rebuild as mantisdarling. Pushed commit aecd447 authored by mantisdarling to GitHub main; checkpoint follows.
