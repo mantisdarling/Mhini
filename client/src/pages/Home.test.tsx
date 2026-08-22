@@ -92,6 +92,21 @@ describe("rebuilt Mantis Home page", () => {
     expect(image?.classList.contains("is-loaded")).toBe(true);
   });
 
+  it("resets dossier image reveal state when the selected project changes", () => {
+    renderHome();
+    const cards = container?.querySelectorAll<HTMLElement>(".rebuild-project-card") ?? [];
+    act(() => cards[0]?.click());
+    const firstImage = container?.querySelector<HTMLImageElement>(".rebuild-modal img.mobile-image-reveal");
+    expect(firstImage).toBeTruthy();
+    act(() => firstImage?.dispatchEvent(new Event("load")));
+    expect(firstImage?.classList.contains("is-loaded")).toBe(true);
+    act(() => container?.querySelector<HTMLButtonElement>(".rebuild-modal-close")?.click());
+    act(() => cards[1]?.click());
+    const secondImage = container?.querySelector<HTMLImageElement>(".rebuild-modal img.mobile-image-reveal");
+    expect(secondImage).toBeTruthy();
+    expect(secondImage?.classList.contains("is-loaded")).toBe(false);
+  });
+
   it("exposes the project archive as a touch carousel on narrow screens", () => {
     renderHome();
     const carousel = container?.querySelector<HTMLElement>('[role="region"][aria-roledescription="carousel"]');
