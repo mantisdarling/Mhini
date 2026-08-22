@@ -9,6 +9,7 @@ import { CredentialsSection, EcosystemSection, PersonalSignalSection, ProfileIde
 import { MantisSilhouette } from "@/components/MantisSilhouette";
 import { MantisFluidField } from "@/components/MantisFluidField";
 import { MantisAtmosphere } from "@/components/MantisAtmosphere";
+import { LayerState, MantisLayerProgress } from "@/components/MantisLayerProgress";
 import { MantisNarrative } from "@/components/MantisNarrative";
 
 import { profile, projects as profileProjects } from "@/data/profileData";
@@ -199,6 +200,8 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState(railSections[0]);
   const [archiveMode, setArchiveMode] = useState("scan");
   const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
+  const [fluidLayerState, setFluidLayerState] = useState<LayerState>("pending");
+  const [katanaLayerState, setKatanaLayerState] = useState<LayerState>("pending");
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const displayedProjects: PortfolioProject[] = [...resumeProjects, ...(publicProjectsQuery.data ?? [])];
   const cursorDot = useRef<HTMLDivElement>(null);
@@ -609,8 +612,9 @@ export default function Home() {
         </section>
       )}
 
-      <MantisFluidField />
+      <MantisFluidField onReady={setFluidLayerState} />
       <MantisAtmosphere />
+      <MantisLayerProgress fluid={fluidLayerState} katana={katanaLayerState} />
       <div className="noise-overlay" aria-hidden="true" />
       <div className="ambient-sweep" aria-hidden="true" />
       <div className="cursor-dot" ref={cursorDot} aria-hidden="true" />
@@ -728,7 +732,7 @@ export default function Home() {
             <p>Scroll to rotate through the instrument. The blade is the interface between intent and release.</p>
           </div>
           <Suspense fallback={<div className="katana-scene katana-scene-loading" aria-label="Loading Mantis katana study"><div className="katana-fallback" aria-hidden="true" /></div>}>
-            <LazyMantisKatanaScene />
+            <LazyMantisKatanaScene onReady={setKatanaLayerState} />
           </Suspense>
         </section>
 

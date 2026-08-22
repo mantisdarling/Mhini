@@ -180,3 +180,4 @@
 - [x] Validate Unicode-safe handling for any animated text input without changing existing data flows. No user-supplied animated text path exists; all animated Kanji and wordmark strings are authored constants.
 - [x] Re-run regression, security, type, build, performance, and visual checks, then synchronize the completed refinement as mantisdarling. 25 tests passed, TypeScript passed, production build passed, dependency audit reported no known vulnerabilities, and GitHub synchronization is in progress for the final refinement.
 - [x] Commit and push the current Mantis creative refinement as mantisdarling, then verify remote identity and clean tree.
+- [x] Add a subtle accessible loading progress indicator for the WebGL fluid field and lazy Three.js katana layer, with non-blocking fallback behavior. Verified with focused component coverage and full project validation.

@@ -1,18 +1,23 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-export function MantisKatanaScene() {
+export function MantisKatanaScene({ onReady }: { onReady?: (state: "ready" | "fallback") => void }) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const readyRef = useRef(onReady);
+  readyRef.current = onReady;
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!host) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { readyRef.current?.("fallback"); return; }
     const canvas = document.createElement("canvas");
     canvas.setAttribute("aria-hidden", "true");
     canvas.className = "katana-canvas";
     host.appendChild(canvas);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
+    let renderer: THREE.WebGLRenderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" }); } catch { readyRef.current?.("fallback"); host.removeChild(canvas); return; }
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     const lowPower = (navigator.hardwareConcurrency || 4) <= 4;
+    readyRef.current?.("ready");
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse || lowPower ? 1 : 1.35));
     renderer.setClearColor(0x000000, 0);
     const scene = new THREE.Scene();
