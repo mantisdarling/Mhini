@@ -119,3 +119,16 @@
 - [x] Finish and document a verifiable repository-wide audit scope, including all authored files and the authored underscore-character check, then record the evidence. Completed with tracked-file inventory, authored-source scans, dangerous-sink scan, credential scan, and framework or schema identifier review.
 - [x] Add new regression tests for storage key validation, Supabase error redaction, debug collector payload rejection, and the CDN-compatible resource policy behavior. Covered by the application and security boundary suites.
 - [x] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo. Checkpoint: 6fed95e9.
+- [x] Run a comprehensive final security scan covering dependencies, secrets, dangerous sinks, trust boundaries, and security regression tests; report findings without code changes unless approved.
+- [x] Perform a second zero-trust audit covering OWASP risks, taint-style data flows, access control, SSRF, XSS, injection, DoS, cryptography, dependencies, CI, deployment, and regression compatibility.
+- [x] Fix only verified vulnerabilities or engineering defects found by the deeper audit, with concise comments and focused tests. Restricted project and image URLs to HTTP and HTTPS and added regression coverage.
+- [x] Re-run full security, regression, type, build, and performance validation and record the final posture. 27 tests passed, TypeScript passed, production build passed, and the full dependency audit reported zero known vulnerabilities.
+- [x] Complete repository-wide automated scans and targeted authored-source review for security, correctness, regression, maintainability, and deployment risks.
+- [x] Fix verified line-level defects with concise comments and focused regression tests.
+- [x] Run full line-audit validation and save the resulting checkpoint.
+
+- [x] Upgrade Vite, Rollup, Picomatch, Babel, Nanoid, PostCSS, and esbuild to patched development releases.
+- [x] Override Drizzle Kit's legacy esbuild loader dependency to remove the final full-graph advisory.
+- [x] Complete final repository line audit, regression validation, and checkpoint the zero-advisory state.
+- [x] Fix the Express 5 startup PathError caused by the remaining bare wildcard middleware route and add a regression test.
+- [x] Remove the unused Drizzle Kit CLI and its deprecated esbuild loader from the project dependency graph, then validate the existing application and migration documentation remain coherent.
