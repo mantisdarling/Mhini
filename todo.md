@@ -101,3 +101,14 @@
 - [ ] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior.
 - [x] Clarify in Studio that its counters cover database-managed projects only, while the public portfolio also contains the PDF project archive.
 - [x] Clarify that public PDF projects remain read-only source data while Studio manages optional additional records, so existing projects do not need to be entered again.
+- [x] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit. Verified remote commit 562c6ed authored by mantisdarling.
+- [x] Audit the Mantis project for project-specific security, dependency, secret, privacy, performance, backup, and monitoring gaps.
+- [x] Add safe server and Vercel security boundaries that preserve Supabase Magic Link, tRPC, health checks, and public asset delivery.
+- [x] Add privacy and cookie consent behavior only where needed by the existing analytics and deployment setup.
+- [x] Improve asset loading and performance without storing new media in the project repository or breaking CDN references.
+- [x] Add or update tests for security headers, CORS, error redaction, privacy behavior, backup behavior, and critical API paths.
+- [x] Validate the hardening pass with tests, type checks, production build, security route checks, responsive screenshots, and realistic bundle measurements.
+- [x] Save a final production-readiness checkpoint and document that publishing remains a user action.
+- [x] Add automated tests for the privacy consent flow, covering default no analytics state, accept and decline persistence, and analytics script injection only after consent.
+- [x] Add component-level tests for PrivacyConsent covering no script by default, no script after decline, and exactly one script after acceptance.
+- [x] Validate the privacy route and consent banner behavior together in a UI-oriented test. The privacy route was visually verified and the consent component was verified in jsdom.

@@ -9,6 +9,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import ProjectConsole from "./pages/ProjectConsole";
+import PrivacyConsent from "./components/PrivacyConsent";
+import Privacy from "./pages/Privacy";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -16,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/studio" component={ProjectConsole} />
+      <Route path="/privacy" component={Privacy} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -28,6 +31,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <PrivacyConsent />
           <Router />
         </TooltipProvider>
       </ThemeProvider>
