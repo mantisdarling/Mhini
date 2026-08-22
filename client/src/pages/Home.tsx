@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { CredentialsSection, EcosystemSection, PersonalSignalSection, ProfileIdentitySection, TechnologySection } from "@/components/ProfileDataSections";
 import { MantisSilhouette } from "@/components/MantisSilhouette";
 import { MantisFluidField } from "@/components/MantisFluidField";
+import { MantisAtmosphere } from "@/components/MantisAtmosphere";
 import { MantisNarrative } from "@/components/MantisNarrative";
 
 import { profile, projects as profileProjects } from "@/data/profileData";
@@ -398,7 +399,7 @@ export default function Home() {
         return;
       }
 
-      const name = new SplitText(".hero-name", { type: "chars" });
+      const name = new SplitText(".hero-name-slice", { type: "chars" });
       const deep = new SplitText(".tagline-deep", { type: "chars" });
       const build = new SplitText(".tagline-build", { type: "chars" });
       gsap.set([name.chars, deep.chars, build.chars], { autoAlpha: 0, yPercent: 110 });
@@ -609,6 +610,7 @@ export default function Home() {
       )}
 
       <MantisFluidField />
+      <MantisAtmosphere />
       <div className="noise-overlay" aria-hidden="true" />
       <div className="ambient-sweep" aria-hidden="true" />
       <div className="cursor-dot" ref={cursorDot} aria-hidden="true" />
@@ -685,7 +687,10 @@ export default function Home() {
           </div>
           <div className="hero-content">
             <p className="hero-kicker"><span /> FOUNDER @ MANTIS / IIT MADRAS CS</p>
-            <h1 className="hero-name">MANTIS</h1>
+            <h1 className="hero-name" aria-label="Mantis">
+              <span className="hero-name-slice hero-name-top" aria-hidden="true">MANTIS</span>
+              <span className="hero-name-slice hero-name-bottom" aria-hidden="true">MANTIS</span>
+            </h1>
             <div className="tagline" aria-label="I GO DEEP AND THEN I BUILD">
               <span className="tagline-deep">I GO DEEP</span>
               <span className="tagline-build">AND THEN I BUILD</span>
