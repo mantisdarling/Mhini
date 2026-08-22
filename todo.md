@@ -176,3 +176,8 @@
 - [x] Add smooth cinematic load-in motion with a reduced-motion fallback and no layout shift.
 - [x] Validate the polished hero and first scroll scene across desktop and phone with tests, types, build, audit, and runtime checks. 32 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
 - [x] Commit, push, and checkpoint the final cinematic polish as mantisdarling. Pushed commit b2106b3 authored by mantisdarling to GitHub main; checkpoint follows.
+- [x] Change the hero heading from Mantis Builds to only Mantis with a bold samurai-inspired visual treatment.
+- [x] Audit the full public page for visible Manus attribution, spelling, content completeness, media failures, visual misalignments, and low-quality presentation. Public attribution scan is clear, the Mantis-only hero is aligned on desktop and phone, media is visible, and preserved profile and project content remain present.
+- [x] Fix all discovered responsive, visual, copy, media, accessibility, and security issues without removing real portfolio content.
+- [x] Re-run the full regression, security, type, build, runtime, and cross-device review after the final pass. 32 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and browser logs were clean.
+- [ ] Commit, push, and checkpoint the final audited website as mantisdarling.

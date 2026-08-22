@@ -42,6 +42,8 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.textContent).toContain(profile.fullName);
     expect(container?.textContent).toContain(profile.positioning);
     expect(container?.textContent).toContain("Mantis");
+    expect(container?.querySelector(".rebuild-wordmark")?.textContent).toBe("Mantis");
+    expect(container?.querySelector(".rebuild-wordmark")?.textContent).not.toContain("Builds");
     expect(container?.textContent).toContain("Harshit Kumar");
     for (const project of projects) expect(container?.textContent).toContain(project.name);
   });

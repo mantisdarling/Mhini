@@ -172,7 +172,7 @@ export default function Home() {
           <div className="rebuild-hero-copy">
             <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
             <p className="rebuild-kicker">I GO DEEP. THEN I BUILD.</p>
-            <h1>Mantis<br /><em>Builds.</em></h1>
+            <h1 className="rebuild-wordmark">Mantis</h1>
             <p className="rebuild-lede">{profile.oneLineBio}</p>
             <div className="rebuild-hero-actions"><button className="rebuild-primary" type="button" onClick={() => scrollTo("work")}>See the work <ArrowUpRight size={17} aria-hidden="true" /></button><a className="rebuild-secondary" href={`mailto:${profile.secondaryEmail}`}>Start a conversation</a></div>
             <div className="rebuild-hero-proof"><span><b>01</b> MANTIS / FOUNDER</span><span><b>02</b> IIT MADRAS / CS</span><span><b>03</b> AI / SYSTEMS</span></div>
