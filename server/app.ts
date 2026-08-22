@@ -25,18 +25,19 @@ export function createApplication(options: ApplicationOptions = {}) {
     "http://localhost:3000",
     "http://127.0.0.1:3000",
   ].filter((origin): origin is string => Boolean(origin)));
+  const isDevelopment = process.env.NODE_ENV === "development";
   const contentSecurityPolicy = [
     "default-src 'self'",
     "base-uri 'self'",
     "object-src 'none'",
     "frame-ancestors 'none'",
     "form-action 'self'",
-    "script-src 'self' https://manus-analytics.com",
+    `script-src 'self'${isDevelopment ? " 'unsafe-inline'" : ""} https://manus-analytics.com`,
     "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
     "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com",
-    "connect-src 'self' https://manus-analytics.com https://*.supabase.co",
+    `connect-src 'self' https://manus-analytics.com https://*.supabase.co${isDevelopment ? " ws://localhost:* ws://127.0.0.1:*" : ""}`,
     "frame-src 'none'",
     "upgrade-insecure-requests",
   ].join("; ");

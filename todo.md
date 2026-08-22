@@ -119,3 +119,7 @@
 - [x] Finish and document a verifiable repository-wide audit scope, including all authored files and the authored underscore-character check, then record the evidence. Completed with tracked-file inventory, authored-source scans, dangerous-sink scan, credential scan, and framework or schema identifier review.
 - [x] Add new regression tests for storage key validation, Supabase error redaction, debug collector payload rejection, and the CDN-compatible resource policy behavior. Covered by the application and security boundary suites.
 - [x] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo. Checkpoint: 6fed95e9.
+- [x] Restore the stable pre-animation checkpoint 4e0be932 as confirmed by Mantis. Restored and repaired the Express 5 preview middleware.
+- [x] Refine the restored portfolio with original samurai silhouette, katana precision, and F1 telemetry cues without reintroducing visual overload. Preserved the restrained baseline composition and verified its katana imagery, red telemetry lines, and F1 instrument-panel hierarchy.
+- [x] Validate the restored refinement across desktop, mobile, reduced motion, accessibility, security, tests, type checks, production build, and clean browser behavior. 25 tests passed, TypeScript passed, production build passed, dependency audit passed, desktop and mobile captures rendered, and current browser logs show no runtime failures.
+- [x] Save and report the restored refined version.
