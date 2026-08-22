@@ -148,4 +148,4 @@
 - [x] Add subtle transform-only scroll parallax to the image-led story chapters without changing their layout bounds. Added a bounded image-only parallax hook inside clipped story frames.
 - [x] Disable decorative parallax for touch, reduced-motion, and low-power contexts, and clean up every animation frame and observer on unmount. Uses coarse-pointer and narrow-viewport gates, reduced-motion detection, observer visibility, one animation frame loop, cancellation, and observer disconnect.
 - [x] Add focused coverage and validate story animation behavior, responsiveness, accessibility, tests, type checks, production build, dependency safety, and browser errors. Added bounded math coverage; 31 tests, TypeScript, build, dependency audit, diff hygiene, full desktop and phone captures, and browser error checks passed.
-- [ ] Commit, push, and checkpoint the story parallax enhancement as mantisdarling.
+- [x] Commit, push, and checkpoint the story parallax enhancement as mantisdarling. Committed as ca6ac72 and pushed to GitHub main under mantisdarling; checkpoint follows.
