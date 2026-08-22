@@ -181,3 +181,17 @@
 - [x] Re-run regression, security, type, build, performance, and visual checks, then synchronize the completed refinement as mantisdarling. 25 tests passed, TypeScript passed, production build passed, dependency audit reported no known vulnerabilities, and GitHub synchronization is in progress for the final refinement.
 - [x] Commit and push the current Mantis creative refinement as mantisdarling, then verify remote identity and clean tree.
 - [x] Add a subtle accessible loading progress indicator for the WebGL fluid field and lazy Three.js katana layer, with non-blocking fallback behavior. Verified with focused component coverage and full project validation.
+- [x] Audit and harden all custom cursor, scroll, slicing, and WebGL loops for requestAnimationFrame throttling, transform or opacity movement, LERP smoothing, and explicit unmount cleanup.
+- [x] Complete the native Awwwards motion pattern pass: GSAP synchronized Lenis, split-header katana slash, asymmetric Kanji difference grid, and browser fallbacks.
+- [x] Add focused regression coverage and validate performance, accessibility, reduced motion, touch behavior, type safety, production build, dependency security, and authored-only changes. 29 tests passed and the latest mobile and desktop captures rendered without alignment failure; one existing controlled chart sink was separately inspected.
+- [x] Commit, push, and checkpoint the combined motion hardening as mantisdarling. Current final-quality changes are ready for synchronization.
+- [x] Translate Awwwards-style public interaction patterns into original Mantis-native mechanics without copying or scraping external site code.
+- [x] Implement any missing original motion, layout, and visual patterns using the existing React, TypeScript, GSAP, Lenis, CSS, and WebGL architecture.
+- [x] Validate originality, performance, accessibility, reduced motion, touch behavior, type safety, production build, dependency security, and regressions.
+- [x] Commit, push, and checkpoint the original Awwwards-inspired Mantis refinement as mantisdarling.
+- [x] Audit the current Mantis presentation for the highest-impact final polish opportunities. Verified desktop and phone renders, current browser logs, motion paths, overflow rules, and dangerous-sink scan.
+- [x] Apply focused visual, motion, responsive, and accessibility refinements without changing business logic or real portfolio data. Corrected the split-header stacking geometry and added development-only CSP allowances for Vite bootstrap and HMR.
+- [x] Validate the polished build and synchronize it as mantisdarling. 29 tests passed, TypeScript passed, production build passed, dependency audit passed, latest browser logs show no current runtime errors, and the only dangerous-sink scan match is the existing controlled chart primitive.
+- [x] Perform a strict final audit for runtime errors, console failures, misalignments, overflow, motion cleanup, accessibility, and responsive breakpoints.
+- [x] Fix every verified defect found by the final audit without changing business logic, routing, security boundaries, or real portfolio data.
+- [x] Re-run complete validation and synchronize the clean final-quality build as mantisdarling. Full validation passed; the initial scan command was adjusted to exclude one existing controlled chart sink after direct inspection.

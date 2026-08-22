@@ -852,10 +852,10 @@ html.motion-off .mantis-depth-glyph { transform: none !important; }
 .mantis-kanji-field span:last-child { bottom: -12vh; left: 8vw; transform: rotate(-12deg); }
 .mantis-film-grain { position: fixed; z-index: 41; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.12; mix-blend-mode: soft-light; animation: mantis-film-jitter 166ms steps(2, end) infinite alternate; }
 @keyframes mantis-film-jitter { 0% { transform: translate3d(-0.35%, 0.25%, 0); } 25% { transform: translate3d(0.25%, -0.2%, 0); } 50% { transform: translate3d(0.15%, 0.35%, 0); } 75% { transform: translate3d(-0.2%, -0.3%, 0); } 100% { transform: translate3d(0.3%, 0.1%, 0); } }
-.hero-name { position: relative; display: grid; overflow: hidden; isolation: isolate; cursor: crosshair; }
-.hero-name-slice { display: block; will-change: transform, opacity; transition: transform 150ms cubic-bezier(0.77, 0, 0.175, 1); }
+.hero-name { position: relative; display: block; height: 1em; overflow: hidden; isolation: isolate; cursor: crosshair; }
+.hero-name-slice { position: absolute; inset: 0; display: block; will-change: transform, opacity; transition: transform 150ms cubic-bezier(0.77, 0, 0.175, 1); }
 .hero-name-top { clip-path: inset(0 0 50% 0); }
-.hero-name-bottom { margin-top: -0.2em; clip-path: inset(50% 0 0 0); }
+.hero-name-bottom { clip-path: inset(50% 0 0 0); }
 .hero-name::after { content: ""; position: absolute; z-index: 2; top: 49%; left: -8%; width: 116%; height: 0.045em; pointer-events: none; background: linear-gradient(90deg, transparent, var(--red) 20%, var(--ivory) 48%, var(--red) 72%, transparent); transform: translateX(-110%) rotate(-4deg); opacity: 0; transition: transform 150ms cubic-bezier(0.77, 0, 0.175, 1), opacity 100ms ease; }
 .hero-name:hover .hero-name-top { transform: translateX(15px); }
 .hero-name:hover .hero-name-bottom { transform: translateX(-15px); }
