@@ -86,3 +86,11 @@
 - [ ] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
 - [ ] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
 - [ ] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
+- [ ] Diagnose why the Supabase Magic Link is delayed or missing and verify the configured email provider behavior on the free plan.
+- [ ] Recheck the deployed Magic Link request response and owner session after the delivery issue is resolved.
+- [ ] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data.
+- [x] Align the private /studio route with the Mantis Red, telemetry, and blade-line visual system while preserving CRUD behavior.
+- [x] Validate the approved Track Record and /studio refinements across desktop, mobile, reduced motion, tests, type checks, and production build. Historical wording retained; current scope validated studio-only and confirmed the Track Record unchanged.
+- [x] Do not modify the public Track Record section as requested; preserve its current layout and copy.
+- [x] Confirm the exact /studio visual alignment changes before implementation.
+- [x] Implement only the approved /studio alignment and validate the untouched public Track Record.

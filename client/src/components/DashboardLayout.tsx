@@ -62,13 +62,16 @@ export default function DashboardLayout({
   if (!user) {
     const independent = independentAuthEnabled();
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
-            </h1>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
+      <div className="studio-gate">
+        <div className="studio-gate-panel">
+          <div className="studio-gate-brand">
+            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png" alt="Mantis blade monogram" />
+            <span>MANTIS / STUDIO</span>
+          </div>
+          <div className="studio-gate-heading">
+            <p className="studio-eyebrow">PRIVATE CHANNEL / OWNER ACCESS</p>
+            <h1>Sign in to continue</h1>
+            <p>
               {independent ? "Use your owner email to receive a one-time secure sign-in link." : "Access to this dashboard requires authentication. Continue to launch the login flow."}
             </p>
           </div>
@@ -85,12 +88,13 @@ export default function DashboardLayout({
                 setSendingLink(false);
               }
             }}>
-              <input className="h-11 w-full border border-border bg-background px-3 text-sm" type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="owner@example.com" required />
-              <Button type="submit" disabled={sendingLink} size="lg" className="w-full shadow-lg hover:shadow-xl transition-all">{sendingLink ? "Sending secure link…" : "Send secure sign-in link"}</Button>
+              <label className="studio-field-label">OWNER EMAIL<input className="studio-email-input" type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="owner@example.com" required /></label>
+              <Button type="submit" disabled={sendingLink} size="lg" className="studio-submit-button">{sendingLink ? "Sending secure link…" : "Send secure sign-in link"}</Button>
             </form>
           ) : (
-            <Button onClick={() => startLogin()} size="lg" className="w-full shadow-lg hover:shadow-xl transition-all">Sign in</Button>
+            <Button onClick={() => startLogin()} size="lg" className="studio-submit-button">Sign in</Button>
           )}
+          <div className="studio-gate-foot"><span>AUTH / READY</span><span>LINKS EXPIRE AFTER USE</span></div>
         </div>
       </div>
     );
@@ -104,9 +108,11 @@ export default function DashboardLayout({
         } as CSSProperties
       }
     >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
-        {children}
-      </DashboardLayoutContent>
+      <div className="studio-shell">
+        <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+          {children}
+        </DashboardLayoutContent>
+      </div>
     </SidebarProvider>
   );
 }
@@ -170,10 +176,10 @@ function DashboardLayoutContent({
       <div className="relative" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
-          className="border-r-0"
+          className="studio-sidebar border-r-0"
           disableTransition={isResizing}
         >
-          <SidebarHeader className="h-16 justify-center">
+          <SidebarHeader className="studio-sidebar-header h-16 justify-center">
             <div className="flex items-center gap-3 px-2 transition-all w-full">
               <button
                 onClick={toggleSidebar}
@@ -184,9 +190,8 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-semibold tracking-tight truncate">
-                      Mantis / Control
-                  </span>
+                    <img className="studio-sidebar-mark" src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png" alt="" />
+                    <span className="studio-sidebar-wordmark">MANTIS <i /> CONTROL</span>
                 </div>
               ) : null}
             </div>
@@ -256,7 +261,7 @@ function DashboardLayoutContent({
         />
       </div>
 
-      <SidebarInset>
+      <SidebarInset className="studio-inset">
         {isMobile && (
           <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
             <div className="flex items-center gap-2">
@@ -271,7 +276,7 @@ function DashboardLayoutContent({
             </div>
           </div>
         )}
-        <main className="flex-1 p-4">{children}</main>
+        <main className="studio-main-content">{children}</main>
       </SidebarInset>
     </>
   );
