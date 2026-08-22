@@ -942,9 +942,15 @@ body.rebuild-body::before { display: none; }
 .rebuild-evidence .rebuild-link { color: rgba(233, 231, 225, 0.72); }
 .rebuild-evidence .rebuild-link:hover { color: var(--paper); }
 .rebuild-dossier-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: clamp(3rem, 7vw, 6rem); }
-.rebuild-dossier { border-color: rgba(233, 231, 225, 0.2); }
-.rebuild-dossier summary { color: var(--paper); }
-.rebuild-dossier > div { padding-bottom: 0.5rem; }
+.rebuild-dossier { overflow: hidden; border-color: rgba(233, 231, 225, 0.2); }
+.rebuild-dossier-heading { margin: 0; }
+.rebuild-dossier-summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; border: 0; padding: 1.1rem 0; background: transparent; color: var(--paper); cursor: pointer; text-align: left; }
+.rebuild-dossier-summary:focus-visible { outline: 2px solid var(--red); outline-offset: 5px; }
+.rebuild-dossier-summary svg { flex: 0 0 auto; color: var(--red); transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1); }
+.rebuild-dossier.is-open .rebuild-dossier-summary svg { transform: rotate(180deg); }
+.rebuild-dossier-panel { max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 420ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms ease, visibility 420ms; }
+.rebuild-dossier-panel[aria-hidden="false"] { opacity: 1; visibility: visible; }
+.rebuild-dossier-panel-inner { padding-bottom: 0.5rem; }
 .rebuild-dossier article { display: grid; gap: 0.45rem; padding: 1.1rem 0; border-top: 1px solid rgba(233, 231, 225, 0.15); }
 .rebuild-dossier article p { margin: 0; color: rgba(233, 231, 225, 0.64); font-size: 0.78rem; line-height: 1.55; }
 .rebuild-dossier article small { color: rgba(233, 231, 225, 0.5); }
@@ -1022,6 +1028,7 @@ body.rebuild-body::before { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .rebuild-site *, .rebuild-site *::before, .rebuild-site *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .rebuild-dossier-panel { transition: none; }
 }
 
 /* The rebuilt shell gives consent its own quiet signal treatment instead of a hero-blocking panel. */

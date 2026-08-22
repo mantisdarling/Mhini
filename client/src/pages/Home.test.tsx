@@ -148,16 +148,22 @@ describe("rebuilt Mantis Home page", () => {
 
   it("keeps Evidence dossiers closed until their summary is activated", () => {
     renderHome();
-    const dossiers = Array.from(container?.querySelectorAll<HTMLDetailsElement>("#evidence .rebuild-dossier") ?? []);
+    const dossiers = Array.from(container?.querySelectorAll<HTMLElement>("#evidence .rebuild-dossier") ?? []);
     expect(dossiers).toHaveLength(4);
-    expect(dossiers.every(dossier => !dossier.open)).toBe(true);
+    expect(dossiers.every(dossier => dossier.classList.contains("is-open") === false)).toBe(true);
     expect(dossiers[0].textContent).toContain("Securing Agents with NemoClaw and OpenShell");
+    expect(dossiers.every(dossier => dossier.querySelector('[aria-expanded="false"]'))).toBe(true);
 
-    const summary = dossiers[0].querySelector("summary");
+    const summary = dossiers[0].querySelector<HTMLButtonElement>(".rebuild-dossier-summary");
+    const panel = dossiers[0].querySelector<HTMLElement>(".rebuild-dossier-panel");
     act(() => summary?.click());
-    expect(dossiers[0].open).toBe(true);
+    expect(summary?.getAttribute("aria-expanded")).toBe("true");
+    expect(dossiers[0].classList.contains("is-open")).toBe(true);
+    expect(panel?.getAttribute("aria-hidden")).toBe("false");
     act(() => summary?.click());
-    expect(dossiers[0].open).toBe(false);
+    expect(summary?.getAttribute("aria-expanded")).toBe("false");
+    expect(dossiers[0].classList.contains("is-open")).toBe(false);
+    expect(panel?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {

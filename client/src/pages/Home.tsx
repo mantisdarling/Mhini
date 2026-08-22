@@ -16,7 +16,7 @@ import {
   writing,
 } from "@/data/profileData";
 import { ArrowUpRight, Check, ChevronDown, Github, Instagram, Linkedin, Mail, Menu, X } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useStoryParallax } from "@/hooks/useStoryParallax";
 
 type DisplayProject = {
@@ -189,6 +189,37 @@ function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: 
   return <article className="cinematic-story-scene"><ResponsiveImage src={src} mobileSrc={mobileSrc} className="cinematic-story-image" /><span>{label}</span><h3>{title}</h3></article>;
 }
 
+function EvidenceDossier({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const [panelHeight, setPanelHeight] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const measure = () => setPanelHeight(panel.scrollHeight);
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className={`rebuild-dossier ${open ? "is-open" : ""}`}>
+      <h3 className="rebuild-dossier-heading">
+        <button id={`${id}-summary`} className="rebuild-dossier-summary" type="button" aria-expanded={open} aria-controls={`${id}-panel`} onClick={() => setOpen(value => !value)}>
+          <span>{title}</span>
+          <ChevronDown size={17} aria-hidden="true" />
+        </button>
+      </h3>
+        <div ref={panelRef} id={`${id}-panel`} className="rebuild-dossier-panel" role="region" aria-labelledby={`${id}-summary`} aria-hidden={!open} inert={!open ? true : undefined} style={{ maxHeight: open ? panelHeight : 0 }}>
+        <div className="rebuild-dossier-panel-inner">{children}</div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
@@ -330,10 +361,10 @@ export default function Home() {
             <div className="rebuild-evidence-column"><h3>Credentials</h3>{credentials.map(item => <article className="rebuild-record" key={item.name}><div><span>{item.status}</span><b>{item.name}</b><small>{item.issuer}{"date" in item && item.date ? ` / ${item.date}` : ""}</small></div><ExternalLink href={item.url}>View</ExternalLink></article>)}</div>
           </div>
           <div className="rebuild-dossier-grid">
-            <details className="rebuild-dossier"><summary>Courses and learning <ChevronDown size={17} aria-hidden="true" /></summary><div>{courses.map(item => <article key={item.name}><span>{item.status}</span><b>{item.name}</b><small>{item.provider} / {item.subject}</small><p>{item.description}</p><ExternalLink href={"url" in item ? item.url : undefined}>Open course</ExternalLink></article>)}</div></details>
-            <details className="rebuild-dossier"><summary>Open source and community <ChevronDown size={17} aria-hidden="true" /></summary><div>{[...openSource.map(item => ({ title: item.name, meta: item.role, body: item.description, url: "url" in item ? item.url : undefined })), ...memberships.map(item => ({ title: item.organization, meta: item.role, body: "description" in item ? item.description : item.location, url: "url" in item ? item.url : undefined }))].map(item => <article key={item.title}><span>{item.meta}</span><b>{item.title}</b><p>{item.body}</p><ExternalLink href={item.url}>Visit record</ExternalLink></article>)}</div></details>
-            <details className="rebuild-dossier"><summary>Research and competition <ChevronDown size={17} aria-hidden="true" /></summary><div><article><span>{writing.platform}</span><b>{writing.title}</b><p>{writing.description}</p><ExternalLink href={writing.url}>Read article</ExternalLink></article>{hackathons.map(item => <article key={item.name}><span>{item.status}{"organizer" in item && item.organizer ? ` / ${item.organizer}` : ""}</span><b>{item.name}</b><p>{item.description}</p></article>)}</div></details>
-            <details className="rebuild-dossier"><summary>Life outside the stack <ChevronDown size={17} aria-hidden="true" /></summary><div><article><span>Languages</span><p>{languages.join(" / ")}</p></article><article><span>Interests and hobbies</span><p>{interests.join(" / ")}</p></article><article><span>Core positioning</span><b>{vision.core}</b><p>{vision.landingMessage}</p></article><article><span>Short term goals</span>{vision.shortTerm.map(item => <p key={item}>{item}</p>)}</article><article><span>Long term vision</span>{vision.longTerm.map(item => <p key={item}>{item}</p>)}</article></div></details>
+            <EvidenceDossier id="evidence-courses" title="Courses and learning"><div>{courses.map(item => <article key={item.name}><span>{item.status}</span><b>{item.name}</b><small>{item.provider} / {item.subject}</small><p>{item.description}</p><ExternalLink href={"url" in item ? item.url : undefined}>Open course</ExternalLink></article>)}</div></EvidenceDossier>
+            <EvidenceDossier id="evidence-community" title="Open source and community"><div>{[...openSource.map(item => ({ title: item.name, meta: item.role, body: item.description, url: "url" in item ? item.url : undefined })), ...memberships.map(item => ({ title: item.organization, meta: item.role, body: "description" in item ? item.description : item.location, url: "url" in item ? item.url : undefined }))].map(item => <article key={item.title}><span>{item.meta}</span><b>{item.title}</b><p>{item.body}</p><ExternalLink href={item.url}>Visit record</ExternalLink></article>)}</div></EvidenceDossier>
+            <EvidenceDossier id="evidence-research" title="Research and competition"><div><article><span>{writing.platform}</span><b>{writing.title}</b><p>{writing.description}</p><ExternalLink href={writing.url}>Read article</ExternalLink></article>{hackathons.map(item => <article key={item.name}><span>{item.status}{"organizer" in item && item.organizer ? ` / ${item.organizer}` : ""}</span><b>{item.name}</b><p>{item.description}</p></article>)}</div></EvidenceDossier>
+            <EvidenceDossier id="evidence-life" title="Life outside the stack"><div><article><span>Languages</span><p>{languages.join(" / ")}</p></article><article><span>Interests and hobbies</span><p>{interests.join(" / ")}</p></article><article><span>Core positioning</span><b>{vision.core}</b><p>{vision.landingMessage}</p></article><article><span>Short term goals</span>{vision.shortTerm.map(item => <p key={item}>{item}</p>)}</article><article><span>Long term vision</span>{vision.longTerm.map(item => <p key={item}>{item}</p>)}</article></div></EvidenceDossier>
           </div>
         </section>
 

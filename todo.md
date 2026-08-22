@@ -313,3 +313,8 @@
 - [x] Add regression coverage for the initial closed state and open-close behavior. The focused Home suite confirms four closed dossiers, retained course content, and native summary open-close behavior.
 - [x] Validate the Evidence disclosure behavior on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the Evidence accordion fix as mantisdarling. Commit 39c7ee1 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [x] Add smooth height-aware transitions when Evidence accordions open and close, keeping every group closed by default. Added measured max-height, opacity, visibility, and arrow rotation transitions.
+- [x] Preserve native summary toggle semantics, focus behavior, content accessibility, and reduced-motion preferences during the transition. Controlled buttons expose expanded state and panel relationships, hidden panels are inert, and reduced motion disables transitions.
+- [x] Validate the accordion animation on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the accordion transition enhancement as mantisdarling.
