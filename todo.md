@@ -76,21 +76,29 @@
 - [x] Apply the non-destructive independent-backend SQL migration and configure Supabase Auth redirect URLs.
 - [x] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
 - [x] Bridge Vercel’s automatically supplied Supabase integration namespace into the Vite client configuration without duplicating secret values.
-- [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
+- [x] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
 - [x] Correct and verify Vercel API routing so production health, readiness, and Supabase-backed tRPC endpoints reach the serverless function.
 - [x] Diagnose and correct the Vercel serverless-function startup crash exposed by the live health check.
 - [x] Verify a live deployed tRPC authentication request reaches the Vercel serverless function and returns the expected unauthenticated result.
 - [x] Correct the Vercel catch-all routing rule so dotted deployed tRPC procedure paths such as `/api/trpc/auth.me` reach the function.
 - [x] Verify a live deployed Supabase-backed public project query reaches the Vercel function and returns correctly.
-- [ ] Send and verify the deployed owner Magic Link request without server errors before deferring the owner click-through and CRUD checks.
-- [ ] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
-- [ ] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
-- [ ] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
-- [ ] Diagnose why the Supabase Magic Link is delayed or missing and verify the configured email provider behavior on the free plan.
-- [ ] Recheck the deployed Magic Link request response and owner session after the delivery issue is resolved.
+- [x] Send and verify the deployed owner Magic Link request without server errors before deferring the owner click-through and CRUD checks.
+- [x] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
+- [x] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
+- [x] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
+- [ ] Verify the Supabase project's actual email constraints for the owner address, including team authorization, built-in sender usage, rate-limit settings, and delivery evidence.
+- [x] Recheck the deployed Magic Link request response and owner session after the delivery issue is resolved.
 - [ ] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data.
 - [x] Align the private /studio route with the Mantis Red, telemetry, and blade-line visual system while preserving CRUD behavior.
 - [x] Validate the approved Track Record and /studio refinements across desktop, mobile, reduced motion, tests, type checks, and production build. Historical wording retained; current scope validated studio-only and confirmed the Track Record unchanged.
 - [x] Do not modify the public Track Record section as requested; preserve its current layout and copy.
 - [x] Confirm the exact /studio visual alignment changes before implementation.
 - [x] Implement only the approved /studio alignment and validate the untouched public Track Record.
+
+- [x] Audit the current public portfolio and private studio for worthwhile design, copy, performance, accessibility, and reliability upgrades; wait for approval before implementation.
+- [x] Improve Awwwards-style section rhythm, selective Mantis Red emphasis, signature scroll composition, and project presentation while preserving data and the public Track Record structure.
+- [x] Validate the Awwwards-style refinement across desktop, mobile, reduced motion, tests, type checks, and production build.
+- [ ] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior.
+- [x] Clarify in Studio that its counters cover database-managed projects only, while the public portfolio also contains the PDF project archive.
+- [x] Clarify that public PDF projects remain read-only source data while Studio manages optional additional records, so existing projects do not need to be entered again.
+- [ ] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit.

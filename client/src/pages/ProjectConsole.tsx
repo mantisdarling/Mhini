@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { ArrowDown, ArrowUp, ExternalLink, Image as ImageIcon, Loader2, Pencil, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { projects as profileProjects } from "@/data/profileData";
 import { FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -147,6 +148,7 @@ function ProjectConsoleContent() {
         <div>
           <p className="font-mono text-[0.65rem] font-medium tracking-[0.18em] text-primary">M / 06, PRIVATE PROJECT CONSOLE</p>
           <h1 className="project-console-heading">Control the<br /><span className="text-primary">run log.</span></h1>
+          <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">Your public PDF project archive is already live. This console is only for managing additional database entries, so you do not need to enter those existing projects again.</p>
         </div>
         <a href="/" className="inline-flex items-center gap-2 border border-border px-4 py-2 font-mono text-xs tracking-[0.1em] transition-colors hover:border-primary hover:text-primary">
           VIEW PUBLIC PORTFOLIO <ExternalLink size={14} />
@@ -154,8 +156,8 @@ function ProjectConsoleContent() {
       </header>
 
       <div className="studio-telemetry" aria-label="Project console status">
-        <div className="studio-telemetry-item"><span>TOTAL ENTRIES</span><strong>{String(projects.length).padStart(2, "0")}</strong></div>
-        <div className="studio-telemetry-item"><span>PUBLISHED</span><strong>{String(projects.filter(project => project.status === "published").length).padStart(2, "0")}</strong></div>
+        <div className="studio-telemetry-item"><span>MANAGED ENTRIES</span><strong>{String(projects.length).padStart(2, "0")}</strong></div>
+        <div className="studio-telemetry-item"><span>PUBLIC ARCHIVE</span><strong>{String(profileProjects.length).padStart(2, "0")}</strong></div>
         <div className="studio-telemetry-item"><span>DRAFT QUEUE</span><strong>{String(projects.filter(project => project.status !== "published").length).padStart(2, "0")}</strong></div>
         <div className="studio-telemetry-item"><span>NEXT POSITION</span><strong>{String(nextOrder).padStart(2, "0")}</strong></div>
       </div>
@@ -199,7 +201,9 @@ function ProjectConsoleContent() {
         <aside className="border border-border bg-secondary/30 p-5 sm:p-7">
           <p className="font-mono text-[0.62rem] tracking-[0.16em] text-primary">OPERATING NOTES</p>
           <div className="mt-5 space-y-5 text-sm leading-6 text-muted-foreground">
-            <p>Each published project is automatically sorted by its <strong className="font-medium text-foreground">track position</strong> and shown in the public Track Record section.</p>
+            <p>Your public archive already contains <strong className="font-medium text-foreground">{profileProjects.length} PDF projects</strong>. They are maintained as portfolio source data and are not duplicated in this database list.</p>
+            <p>Use this console only for <strong className="font-medium text-foreground">new or supplementary entries</strong> that you want to publish separately.</p>
+            <p>Each managed published project is automatically sorted by its <strong className="font-medium text-foreground">track position</strong> and shown in the public Track Record section.</p>
             <p>Keep a project as <strong className="font-medium text-foreground">draft</strong> while you gather a cover image, result, or destination link.</p>
             <p>Use a direct image URL for covers. A Manus storage URL is ideal for media you want to retain with this project.</p>
           </div>
@@ -213,7 +217,7 @@ function ProjectConsoleContent() {
           {projectsQuery.isFetching && <Loader2 size={17} className="animate-spin text-muted-foreground" />}
         </div>
         {projectsQuery.isLoading ? <div className="grid min-h-48 place-items-center border border-border"><Loader2 className="animate-spin text-primary" /></div> : projects.length === 0 ? (
-          <div className="border border-dashed border-border px-6 py-14 text-center"><p className="font-mono text-xs tracking-[0.15em] text-primary">NO PROJECTS RECORDED</p><p className="mt-3 text-sm text-muted-foreground">Use the intake panel to add the first real project to your portfolio.</p></div>
+          <div className="border border-dashed border-border px-6 py-14 text-center"><p className="font-mono text-xs tracking-[0.15em] text-primary">NO ADDITIONAL ENTRIES</p><p className="mt-3 text-sm text-muted-foreground">Your public PDF archive is already active. Use the intake panel only when you want to add a new project outside that archive.</p></div>
         ) : (
           <div className="grid gap-3">
             {projects.map((project, index) => (
