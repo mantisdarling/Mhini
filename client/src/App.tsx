@@ -3,24 +3,37 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
+import RouteLoadingSkeleton from "./components/RouteLoadingSkeleton";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import ProjectConsole from "./pages/ProjectConsole";
 import PrivacyConsent from "./components/PrivacyConsent";
-import Privacy from "./pages/Privacy";
+
+const Home = lazy(() => import("./pages/Home"));
+const ProjectConsole = lazy(() => import("./pages/ProjectConsole"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
+  // Route chunks load independently so the shell stays responsive on first visit.
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/studio" component={ProjectConsole} />
-      <Route path="/privacy" component={Privacy} />
-      <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
+      <Route path="/">
+        <Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><Home /></Suspense>
+      </Route>
+      <Route path="/studio">
+        <Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><ProjectConsole /></Suspense>
+      </Route>
+      <Route path="/privacy">
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><Privacy /></Suspense>
+      </Route>
+      <Route path="/404">
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><NotFound /></Suspense>
+      </Route>
+      <Route>
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><NotFound /></Suspense>
+      </Route>
     </Switch>
   );
 }

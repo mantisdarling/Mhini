@@ -132,3 +132,6 @@
 - [x] Complete final repository line audit, regression validation, and checkpoint the zero-advisory state.
 - [x] Fix the Express 5 startup PathError caused by the remaining bare wildcard middleware route and add a regression test.
 - [x] Remove the unused Drizzle Kit CLI and its deprecated esbuild loader from the project dependency graph, then validate the existing application and migration documentation remain coherent.
+- [x] Add branded skeleton loading screens to the main portfolio, privacy, and Studio routes.
+- [x] Add focused tests for route loading states and validate type safety, production build, and responsive rendering.
+- [x] Fix the shared Skeleton primitive JSX runtime import exposed by the new route loading tests.
