@@ -36,8 +36,9 @@ export function createApplication(options: ApplicationOptions = {}) {
     "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
     "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
-    "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com",
+    "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com https://i.pinimg.com",
     `connect-src 'self' https://manus-analytics.com https://*.supabase.co${isDevelopment ? " ws://localhost:* ws://127.0.0.1:*" : ""}`,
+    "media-src 'self' https://v1.pinimg.com",
     "frame-src https://assets.pinterest.com",
     "upgrade-insecure-requests",
   ].join("; ");

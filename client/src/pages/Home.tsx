@@ -48,8 +48,8 @@ const ASSETS = {
     descent: "/manus-storage/1000237108_520eca52.jpg",
     stillness: "/manus-storage/1000237111_d1ae622f.jpg",
     finalFrame: "/manus-storage/1000237112_04ac6804.jpg",
-    heroVideo: "https://assets.pinterest.com/ext/embed.html?id=544865254939654931",
-    closingVideo: "https://assets.pinterest.com/ext/embed.html?id=894105332291615495",
+    heroVideo: "https://v1.pinimg.com/videos/iht/expMp4/22/bd/98/22bd9828506f050e48c10f0e9024ee85_720w.mp4",
+    closingVideo: "https://v1.pinimg.com/videos/iht/expMp4/0d/96/51/0d965150aded2a004aa629c909118540_720w.mp4",
   },
 };
 
@@ -137,8 +137,8 @@ function SceneBackdrop({ src, alt = "" }: { src: string; alt?: string }) {
   return <div className="cinematic-scene-backdrop" aria-hidden="true"><img src={src} alt={alt} loading="eager" decoding="async" /><span /></div>;
 }
 
-function PinterestBackdrop({ src, fallbackSrc, title }: { src: string; fallbackSrc: string; title: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><iframe title={title} src={src} loading="eager" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><span /></div>;
+function VideoBackdrop({ src, fallbackSrc }: { src: string; fallbackSrc: string }) {
+  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><video src={src} autoPlay muted loop playsInline preload="metadata" /><span /></div>;
 }
 
 export default function Home() {
@@ -180,12 +180,12 @@ export default function Home() {
 
       <main>
         <section className="rebuild-hero cinematic-hero" id="top">
-          <PinterestBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} title="Mantis hero samurai motion study" />
+          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy">
             <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
             <p className="rebuild-kicker">I GO DEEP. THEN I BUILD.</p>
-            <h1>Harshit<br /><em>Kumar</em></h1>
+            <h1>Mantis<br /><em>Builds.</em></h1>
             <p className="rebuild-lede">{profile.oneLineBio}</p>
             <div className="rebuild-hero-actions"><button className="rebuild-primary" type="button" onClick={() => scrollTo("work")}>See the work <ArrowUpRight size={17} aria-hidden="true" /></button><a className="rebuild-secondary" href={`mailto:${profile.secondaryEmail}`}>Start a conversation</a></div>
             <div className="rebuild-hero-proof"><span><b>01</b> MANTIS / FOUNDER</span><span><b>02</b> IIT MADRAS / CS</span><span><b>03</b> AI / SYSTEMS</span></div>
@@ -196,7 +196,7 @@ export default function Home() {
 
         <section className="rebuild-intro cinematic-section" id="profile">
           <SceneBackdrop src={ASSETS.story.stillness} />
-          <div className="rebuild-section-lead"><SectionMarker number="01" label="PROFILE" /><h2>Not a portfolio.<br /><em>A working record.</em></h2></div>
+          <div className="rebuild-section-lead"><SectionMarker number="01" label="PROFILE" /><p className="rebuild-profile-name">Harshit Kumar</p><h2>Not a portfolio.<br /><em>A working record.</em></h2></div>
           <div className="rebuild-intro-body"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
         </section>
 
@@ -240,9 +240,8 @@ export default function Home() {
         </section>
 
         <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
-          <PinterestBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} title="Mantis closing samurai motion study" />
+          <VideoBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} />
           <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
-          <div className="rebuild-finale-media"><div className="rebuild-final-still"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div><div className="rebuild-inline-video"><iframe title="Mantis closing samurai motion study" src={ASSETS.story.closingVideo} loading="lazy" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><p className="rebuild-video-fallback">If the player is unavailable, <a href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">open the motion study</a>.</p></div></div>
         </section>
 
         <section className="rebuild-contact" id="contact">

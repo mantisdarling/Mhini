@@ -161,3 +161,9 @@
 - [x] Replace broken media behavior with reliable production-safe sources, responsive video and image fallbacks, readable overlays, and no empty placeholder panels. Reuploaded the original scene stills, verified their HTTP responses, and added poster layers beneath both Pinterest embeds.
 - [x] Validate the video-first rebuild across desktop, tablet, phone, reduced motion, accessibility, content preservation, tests, type checks, production build, dependency safety, and browser behavior. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
 - [x] Commit, push, and checkpoint the video-first cinematic rebuild as mantisdarling. Pushed commit aecd447 authored by mantisdarling to GitHub main; checkpoint follows.
+- [x] Correct the hero so Mantis, not Harshit Kumar, is the primary identity and the first supplied Pinterest video is visibly presented as the hero scene.
+- [x] Replace the conventional card-like public composition with full-bleed cinematic background scenes that change as the visitor scrolls through the portfolio.
+- [x] Keep the second supplied Pinterest video visibly embedded in the final scene, with no primary source link replacing the player.
+- [x] Remove broken image and empty player presentation from the public experience with verified visual fallbacks and mobile-safe media behavior.
+- [x] Revalidate all preserved portfolio data, Studio behavior, responsiveness, accessibility, reduced motion, tests, production build, security, and browser rendering. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, native MP4 playback was visible after CSP restart, and desktop and phone full-page captures were reviewed.
+- [ ] Commit, push, and checkpoint the corrected cinematic rebuild as mantisdarling.

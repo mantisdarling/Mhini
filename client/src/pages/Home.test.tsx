@@ -41,6 +41,8 @@ describe("rebuilt Mantis Home page", () => {
     renderHome();
     expect(container?.textContent).toContain(profile.fullName);
     expect(container?.textContent).toContain(profile.positioning);
+    expect(container?.textContent).toContain("Mantis");
+    expect(container?.textContent).toContain("Harshit Kumar");
     for (const project of projects) expect(container?.textContent).toContain(project.name);
   });
 
@@ -73,11 +75,11 @@ describe("rebuilt Mantis Home page", () => {
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");
-    expect(container?.querySelector('a[href="https://pin.it/1uzOHjzz9"]')).toBeTruthy();
     expect(container?.querySelector('a[href="https://in.pinterest.com/pin/894105332291615495/"]')).toBeNull();
-    expect(container?.querySelector('iframe[src="https://assets.pinterest.com/ext/embed.html?id=544865254939654931"]')).toBeTruthy();
-    expect(container?.querySelector('iframe[src="https://assets.pinterest.com/ext/embed.html?id=894105332291615495"]')).toBeTruthy();
-    expect(container?.querySelector('a[href="https://pin.it/1uzOHjzz9"]')).toBeTruthy();
+    expect(container?.querySelector("#top .cinematic-video-backdrop video")?.getAttribute("autoplay")).toBe("");
+    expect(container?.querySelector(".cinematic-finale .cinematic-video-backdrop video")?.getAttribute("loop")).toBe("");
+    expect(container?.querySelector('video[src="https://v1.pinimg.com/videos/iht/expMp4/22/bd/98/22bd9828506f050e48c10f0e9024ee85_720w.mp4"]')).toBeTruthy();
+    expect(container?.querySelector('video[src="https://v1.pinimg.com/videos/iht/expMp4/0d/96/51/0d965150aded2a004aa629c909118540_720w.mp4"]')).toBeTruthy();
     expect(container?.querySelectorAll(".cinematic-story-scene")).toHaveLength(4);
     expect(container?.querySelectorAll(".cinematic-section .cinematic-scene-backdrop img").length).toBeGreaterThanOrEqual(4);
   });
