@@ -36,6 +36,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 const ASSETS = {
   hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
   mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
+  caseStudy: "/manus-storage/mantis-samurai-case-study-cover_d193f233.jpg",
 };
 
 function prefersReducedMotion() {
@@ -83,7 +84,7 @@ const resumeProjects: PortfolioProject[] = profileProjects.map((project, index) 
   title: project.name,
   category: project.role ? `${project.status} / ${project.role}` : project.status,
   description: project.description,
-  imageUrl: null,
+  imageUrl: index === 0 ? ASSETS.caseStudy : null,
   projectUrl: project.liveUrl ?? project.githubUrl ?? null,
   tags: [...project.technologies],
   tagline: project.tagline,
@@ -157,7 +158,7 @@ function ProjectCard({ project, index, onOpen }: { project: PortfolioProject; in
       aria-label={`Open project dossier for ${project.title}`}
     >
       <div className="project-image-wrap">
-        {project.imageUrl ? <img src={project.imageUrl} alt="" loading="lazy" /> : <div className="project-image-placeholder"><span>NO COVER FRAME</span></div>}
+        {project.imageUrl ? <img src={project.imageUrl} alt="" loading="lazy" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.hero; }} /> : <div className="project-image-placeholder"><span>NO COVER FRAME</span></div>}
         <div className="project-image-scrim" />
         <div className="project-blade-flash" aria-hidden="true" />
         <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
