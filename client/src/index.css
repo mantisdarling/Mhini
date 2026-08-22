@@ -824,7 +824,7 @@ html.motion-off .hero-field { display: none; }
 }
 
 /* Rebuilt Mantis portfolio: editorial field journal, not an effect layer. */
-body.rebuild-body { background: #e9e7e1; color: #151515; font-family: "Satoshi", "Inter", sans-serif; }
+body.rebuild-body { background: #e9e7e1; color: #151515; font-family: "Satoshi", "Inter", sans-serif; overflow-x: hidden; }
 body.rebuild-body::before { display: none; }
 .rebuild-site { --paper: #e9e7e1; --paper-deep: #d9d6ce; --charcoal: #151515; --charcoal-soft: #262624; --line: rgba(21, 21, 21, 0.18); --red: #c92028; --gold: #b48a32; min-height: 100vh; overflow: clip; background: var(--paper); color: var(--charcoal); }
 .rebuild-site button, .rebuild-site a { -webkit-tap-highlight-color: transparent; }
@@ -1263,10 +1263,10 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 .rebuild-project-overlay::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 49.8%, rgba(233, 231, 225, 0.18) 50%, transparent 50.2%), linear-gradient(0deg, transparent 49.8%, rgba(233, 231, 225, 0.1) 50%, transparent 50.2%); background-size: 50% 100%, 100% 50%; }
 .rebuild-project-grid:focus-visible { outline: 2px solid var(--red); outline-offset: 6px; }
 @supports not (overflow: clip) {
-  .rebuild-site { overflow: hidden; }
+  .rebuild-site { overflow: visible; }
 }
 @media (max-width: 800px) {
-  .rebuild-project-grid { touch-action: pan-x; scroll-behavior: smooth; }
+  .rebuild-project-grid { touch-action: pan-x pan-y; scroll-behavior: smooth; }
   .rebuild-project-card, .rebuild-project-card.is-featured { scroll-snap-stop: always; }
 }
 @media (max-width: 700px) {
