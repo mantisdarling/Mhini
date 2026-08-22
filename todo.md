@@ -145,3 +145,7 @@
 - [x] Add the uploaded samurai, katana, landscape, and closing-frame media through the approved external asset workflow, with lazy loading and responsive crops.
 - [x] Validate media loading, content completeness, responsive story flow, accessibility, and performance. 29 tests passed, TypeScript and production build passed, dependency audit passed, desktop and phone full-page captures were reviewed, and current browser logs show no new runtime errors.
 - [x] Commit, push, and checkpoint the image-led storytelling redesign as mantisdarling. Committed as f425f9d and pushed to GitHub main under mantisdarling; checkpoint follows.
+- [x] Add subtle transform-only scroll parallax to the image-led story chapters without changing their layout bounds. Added a bounded image-only parallax hook inside clipped story frames.
+- [x] Disable decorative parallax for touch, reduced-motion, and low-power contexts, and clean up every animation frame and observer on unmount. Uses coarse-pointer and narrow-viewport gates, reduced-motion detection, observer visibility, one animation frame loop, cancellation, and observer disconnect.
+- [x] Add focused coverage and validate story animation behavior, responsiveness, accessibility, tests, type checks, production build, dependency safety, and browser errors. Added bounded math coverage; 31 tests, TypeScript, build, dependency audit, diff hygiene, full desktop and phone captures, and browser error checks passed.
+- [ ] Commit, push, and checkpoint the story parallax enhancement as mantisdarling.

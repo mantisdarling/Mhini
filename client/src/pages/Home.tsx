@@ -16,7 +16,8 @@ import {
   writing,
 } from "@/data/profileData";
 import { ArrowUpRight, Check, ChevronDown, Github, Instagram, Linkedin, Mail, Menu, X } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useStoryParallax } from "@/hooks/useStoryParallax";
 
 type DisplayProject = {
   id: string | number;
@@ -135,6 +136,8 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  const storyRef = useRef<HTMLElement>(null);
+  useStoryParallax(storyRef);
   const displayedProjects = useMemo<DisplayProject[]>(() => [...resumeProjects, ...(publicProjectsQuery.data ?? [])], [publicProjectsQuery.data]);
 
   useEffect(() => {
@@ -185,13 +188,13 @@ export default function Home() {
           <div className="rebuild-intro-body"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
         </section>
 
-        <section className="rebuild-story" aria-label="Mantis visual story">
+        <section className="rebuild-story" ref={storyRef} aria-label="Mantis visual story">
           <div className="rebuild-story-intro"><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. The first reference opens the motion study externally, while the stills remain lightweight and readable inside the page.</p></div>
           <div className="rebuild-story-grid">
-            <a className="rebuild-story-frame rebuild-story-motion" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer"><img src={ASSETS.story.motion} alt="Samurai figure standing in a misty landscape" loading="lazy" /><span>OPEN MOTION STUDY <ArrowUpRight size={15} aria-hidden="true" /></span></a>
-            <figure className="rebuild-story-frame rebuild-story-blade"><img src={ASSETS.story.blade} alt="Katana arranged on a quiet neutral field" loading="lazy" /><figcaption>01 / EDGE / A precise line is enough.</figcaption></figure>
-            <figure className="rebuild-story-frame rebuild-story-descent"><img src={ASSETS.story.descent} alt="Figure carrying a katana through dense leaves" loading="lazy" /><figcaption>02 / DEPTH / Go lower than the obvious layer.</figcaption></figure>
-            <figure className="rebuild-story-frame rebuild-story-stillness"><img src={ASSETS.story.stillness} alt="Overgrown house and quiet road in a deep green landscape" loading="lazy" /><figcaption>03 / SYSTEM / Let the environment carry the weight.</figcaption></figure>
+            <a className="rebuild-story-frame rebuild-story-motion" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer"><img data-parallax src={ASSETS.story.motion} alt="Samurai figure standing in a misty landscape" loading="lazy" /><span>OPEN MOTION STUDY <ArrowUpRight size={15} aria-hidden="true" /></span></a>
+            <figure className="rebuild-story-frame rebuild-story-blade"><img data-parallax src={ASSETS.story.blade} alt="Katana arranged on a quiet neutral field" loading="lazy" /><figcaption>01 / EDGE / A precise line is enough.</figcaption></figure>
+            <figure className="rebuild-story-frame rebuild-story-descent"><img data-parallax src={ASSETS.story.descent} alt="Figure carrying a katana through dense leaves" loading="lazy" /><figcaption>02 / DEPTH / Go lower than the obvious layer.</figcaption></figure>
+            <figure className="rebuild-story-frame rebuild-story-stillness"><img data-parallax src={ASSETS.story.stillness} alt="Overgrown house and quiet road in a deep green landscape" loading="lazy" /><figcaption>03 / SYSTEM / Let the environment carry the weight.</figcaption></figure>
           </div>
         </section>
 

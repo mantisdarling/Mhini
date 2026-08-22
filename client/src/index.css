@@ -1083,3 +1083,12 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-epilogue-image { min-height: 280px; max-height: 44svh; }
   .rebuild-epilogue-copy { padding: 3.7rem 1.25rem 4.2rem; }
 }
+
+/* Parallax only moves pixels inside an already allocated frame. */
+.rebuild-story-frame img[data-parallax] { will-change: transform; }
+@media (pointer: fine) and (min-width: 801px) and (prefers-reduced-motion: no-preference) {
+  .rebuild-story-frame img[data-parallax] { height: calc(100% + 36px); max-width: none; margin-top: -18px; }
+}
+@media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 800px) {
+  .rebuild-story-frame img[data-parallax] { will-change: auto; }
+}
