@@ -222,9 +222,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="rebuild-epilogue" aria-label="Closing visual reference">
-          <div className="rebuild-epilogue-image"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div>
-          <div className="rebuild-epilogue-copy"><SectionMarker number="05A" label="CLOSING FRAME" /><h2>Build the<br /><em>quiet proof.</em></h2><p>The final frame is an invitation to slow down. The reference link opens the original Pinterest post in a new tab and remains separate from the portfolio’s functional content.</p><a className="rebuild-primary rebuild-epilogue-link" href="https://in.pinterest.com/pin/894105332291615495/" target="_blank" rel="noreferrer">Open closing reference <ArrowUpRight size={17} aria-hidden="true" /></a></div>
+        <section className="rebuild-finale" aria-label="Closing motion and image chapter">
+          <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The Pinterest player is embedded in the page so the closing reference can be watched without leaving the experience.</p><a className="rebuild-source-link" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">Open source pin <ArrowUpRight size={14} aria-hidden="true" /></a></div>
+          <div className="rebuild-finale-media"><div className="rebuild-final-still"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div><div className="rebuild-inline-video"><iframe title="Mantis closing samurai motion study" src="https://assets.pinterest.com/ext/embed.html?id=544865254939654931" loading="lazy" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><p className="rebuild-video-fallback">If the player is unavailable, <a href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">open the motion study</a>.</p></div></div>
         </section>
 
         <section className="rebuild-contact" id="contact">

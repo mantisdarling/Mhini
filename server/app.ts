@@ -38,7 +38,7 @@ export function createApplication(options: ApplicationOptions = {}) {
     "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com",
     `connect-src 'self' https://manus-analytics.com https://*.supabase.co${isDevelopment ? " ws://localhost:* ws://127.0.0.1:*" : ""}`,
-    "frame-src 'none'",
+    "frame-src https://assets.pinterest.com",
     "upgrade-insecure-requests",
   ].join("; ");
   app.use((req, res, next) => {

@@ -1092,3 +1092,26 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 @media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 800px) {
   .rebuild-story-frame img[data-parallax] { will-change: auto; }
 }
+
+/* Closing media chapter: a quiet still anchors the embedded motion rather than becoming another external card. */
+.rebuild-finale { display: grid; grid-template-columns: minmax(240px, 0.62fr) minmax(0, 1.38fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; padding: clamp(4.5rem, 9vw, 8rem) clamp(1.25rem, 7vw, 7.5rem); background: #0e0e0e; color: var(--paper); }
+.rebuild-finale-copy { max-width: 350px; }
+.rebuild-finale-copy h2 { margin: 1.8rem 0 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(3.2rem, 6vw, 6.2rem); font-weight: 500; letter-spacing: -0.09em; line-height: 0.83; }
+.rebuild-finale-copy h2 em { color: var(--red); font-style: normal; }
+.rebuild-finale-copy > p { margin: 1.8rem 0 0; color: rgba(245, 243, 237, 0.65); font-size: 0.88rem; line-height: 1.65; }
+.rebuild-source-link { display: inline-flex; align-items: center; gap: 0.55rem; margin-top: 1.8rem; color: var(--paper); font-family: "Barlow Condensed", sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.rebuild-finale-media { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: 0.8rem; align-items: stretch; }
+.rebuild-final-still, .rebuild-inline-video { position: relative; min-height: 300px; overflow: hidden; background: #1a1a1a; }
+.rebuild-final-still img { display: block; width: 100%; height: 100%; min-height: 300px; object-fit: cover; filter: grayscale(1) contrast(1.1); }
+.rebuild-inline-video { aspect-ratio: 16 / 10; }
+.rebuild-inline-video iframe { display: block; width: 100%; height: 100%; min-height: 300px; border: 0; background: #161616; }
+.rebuild-video-fallback { position: absolute; right: 0.8rem; bottom: 0.65rem; left: 0.8rem; z-index: 2; margin: 0; color: rgba(245, 243, 237, 0.68); font-family: "Barlow Condensed", sans-serif; font-size: 0.62rem; letter-spacing: 0.04em; text-align: right; text-transform: uppercase; pointer-events: none; }
+.rebuild-video-fallback a { color: var(--paper); pointer-events: auto; }
+@media (max-width: 800px) {
+  .rebuild-finale { grid-template-columns: 1fr; gap: 2.4rem; padding: 4.5rem 1.25rem 5.3rem; }
+  .rebuild-finale-copy { max-width: none; }
+  .rebuild-finale-media { grid-template-columns: 1fr; }
+  .rebuild-final-still, .rebuild-inline-video, .rebuild-final-still img, .rebuild-inline-video iframe { min-height: 230px; }
+  .rebuild-final-still { aspect-ratio: 16 / 10; }
+  .rebuild-inline-video { aspect-ratio: 16 / 11; }
+}
