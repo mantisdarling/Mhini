@@ -805,3 +805,20 @@ html.motion-off .hero-field { display: none; }
 .hero-samurai .samurai-hilt { fill: var(--red); opacity: 0.9; }
 .hero-samurai .samurai-rim { fill: none; stroke: var(--red); stroke-width: 2; opacity: 0.74; }
 @media (max-width: 760px) { .hero-samurai { right: -2rem; width: 54vw; height: 52vh; opacity: 0.28; } }
+
+/* Mobile editorial rhythm: keep the story complete, but remove the empty scroll between proof points. */
+@media (max-width: 760px) {
+  .kinetic-stage { min-height: 34vh; height: 34vh; }
+  .kinetic-sticky { min-height: 30vh; padding-top: 2.4rem; padding-bottom: 2rem; }
+  .kinetic-track { font-size: clamp(3.2rem, 16vw, 5.4rem); line-height: 0.84; }
+  .kinetic-caption { display: none; }
+  .section-pad { padding-top: 3.35rem; padding-bottom: 3.25rem; }
+  .data-section-heading { margin-bottom: 1.8rem; }
+  .data-section-heading h2 { line-height: 0.86; }
+  .section-heading-wide { margin-bottom: 1.8rem; }
+  .record-footer { margin-top: 1rem; }
+  .record-footer p { display: none; }
+  .pit-stop { padding-top: 4.1rem; padding-bottom: 2.8rem; gap: 2.2rem; }
+  .pit-stop-side { gap: 0.8rem; }
+  .site-footer { padding-top: 0.9rem; padding-bottom: 0.9rem; }
+}

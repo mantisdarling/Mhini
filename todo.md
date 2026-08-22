@@ -130,3 +130,9 @@
 - [x] Add the original static lightweight samurai silhouette asset to the hero with responsive compositing, readable contrast, and no new animation loop. Implemented as an authored inline SVG so the hero has no external asset failure state.
 - [x] Create and integrate an original text-free samurai-inspired case-study cover that matches the Mantis charcoal, ivory, crimson, katana, and F1 telemetry style. Integrated the generated web asset into the first existing portfolio case-study while preserving its real metadata.
 - [x] Validate the cover asset, project-card cropping, responsive behavior, accessibility, production build, and dependency safety before saving a checkpoint. Added a hero fallback for failed cover requests; 25 tests, TypeScript, build, audit, and diff checks passed.
+- [ ] Shorten the mobile portfolio journey by removing repeated spacing and collapsing secondary sections behind intentional access points.
+- [ ] Keep the hero, selected work, strongest identity proof, and contact path prominent on phone while preserving complete content on desktop and in secondary views.
+- [ ] Validate mobile page length, section navigation, accessibility, desktop preservation, tests, type checks, production build, and clean browser behavior.
+- [x] Shorten the mobile portfolio journey by removing repeated spacing and compressing the motion study without deleting real project data.
+- [x] Keep the hero, selected work, strongest identity proof, and contact path prominent on phone while preserving complete content on desktop and in secondary views.
+- [x] Validate mobile page length, section navigation, accessibility, desktop preservation, tests, type checks, production build, and clean browser behavior. 25 tests passed, TypeScript and production build passed, dependency audit passed, diff check passed, and no current browser runtime errors were found.
