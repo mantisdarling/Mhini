@@ -302,4 +302,4 @@
 - [x] Add mobile project carousel position indicators that clearly communicate the current slide and available projects. Added a live 01 / total counter and a visual active-segment rail.
 - [x] Keep the indicators accessible, responsive, and hidden from the desktop layout without changing project data or touch scrolling. The counter uses a polite live region, the rail is mobile-only, and all project records and touch behavior remain unchanged.
 - [x] Validate indicator updates on mobile and absence on larger screens, then rerun tests, types, build, audit, and runtime checks. Verified 390px mobile and 1440px desktop captures; 41 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
-- [ ] Commit, push, and checkpoint the carousel indicator enhancement as mantisdarling.
+- [x] Commit, push, and checkpoint the carousel indicator enhancement as mantisdarling. Commit 3efc585 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
