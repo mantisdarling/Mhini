@@ -191,3 +191,7 @@
 - [x] Reduce excessive opacity and empty vertical space in scroll chapters while preserving cinematic full-bleed imagery. Existing scene geometry was reviewed and the active production regression was identified as missing media, not a new layout failure.
 - [x] Improve image treatment and section pacing for a premium, high-quality Awards-style presentation across mobile and desktop. Stable images now render in production and the hero and closing scenes retain cinematic poster fallbacks.
 - [x] Revalidate the deployed media, layout, accessibility, content, tests, types, build, audit, and runtime behavior, then commit and push as mantisdarling. 32 tests, TypeScript, build, audit, asset headers, and local desktop and mobile previews passed; Vercel redeploy verification follows the push.
+- [x] Apply the samurai visual treatment to every project card and project dossier fallback without changing project data.
+- [x] Remove the closing still image from the closing video backdrop so the closing MP4 stands alone.
+- [x] Revalidate project imagery, closing media separation, section pacing, desktop and phone layouts, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
+- [ ] Commit, push, and checkpoint the project-card and closing-video separation fix as mantisdarling.

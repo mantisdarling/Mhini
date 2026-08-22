@@ -98,11 +98,7 @@ function ProjectCard({ project, index, onOpen }: { project: DisplayProject; inde
       }}
     >
       <div className="rebuild-project-visual">
-        {project.imageUrl ? (
-          <img src={project.imageUrl} alt="" loading="lazy" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.hero; }} />
-        ) : (
-          <div className="rebuild-project-placeholder" aria-hidden="true"><span>{String(index + 1).padStart(2, "0")}</span><i /></div>
-        )}
+        <img src={project.imageUrl ?? ASSETS.caseStudy} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.caseStudy; }} />
         <div className="rebuild-project-grid" aria-hidden="true" />
         <span className="rebuild-project-index">{String(index + 1).padStart(2, "0")}</span>
         <span className="rebuild-project-open">Open dossier <ArrowUpRight size={15} aria-hidden="true" /></span>
@@ -124,8 +120,8 @@ function SceneBackdrop({ src, alt = "" }: { src: string; alt?: string }) {
   return <div className="cinematic-scene-backdrop" aria-hidden="true"><img src={src} alt={alt} loading="eager" decoding="async" /><span /></div>;
 }
 
-function VideoBackdrop({ src, fallbackSrc, poster }: { src: string; fallbackSrc: string; poster?: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><video src={src} poster={poster} autoPlay muted loop playsInline preload="auto" /><span /></div>;
+function VideoBackdrop({ src, fallbackSrc, poster }: { src: string; fallbackSrc?: string; poster?: string }) {
+  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <img src={fallbackSrc} alt="" loading="eager" decoding="async" />}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
 }
 
 export default function Home() {
@@ -226,7 +222,7 @@ export default function Home() {
         </section>
 
         <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
-          <VideoBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} poster={ASSETS.story.finalFrame} />
+          <VideoBackdrop src={ASSETS.story.closingVideo} />
           <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
         </section>
 
@@ -239,7 +235,7 @@ export default function Home() {
       <footer className="rebuild-footer"><span>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span>HARSHIT KUMAR / EAST INDIA</span><a href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual">{selectedProject.imageUrl ? <img src={selectedProject.imageUrl} alt="" /> : <div className="rebuild-project-placeholder"><span>PROJECT DOSSIER</span><i /></div>}</div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><img src={selectedProject.imageUrl ?? ASSETS.caseStudy} alt="" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
       </AnimatePresence>
     </div>
   );

@@ -74,6 +74,15 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector("#evidence .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
   });
 
+  it("gives every project card a samurai visual and keeps the closing scene video-only", () => {
+    renderHome();
+    const cards = container?.querySelectorAll(".rebuild-project-card") ?? [];
+    expect(cards).toHaveLength(projects.length);
+    cards.forEach(card => expect(card.querySelector('img[src*="files.manuscdn.com"]')).toBeTruthy());
+    expect(container?.querySelectorAll(".cinematic-finale .cinematic-video-backdrop img")).toHaveLength(0);
+    expect(container?.querySelector(".cinematic-finale .cinematic-video-backdrop video")).toBeTruthy();
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");
