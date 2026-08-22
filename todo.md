@@ -118,4 +118,4 @@
 - [x] Re-run complete validation and save a checkpoint for the full code audit.
 - [x] Finish and document a verifiable repository-wide audit scope, including all authored files and the authored underscore-character check, then record the evidence. Completed with tracked-file inventory, authored-source scans, dangerous-sink scan, credential scan, and framework or schema identifier review.
 - [x] Add new regression tests for storage key validation, Supabase error redaction, debug collector payload rejection, and the CDN-compatible resource policy behavior. Covered by the application and security boundary suites.
-- [ ] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo.
+- [x] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo. Checkpoint: 6fed95e9.
