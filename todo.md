@@ -195,3 +195,7 @@
 - [x] Remove the closing still image from the closing video backdrop so the closing MP4 stands alone.
 - [x] Revalidate project imagery, closing media separation, section pacing, desktop and phone layouts, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
 - [x] Commit, push, and checkpoint the project-card and closing-video separation fix as mantisdarling. Pushed commit e8509de authored by mantisdarling to GitHub main; checkpoint follows.
+- [x] Remove the evidence section dead-space caused by the full-height background image and make the content begin in a compact, intentional layout on mobile and desktop.
+- [x] Keep the evidence samurai image as a controlled side or lower visual layer without stretching it through empty space.
+- [x] Revalidate project imagery, evidence density, closing video separation, responsive behavior, accessibility, tests, types, build, audit, and runtime logs. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
+- [x] Commit, push, and checkpoint the evidence dead-space correction as mantisdarling. Checkpoint follows after the final source cleanup.

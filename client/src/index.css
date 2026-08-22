@@ -1214,3 +1214,18 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-intro { min-height: auto; }
   .cinematic-story-scene { min-height: 220px; }
 }
+
+/* Evidence chapter correction: keep the information dense and let the artwork support it instead of occupying the lead-in. */
+.rebuild-evidence > .cinematic-scene-backdrop { inset: auto 0 0; top: auto; height: min(34vw, 430px); opacity: 0.22; }
+.rebuild-evidence > .rebuild-section-atmosphere-evidence { top: auto; right: -5rem; bottom: 3rem; width: min(42vw, 580px); height: min(430px, 34%); opacity: 0.16; }
+.rebuild-evidence .rebuild-section-heading { position: relative; z-index: 3; }
+.rebuild-evidence-grid,
+.rebuild-dossier-grid { position: relative; z-index: 3; }
+.rebuild-evidence-grid { gap: clamp(1.5rem, 4vw, 4.5rem); }
+.rebuild-dossier-grid { margin-top: clamp(2.25rem, 4vw, 4rem); }
+@media (max-width: 800px) {
+  .rebuild-evidence > .cinematic-scene-backdrop { height: 250px; opacity: 0.2; }
+  .rebuild-evidence > .rebuild-section-atmosphere-evidence { right: -8rem; bottom: 2rem; width: 105vw; height: 230px; opacity: 0.13; }
+  .rebuild-evidence-grid { gap: 1.8rem; }
+  .rebuild-dossier-grid { margin-top: 2.2rem; }
+}
