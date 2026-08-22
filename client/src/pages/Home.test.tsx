@@ -146,6 +146,20 @@ describe("rebuilt Mantis Home page", () => {
     expect(position?.querySelector(".rebuild-project-position-dots i.is-active")).toBeTruthy();
   });
 
+  it("keeps Evidence dossiers closed until their summary is activated", () => {
+    renderHome();
+    const dossiers = Array.from(container?.querySelectorAll<HTMLDetailsElement>("#evidence .rebuild-dossier") ?? []);
+    expect(dossiers).toHaveLength(4);
+    expect(dossiers.every(dossier => !dossier.open)).toBe(true);
+    expect(dossiers[0].textContent).toContain("Securing Agents with NemoClaw and OpenShell");
+
+    const summary = dossiers[0].querySelector("summary");
+    act(() => summary?.click());
+    expect(dossiers[0].open).toBe(true);
+    act(() => summary?.click());
+    expect(dossiers[0].open).toBe(false);
+  });
+
   it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {
     renderHome();
     const mobileSources = container?.querySelectorAll('source[media="(max-width: 800px)"]') ?? [];

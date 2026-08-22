@@ -303,3 +303,13 @@
 - [x] Keep the indicators accessible, responsive, and hidden from the desktop layout without changing project data or touch scrolling. The counter uses a polite live region, the rail is mobile-only, and all project records and touch behavior remain unchanged.
 - [x] Validate indicator updates on mobile and absence on larger screens, then rerun tests, types, build, audit, and runtime checks. Verified 390px mobile and 1440px desktop captures; 41 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the carousel indicator enhancement as mantisdarling. Commit 3efc585 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [ ] Recompose the Evidence chapter on phones so dense records, dossier groups, and the artwork do not read as one overloaded vertical field.
+- [ ] Preserve every education, credential, course, community, research, competition, language, interest, and vision record while improving phone hierarchy and readability.
+- [ ] Validate Evidence at 320px, 360px, 390px, 412px, tablet, and desktop widths, then rerun tests, types, build, audit, and runtime checks.
+- [ ] Commit, push, and checkpoint the Evidence phone repair as mantisdarling.
+
+- [x] Make every Evidence accordion closed on initial page load while preserving each arrow toggle and all existing records. Removed the initial open attribute from the Courses and learning group; all four dossiers now start collapsed.
+- [x] Add regression coverage for the initial closed state and open-close behavior. The focused Home suite confirms four closed dossiers, retained course content, and native summary open-close behavior.
+- [x] Validate the Evidence disclosure behavior on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the Evidence accordion fix as mantisdarling.
