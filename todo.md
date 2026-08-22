@@ -293,3 +293,8 @@
 - [x] Re-run automated tests, TypeScript, production build, dependency audit, and runtime console checks after the device audit. Tests, TypeScript, build, dependency audit, secret scan, and diff checks passed; no new browser error-level records or network failures appeared during the current review.
 - [x] Save and report the cross-device verification result as mantisdarling. The device audit and validation utilities are ready for checkpointing.
 - [x] Repair the missing security:secrets validation script discovered during the cross-device quality gate and verify it without exposing credentials. Added a conservative redacted-pattern scanner and a regression test; the scan passed for 184 tracked files.
+
+- [x] Fix the mobile Work chapter where the desktop project grid is overflowing the phone viewport and making the first card dominate the composition. Rebuilt the phone archive as compact snap cards with controlled media ratios and no desktop-width overflow.
+- [x] Preserve every project, link, metadata field, and card interaction while recomposing the Work archive for phone widths. All project records remain present, touch targets stay active, and the desktop grid rules are unchanged.
+- [x] Validate the Work fix at 320px, 360px, 390px, 412px, tablet, and desktop widths, then rerun tests, types, build, audit, and runtime checks. Reviewed 320px, 360px, 390px, 412px, 768px, and 1440px captures; 41 tests passed, TypeScript and build passed, audit was clear, and current runtime logs showed no new errors or network failures.
+- [ ] Commit, push, and checkpoint the mobile Work repair as mantisdarling.

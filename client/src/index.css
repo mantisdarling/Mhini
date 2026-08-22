@@ -896,7 +896,8 @@ body.rebuild-body::before { display: none; }
 .rebuild-project-placeholder { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 65% 34%, rgba(201, 32, 40, 0.4), transparent 27%), linear-gradient(145deg, #2a2926, #111110 66%); }
 .rebuild-project-placeholder span { color: rgba(233, 231, 225, 0.65); font-family: "Barlow Condensed", sans-serif; font-size: 0.68rem; letter-spacing: 0.18em; }
 .rebuild-project-placeholder i { position: absolute; width: 75%; height: 1px; background: var(--red); transform: rotate(-18deg); }
-.rebuild-project-grid { pointer-events: none; }
+.rebuild-project-grid { position: relative; pointer-events: none; }
+.rebuild-project-card { pointer-events: auto; }
 .rebuild-project-grid::before, .rebuild-project-grid::after { content: ""; position: absolute; pointer-events: none; }
 .rebuild-project-grid::before { inset: 0; background: linear-gradient(90deg, transparent 49.8%, rgba(233, 231, 225, 0.18) 50%, transparent 50.2%), linear-gradient(0deg, transparent 49.8%, rgba(233, 231, 225, 0.1) 50%, transparent 50.2%); background-size: 50% 100%, 100% 50%; }
 .rebuild-project-index, .rebuild-project-open { position: absolute; z-index: 2; color: var(--paper); font-family: "Barlow Condensed", sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -1240,10 +1241,16 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .mobile-image-reveal:not(.is-loaded) { opacity: 0 !important; }
   .rebuild-project-carousel-hint { display: flex; align-items: center; gap: 0.65rem; margin: -1rem 0 0.85rem; color: rgba(233, 231, 225, 0.58); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.16em; }
   .rebuild-project-carousel-hint i { display: block; width: 34px; height: 1px; background: var(--red); }
-  .rebuild-project-grid { display: flex; gap: 0.7rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 0.25rem; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .rebuild-project-grid { display: flex; gap: 0.75rem; margin: 0 -0.35rem; padding: 0 0.35rem 0.55rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 0.35rem; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .rebuild-project-grid::-webkit-scrollbar { display: none; }
-  .rebuild-project-card, .rebuild-project-card.is-featured { flex: 0 0 min(86vw, 380px); width: min(86vw, 380px); grid-column: auto; scroll-snap-align: start; }
-  .rebuild-project-card.is-featured .rebuild-project-visual, .rebuild-project-visual { min-height: 270px; }
+  .rebuild-project-card, .rebuild-project-card.is-featured { display: flex; flex: 0 0 min(calc(100vw - 2.5rem), 350px); width: min(calc(100vw - 2.5rem), 350px); flex-direction: column; grid-column: auto; scroll-snap-align: start; scroll-snap-stop: always; }
+  .rebuild-project-visual, .rebuild-project-card.is-featured .rebuild-project-visual { min-height: 0; aspect-ratio: 1.36; }
+  .rebuild-project-copy { flex: 1; padding: 0.9rem 0.9rem 1rem; }
+  .rebuild-project-meta { min-height: 1.5em; font-size: 0.54rem; }
+  .rebuild-project-copy h3 { margin-top: 0.85rem; font-size: clamp(1.55rem, 7vw, 2rem); }
+  .rebuild-project-copy p { min-height: 0; margin-top: 0.5rem; font-size: 0.72rem; line-height: 1.4; }
+  .rebuild-project-visual img { object-position: 62% center; }
+  .rebuild-project-open { display: none; }
 }
 @media (min-width: 801px) {
   .rebuild-project-carousel-hint { display: none; }
@@ -1262,7 +1269,6 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 }
 @media (max-width: 800px) {
   .rebuild-project-grid { touch-action: pan-x pan-y; scroll-behavior: smooth; }
-  .rebuild-project-card, .rebuild-project-card.is-featured { scroll-snap-stop: always; }
 }
 @media (max-width: 700px) {
   .rebuild-hero-copy { min-height: max(560px, min(720px, calc(100svh - 62px))); }
