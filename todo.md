@@ -267,3 +267,7 @@
 - [x] Add a subtle glow to the blade-line cue without changing timing or layout. Added a compact crimson halo and preserved the existing animation geometry.
 - [x] Validate the glow on phone and desktop, including reduced motion, tests, types, build, audit, and runtime behavior. Reviewed 390px and 1440px routes; 37 tests pass, TypeScript and build pass, audit is clear, and diff hygiene passes.
 - [x] Commit, push, and checkpoint the blade-line glow refinement as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Inventory every image and video source, fallback, responsive derivative, and CDN path used by the portfolio. Audited 17 live CDN media URLs, five mobile derivatives, two MP4s, poster frames, and the brand mark; all returned expected HTTP 200 content types.
+- [x] Fix verified media quality, responsive source, crop, poster, loading, or video fallback issues without changing portfolio content. Added seven quality-preserving WebP variants, a responsive mobile closing poster, metadata preload for the closing video, and a first-render mobile viewport guard.
+- [x] Validate all media requests and visual fidelity across phone, tablet, laptop, and desktop layouts. Reviewed 390px, 768px, and 1440px full-page captures; video sources are H.264 736x414, poster and WebP paths resolve, and imagery remains present across layouts.
+- [x] Run tests, types, production build, audit, runtime checks, commit, push, and checkpoint as mantisdarling. 38 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.

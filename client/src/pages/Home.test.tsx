@@ -128,6 +128,15 @@ describe("rebuilt Mantis Home page", () => {
     });
   });
 
+  it("uses optimized media sources and a closing poster fallback", () => {
+    renderHome();
+    expect(container?.querySelector(".rebuild-brand img")?.getAttribute("src")).toContain("SzCbbuLdJOszlBMq.webp");
+    expect(container?.querySelector("#top .cinematic-video-backdrop video")?.getAttribute("poster")).toContain("DqFlWdeJBdeaAsZf.webp");
+    const closingVideo = container?.querySelector<HTMLVideoElement>(".cinematic-finale .cinematic-video-backdrop video");
+    expect(closingVideo?.getAttribute("poster")).toContain("DDtXMipemsimcRFJ.webp");
+    expect(closingVideo?.getAttribute("preload")).toBe("metadata");
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");

@@ -41,18 +41,19 @@ type DisplayProject = {
 
 const ASSETS = {
   hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
-  mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
+  mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/SzCbbuLdJOszlBMq.webp",
   caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/USqfDrBUsSRPObfw.webp",
   story: {
-    motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/FByzXgbgQiswqlog.jpg",
-    blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/OaurgvWfMCgyVyCP.jpg",
-    descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/QMRiiKxlvqBUSZxk.jpg",
-    stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/CglFXlEULjwNYZzM.jpg",
-    finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/OmMDaJlcEpZMUkQZ.jpg",
+    motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dXOMgdKzODAwcXzG.webp",
+    blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/mLkdLUoOCQEUGqpn.webp",
+    descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/CVLSXMjGiZyuLzmm.webp",
+    stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/QhtLfdSjMUvuXRLv.webp",
+    finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/DDtXMipemsimcRFJ.webp",
     heroVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dQgTwaCcLKHSusnt.mp4",
     closingVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/qPIGKaMzyrRrveJB.mp4",
-    heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/ZkrXSluZpNaFkhcC.jpg",
+    heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/DqFlWdeJBdeaAsZf.webp",
     mobile: {
+      finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/TWsZPXtLopGlIkYr.webp",
       motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/sTadKupcVFDwguav.webp",
       blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/FTbPLbavzYQOssdo.webp",
       descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/nUUmQGGwbuDjMqAD.webp",
@@ -163,8 +164,25 @@ function SceneBackdrop({ src, mobileSrc, alt = "" }: { src: string; mobileSrc?: 
   return <div className="cinematic-scene-backdrop" aria-hidden="true"><ResponsiveImage src={src} mobileSrc={mobileSrc} alt={alt} /></div>;
 }
 
-function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" />}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
+function useCompactViewport() {
+  const [isCompact, setIsCompact] = useState(() => typeof window !== "undefined" && window.matchMedia?.("(max-width: 800px)").matches === true);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const media = window.matchMedia("(max-width: 800px)");
+    const update = () => setIsCompact(media.matches);
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
+  }, []);
+
+  return isCompact;
+}
+
+function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster, mobilePoster, preload = "auto" }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string; mobilePoster?: string; preload?: "auto" | "metadata" | "none" }) {
+  const isCompact = useCompactViewport();
+  const activePoster = isCompact ? mobilePoster ?? poster : poster;
+  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" />}<video src={src} {...(activePoster ? { poster: activePoster } : {})} autoPlay muted loop playsInline preload={preload} /><span /></div>;
 }
 
 function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: string; label: string; title: string }) {
@@ -269,7 +287,7 @@ export default function Home() {
         </section>
 
         <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
-          <VideoBackdrop src={ASSETS.story.closingVideo} />
+          <VideoBackdrop src={ASSETS.story.closingVideo} poster={ASSETS.story.finalFrame} mobilePoster={ASSETS.story.mobile.finalFrame} preload="metadata" />
           <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
         </section>
 
