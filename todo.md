@@ -255,3 +255,7 @@
 - [x] Audit code safety, dependency health, performance, data integrity, and deployment boundaries; fix only verified issues. No credential markers or unclassified dangerous browser sinks were found, dependency audit is clear, expected security headers are present, and all portfolio data remains preserved.
 - [x] Run complete visual, functional, regression, type, build, audit, and runtime validation across the matrix. 37 tests pass, TypeScript and production build pass, audit reports no known vulnerabilities, diff hygiene passes, and final phone, tablet, and desktop captures were reviewed.
 - [x] Commit, push, and checkpoint the complete quality audit as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the client entry, route boundaries, and current production chunk sizes. The original 683 KB main chunk and heavy private Studio route were identified as the primary split targets.
+- [x] Implement safe route and dependency code-splitting without changing public behavior. Home, Studio, Privacy, and NotFound now load lazily with a lightweight accessible suspense shell.
+- [x] Validate chunk output, initial load, route behavior, responsive UI, tests, types, build, audit, and runtime errors. Entry is now 465 KB, Home 64 KB, Studio 123 KB, Privacy 3.5 KB, and NotFound 4.4 KB; 37 tests pass, TypeScript and build pass, and audit reports no known vulnerabilities.
+- [x] Commit, push, and checkpoint the code-splitting improvement as mantisdarling. Checkpoint follows after source cleanup.

@@ -1304,3 +1304,15 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
     .cinematic-section#stack > .cinematic-scene-backdrop picture { height: min(72vh, 640px); }
   }
 }
+
+/* Keep deferred route loading intentional instead of showing an empty viewport. */
+.route-loading { display: grid; place-items: center; min-height: 100svh; background: #111; color: #e9e7e1; font-family: "Barlow Condensed", sans-serif; font-size: 0.68rem; letter-spacing: 0.28em; }
+.route-loading::before { content: ""; width: 42px; height: 1px; margin-bottom: 1.25rem; background: #c92028; box-shadow: 0 0 18px rgba(201, 32, 40, 0.45); }
+.route-loading { grid-template-rows: auto auto; align-content: center; }
+.route-loading span { grid-row: 2; }
+@supports not (height: 100svh) {
+  .route-loading { min-height: 100vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-loading::before { box-shadow: none; }
+}

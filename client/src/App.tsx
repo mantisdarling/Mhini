@@ -3,24 +3,54 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
+import { lazy, Suspense, type ReactNode } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import ProjectConsole from "./pages/ProjectConsole";
 import PrivacyConsent from "./components/PrivacyConsent";
-import Privacy from "./pages/Privacy";
+
+const Home = lazy(() => import("./pages/Home"));
+const ProjectConsole = lazy(() => import("./pages/ProjectConsole"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+function RouteLoading() {
+  return (
+    <div className="route-loading" role="status" aria-live="polite">
+      <span>LOADING</span>
+    </div>
+  );
+}
+
+function LazyRoute({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<RouteLoading />}>{children}</Suspense>;
+}
+
+function HomeRoute() {
+  return <LazyRoute><Home /></LazyRoute>;
+}
+
+function StudioRoute() {
+  return <LazyRoute><ProjectConsole /></LazyRoute>;
+}
+
+function PrivacyRoute() {
+  return <LazyRoute><Privacy /></LazyRoute>;
+}
+
+function NotFoundRoute() {
+  return <LazyRoute><NotFound /></LazyRoute>;
+}
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/studio" component={ProjectConsole} />
-      <Route path="/privacy" component={Privacy} />
-      <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
+      <Route path="/" component={HomeRoute} />
+      <Route path="/studio" component={StudioRoute} />
+      <Route path="/privacy" component={PrivacyRoute} />
+      <Route path="/404" component={NotFoundRoute} />
+      <Route component={NotFoundRoute} />
     </Switch>
   );
 }
