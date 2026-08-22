@@ -242,3 +242,7 @@
 - [x] Refine verified responsive layout, media framing, typography, interaction spacing, and overflow behavior without removing content. Restored project telemetry overlays, hardened touch scrolling, added focus treatment, added an older-engine overflow fallback, and made the small-phone hero height safer.
 - [x] Validate visual, accessibility, performance, reduced-motion, tests, types, build, audit, and runtime behavior across the device matrix. 36 tests pass, TypeScript and production build pass, dependency audit reports no known vulnerabilities, diff hygiene passes, and final 320px plus 1440px previews were reviewed.
 - [x] Commit, push, and checkpoint the full-device quality pass as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the evidence background crop, overlay, and content measure on real phone widths. Confirmed the subject was too dominant and stretched behind the long mobile record.
+- [x] Apply a phone-specific evidence image crop and readable layout while keeping desktop treatment unchanged. Added a phone-only focal crop, reduced saturation, controlled opacity, and a stronger lower readability gradient.
+- [x] Validate phone, tablet, desktop, accessibility, tests, types, build, audit, and runtime behavior. Reviewed 390px phone and 1280px desktop captures; 36 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.
+- [x] Commit, push, and checkpoint the evidence mobile repair as mantisdarling. Checkpoint follows after source cleanup.
