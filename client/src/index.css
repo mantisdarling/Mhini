@@ -1257,3 +1257,23 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .mobile-image-reveal { transition-duration: 0.01ms; }
   .rebuild-project-grid { scroll-behavior: auto; }
 }
+
+/* Final device pass: restore the card telemetry grid and make narrow touch layouts deliberate. */
+.rebuild-project-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.rebuild-project-overlay::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 49.8%, rgba(233, 231, 225, 0.18) 50%, transparent 50.2%), linear-gradient(0deg, transparent 49.8%, rgba(233, 231, 225, 0.1) 50%, transparent 50.2%); background-size: 50% 100%, 100% 50%; }
+.rebuild-project-grid:focus-visible { outline: 2px solid var(--red); outline-offset: 6px; }
+@supports not (overflow: clip) {
+  .rebuild-site { overflow: hidden; }
+}
+@media (max-width: 800px) {
+  .rebuild-project-grid { touch-action: pan-x; scroll-behavior: smooth; }
+  .rebuild-project-card, .rebuild-project-card.is-featured { scroll-snap-stop: always; }
+}
+@media (max-width: 700px) {
+  .rebuild-hero-copy { min-height: max(560px, min(720px, calc(100svh - 62px))); }
+}
+@supports not (height: 100svh) {
+  @media (max-width: 700px) {
+    .rebuild-hero-copy { min-height: max(560px, calc(100vh - 62px)); }
+  }
+}

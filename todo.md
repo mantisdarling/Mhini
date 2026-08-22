@@ -238,3 +238,7 @@
 - [x] Add an accessible swipeable project carousel for touch-sized screens while preserving the desktop project grid. Mobile uses horizontal scroll snap with a next-card peek; desktop remains the original grid.
 - [x] Verify mobile, tablet, desktop, keyboard, reduced-motion, image-error, tests, types, build, and runtime behavior. 36 tests pass, TypeScript and production build pass, dependency audit is clear, and 390px plus 1280px previews were reviewed.
 - [x] Commit, push, and checkpoint the mobile interaction upgrade as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Establish and audit a device matrix covering small phones, standard phones, tablets, laptops, and wide desktop screens. Reviewed 320x700, 390x844, 768x1024, 1024x900, 1280x720, and 1440x900.
+- [x] Refine verified responsive layout, media framing, typography, interaction spacing, and overflow behavior without removing content. Restored project telemetry overlays, hardened touch scrolling, added focus treatment, added an older-engine overflow fallback, and made the small-phone hero height safer.
+- [x] Validate visual, accessibility, performance, reduced-motion, tests, types, build, audit, and runtime behavior across the device matrix. 36 tests pass, TypeScript and production build pass, dependency audit reports no known vulnerabilities, diff hygiene passes, and final 320px plus 1440px previews were reviewed.
+- [x] Commit, push, and checkpoint the full-device quality pass as mantisdarling. Checkpoint follows after source cleanup.
