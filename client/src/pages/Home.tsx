@@ -266,7 +266,6 @@ export default function Home() {
 
         <section className="rebuild-stack cinematic-section" id="stack">
           <SceneBackdrop src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} />
-          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><ResponsiveImage src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p>Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>

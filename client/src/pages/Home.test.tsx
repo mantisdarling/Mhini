@@ -66,11 +66,12 @@ describe("rebuilt Mantis Home page", () => {
     expect(stackButton?.getAttribute("aria-expanded")).toBe("true");
   });
 
-  it("renders blended atmosphere layers for stack and evidence", () => {
+  it("renders one blended backdrop for stack and evidence", () => {
     renderHome();
-    expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack img")?.getAttribute("src")).toContain("files.manuscdn.com");
+    expect(container?.querySelector("#stack > .cinematic-scene-backdrop img")?.getAttribute("src")).toContain("files.manuscdn.com");
+    expect(container?.querySelectorAll("#stack > .cinematic-scene-backdrop")).toHaveLength(1);
+    expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack")).toBeNull();
     expect(container?.querySelector("#evidence > .cinematic-scene-backdrop img")?.getAttribute("src")).toContain("files.manuscdn.com");
-    expect(container?.querySelector("#stack .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
     expect(container?.querySelector("#evidence .rebuild-section-atmosphere")).toBeNull();
   });
 
@@ -86,6 +87,16 @@ describe("rebuilt Mantis Home page", () => {
     expect(backdrop?.parentElement).toBe(stack);
     expect(heading?.parentElement).toBe(stack);
     expect(list?.parentElement).toBe(stack);
+  });
+
+  it("keeps each major media section as one backdrop with foreground content", () => {
+    renderHome();
+    for (const id of ["profile", "work", "stack", "evidence"]) {
+      const section = container?.querySelector(`#${id}`);
+      expect(section?.querySelectorAll(":scope > .cinematic-scene-backdrop")).toHaveLength(1);
+      expect(section?.querySelector(":scope > .cinematic-scene-backdrop")?.nextElementSibling).toBeTruthy();
+    }
+    expect(container?.querySelectorAll("#stack > picture")).toHaveLength(0);
   });
 
   it("gives every project card a samurai visual and keeps the closing scene video-only", () => {
@@ -133,10 +144,10 @@ describe("rebuilt Mantis Home page", () => {
   it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {
     renderHome();
     const mobileSources = container?.querySelectorAll('source[media="(max-width: 800px)"]') ?? [];
-    expect(mobileSources.length).toBe(projects.length + 10);
+    expect(mobileSources.length).toBe(projects.length + 9);
     expect(container?.querySelector('source[srcset*="/nUUmQGGwbuDjMqAD.webp"]')).toBeTruthy();
     expect(container?.querySelector('source[srcset*="/yobFGNuwyHwrFsAO.webp"]')).toBeTruthy();
-    expect(container?.querySelector('#stack .rebuild-section-atmosphere source[srcset*="/FTbPLbavzYQOssdo.webp"]')).toBeTruthy();
+    expect(container?.querySelector('#stack > .cinematic-scene-backdrop source[srcset*="/FTbPLbavzYQOssdo.webp"]')).toBeTruthy();
     container?.querySelectorAll(".rebuild-project-card").forEach(card => {
       expect(card.querySelector('source[media="(max-width: 800px)"]')).toBeTruthy();
     });
