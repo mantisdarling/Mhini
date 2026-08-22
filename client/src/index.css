@@ -778,3 +778,30 @@ html.motion-off .hero-field { display: none; }
   .hero-support { gap: 1.35rem; }
   .hero-support p { max-width: 340px; }
 }
+
+/* Original static samurai layer: a quiet focal counterweight to the telemetry field. */
+.hero-samurai { position: absolute; z-index: -2; right: clamp(2rem, 7vw, 9rem); bottom: 0; width: clamp(250px, 30vw, 470px); height: min(76vh, 700px); object-fit: contain; object-position: bottom center; opacity: 0.64; mix-blend-mode: screen; pointer-events: none; filter: contrast(1.08) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35)); }
+.hero-shade { z-index: -1; }
+@supports not (mix-blend-mode: screen) {
+  .hero-samurai { opacity: 0.34; mix-blend-mode: normal; }
+}
+@media (max-width: 980px) {
+  .hero-samurai { right: -2rem; width: min(48vw, 360px); opacity: 0.42; }
+}
+@media (max-width: 760px) {
+  .hero-samurai { right: -3.6rem; bottom: 1.5rem; width: 58vw; height: 56vh; opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-samurai { opacity: 0.3; }
+}
+
+/* SVG silhouette fallback: no external request, no broken state, no animation loop. */
+.hero-samurai { z-index: -1; display: block; overflow: visible; object-fit: initial; }
+.hero-shade { z-index: -2; }
+.hero-samurai .samurai-shadow { fill: rgba(6, 6, 6, 0.94); }
+.hero-samurai .samurai-plate { fill: rgba(242, 239, 233, 0.18); stroke: rgba(242, 239, 233, 0.34); stroke-width: 1; }
+.hero-samurai .samurai-helmet { fill: rgba(242, 239, 233, 0.25); stroke: rgba(242, 239, 233, 0.48); stroke-width: 1; }
+.hero-samurai .samurai-blade { fill: var(--ivory); opacity: 0.8; }
+.hero-samurai .samurai-hilt { fill: var(--red); opacity: 0.9; }
+.hero-samurai .samurai-rim { fill: none; stroke: var(--red); stroke-width: 2; opacity: 0.74; }
+@media (max-width: 760px) { .hero-samurai { right: -2rem; width: 54vw; height: 52vh; opacity: 0.28; } }

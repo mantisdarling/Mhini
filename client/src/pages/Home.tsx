@@ -633,6 +633,14 @@ export default function Home() {
       <main>
         <section className="hero" id="top" ref={heroRef} onMouseMove={trackHeroPointer} onMouseLeave={resetHeroPointer}>
           <img className="hero-art" src={ASSETS.hero} alt="" fetchPriority="high" />
+          <svg className="hero-samurai" viewBox="0 0 260 520" aria-hidden="true" focusable="false">
+            <path className="samurai-shadow" d="M156 76c16 4 28 18 28 35 0 12-5 22-14 29 18 13 31 29 39 49l13 33-19 8-21-31 11 59 28 71-34 13-30-69-4 54 35 112-47 12-23-93-8 89-45-3 11-117 18-55 4-66c-12 6-22 17-31 32l-19-10 18-34c11-19 25-33 42-42-7-8-11-18-11-29 0-22 16-40 37-43l15-18 7 18z" />
+            <path className="samurai-plate" d="M86 185c17-18 38-27 64-27 22 0 42 8 59 22l-12 29-48-8-49 10zM78 230l49-13 52 10-3 22-52 8-49-10zM83 274l40-7 50 6 6 34-54 9-43-11z" />
+            <path className="samurai-helmet" d="M111 96c8-22 27-35 48-35 20 0 36 9 46 27l-12 14-10-9-2 20-51 3-2-16-11 8z" />
+            <path className="samurai-blade" d="M117 239 258 96l2 7-129 163z" />
+            <path className="samurai-hilt" d="m105 236 24 23-11 10-24-23z" />
+            <path className="samurai-rim" d="M158 76c16 4 28 18 28 35 0 12-5 22-14 29 18 13 31 29 39 49l13 33" />
+          </svg>
           <div className="hero-shade" aria-hidden="true" />
           <div className="hero-field" aria-hidden="true"><i /><b /><span /></div>
           <div className="hero-cut-flash" aria-hidden="true" />
