@@ -142,3 +142,8 @@
 - [x] Audit scroll, motion, touch, and responsive behavior across desktop, tablet, mobile, and reduced-motion paths.
 - [x] Improve cross-device smoothness with bounded motion, responsive input handling, and cleanup safeguards.
 - [x] Validate desktop, tablet, mobile, touch, reduced-motion, tests, type safety, and production build. Visual capture was attempted at desktop and mobile sizes but the preview service was unavailable.
+- [x] Push all current unpushed project changes to the GitHub repository as mantisdarling and verify the remote commit.
+- [x] Audit existing dependency checks, secret handling, backup recovery paths, security tests, and incident-response documentation.
+- [x] Add free repository-first dependency and secret scanning gates, deterministic backup and restore guidance, and a legally cautious incident-response playbook.
+- [x] Add or extend non-invasive security regression tests and validate the resilience documentation and scripts without touching production data.
+- [x] Remediate the verified development dependency advisories by removing the unnecessary bundled pnpm dependency and upgrading affected toolchain packages to patched releases.

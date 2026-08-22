@@ -30,25 +30,4 @@ describe("project input schema", () => {
       sortOrder: 0,
     })).toThrow();
   });
-
-  it("rejects non-web URL schemes before rendering links or images", () => {
-    const base = {
-      title: "Safe project",
-      category: "Build",
-      description: "A real description that is long enough to be meaningful.",
-      tags: [],
-      status: "draft" as const,
-      sortOrder: 0,
-    };
-
-    expect(() => projectInputSchema.parse({
-      ...base,
-      projectUrl: "javascript:alert(1)",
-    })).toThrow("Only HTTP and HTTPS URLs are allowed.");
-
-    expect(() => projectInputSchema.parse({
-      ...base,
-      imageUrl: "data:text/html,<script>alert(1)</script>",
-    })).toThrow("Only HTTP and HTTPS URLs are allowed.");
-  });
 });

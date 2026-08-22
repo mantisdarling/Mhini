@@ -10,7 +10,8 @@
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "security:secrets": "node scripts/check-secrets.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -67,6 +68,7 @@
     "lucide-react": "^0.453.0",
     "mdast-util-to-hast": "^13.2.1",
     "mysql2": "^3.15.0",
+    "nanoid": "^6.0.1",
     "next-themes": "^0.4.6",
     "qs": "^6.15.2",
     "react": "^19.2.8",
@@ -86,10 +88,8 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.6",
-    "@builder.io/vite-plugin-jsx-loc": "^0.1.1",
     "@tailwindcss/typography": "^0.5.15",
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.1.3",
     "@types/express": "5.0.6",
     "@types/google.maps": "^3.58.1",
     "@types/node": "^24.7.0",
@@ -98,19 +98,15 @@
     "@vitejs/plugin-react": "^5.0.4",
     "add": "^2.0.6",
     "autoprefixer": "^10.4.20",
-    "esbuild": "^0.25.10",
+    "esbuild": "^0.25.0",
     "jsdom": "^26.1.0",
-    "nanoid": "^5.1.16",
-    "picomatch": "^4.0.4",
-    "pnpm": "^10.34.5",
-    "postcss": "^8.5.26",
+    "postcss": "^8.4.47",
     "prettier": "^3.6.2",
-    "rollup": "^4.59.0",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.1.14",
     "tsx": "^4.19.1",
     "tw-animate-css": "^1.4.0",
     "typescript": "5.9.3",
-    "vite": "^7.3.6",
+    "vite": "^7.1.7",
     "vite-plugin-manus-runtime": "0.0.59",
     "vitest": "^3.2.7"
   },

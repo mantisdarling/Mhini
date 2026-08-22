@@ -3,44 +3,26 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense, type ReactNode } from "react";
+import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
-import RouteLoadingSkeleton from "./components/RouteLoadingSkeleton";
-import RouteChunkErrorBoundary from "./components/RouteChunkErrorBoundary";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import Home from "./pages/Home";
+import ProjectConsole from "./pages/ProjectConsole";
 import PrivacyConsent from "./components/PrivacyConsent";
-
-const Home = lazy(() => import("./pages/Home"));
-const ProjectConsole = lazy(() => import("./pages/ProjectConsole"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const NotFound = lazy(() => import("@/pages/NotFound"));
+import Privacy from "./pages/Privacy";
 
 function Router() {
-  // Route chunks load independently so the shell stays responsive on first visit.
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/">
-        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><RouteContent><Home /></RouteContent></Suspense></RouteChunkErrorBoundary>
-      </Route>
-      <Route path="/studio">
-        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><RouteContent><ProjectConsole /></RouteContent></Suspense></RouteChunkErrorBoundary>
-      </Route>
-      <Route path="/privacy">
-        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><Privacy /></RouteContent></Suspense></RouteChunkErrorBoundary>
-      </Route>
-      <Route path="/404">
-        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense></RouteChunkErrorBoundary>
-      </Route>
-      <Route>
-        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense></RouteChunkErrorBoundary>
-      </Route>
+      <Route path="/" component={Home} />
+      <Route path="/studio" component={ProjectConsole} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/404" component={NotFound} />
+      <Route component={NotFound} />
     </Switch>
   );
-}
-
-function RouteContent({ children }: { children: ReactNode }) {
-  return <div className="route-content-enter">{children}</div>;
 }
 
 function App() {

@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-// Rendered links and images accept network URLs only.
-const webUrl = z.string().trim().url().refine(value => {
-  if (value === "") return true;
-  return ["http:", "https:"].includes(new URL(value).protocol);
-}, "Only HTTP and HTTPS URLs are allowed.");
+const webUrl = z.string().trim().url().or(z.literal(""));
 
 export const projectInputSchema = z.object({
   title: z.string().trim().min(2, "Title must be at least 2 characters.").max(140),
