@@ -155,3 +155,8 @@
 - [x] Add mantis-led slash transitions, silhouette treatment, selective blade gleam, and restrained depth effects.
 - [x] Validate the visual pass across desktop, tablet, mobile, touch, keyboard, reduced motion, tests, type safety, and production build. Automated validation passed; preview capture was unavailable.
 - [x] Verify the Mantis visual effects remain smooth and usable on desktop, tablet, phone, touch, keyboard, low-power, and reduced-motion devices. Responsive and reduced-motion rules were verified in source; visual preview capture was unavailable.
+- [x] Push the latest Mantis visual changes to GitHub as mantisdarling and verify the remote commit identity and clean tree.
+- [x] Audit every visible route, section, text block, alignment, spacing relationship, responsive breakpoint, interaction, and Mantis visual treatment.
+- [x] Refine verified copy, hierarchy, layout rhythm, responsive composition, and Awwwards-inspired art direction without fabricating portfolio data.
+- [x] Validate accessibility, motion, touch behavior, reduced motion, desktop, tablet, mobile, tests, type safety, and production build. Visual capture was attempted but no preview URL was available.
+- [x] Replace the remaining Express 4 wildcard middleware paths in the Vite adapter and verify clean preview startup before visual review.

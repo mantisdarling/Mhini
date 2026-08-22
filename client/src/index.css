@@ -774,3 +774,28 @@ html.motion-off .hero-field { display: none; }
 @keyframes mantis-dossier-cut { 0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); opacity: 0.7; } 45% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; } 100% { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); opacity: 0; } }
 @media (max-width: 767px) { .mantis-slash-transition { inset: -4%; animation-duration: 480ms; } }
 @media (prefers-reduced-motion: reduce) { .mantis-slash-transition { display: none; } }
+
+/* Final layout polish for long copy, narrow screens, and touch targets. */
+html { scrollbar-gutter: stable; text-rendering: optimizeLegibility; }
+body { overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+main, section, article, header, footer, nav, div { min-width: 0; }
+h1, h2, h3, p { text-wrap: pretty; }
+.hero-name, .tagline, .data-section-heading h2, .systems-index-intro h2, .vision-card h3, .writing-card h3 { text-wrap: balance; }
+a, button { -webkit-tap-highlight-color: transparent; }
+button, .social-row a, .menu-button { min-height: 44px; min-width: 44px; }
+.project-card, .education-card, .credential-card, .membership-card, .hackathon-card, .course-row, .open-source-row, .writing-card, .vision-card { overflow-wrap: anywhere; }
+.data-external, .contact-link, .course-row h3, .open-source-row h3, .membership-card h3, .hackathon-card h3 { overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .site-header { padding-inline: var(--page-padding); }
+  .hero-content { max-width: 100%; }
+  .hero-support p { max-width: 34ch; }
+  .data-section-heading { padding-right: 0.2rem; }
+  .data-section-heading h2 { max-width: 16ch; }
+  .systems-index-intro h2 { max-width: 10ch; }
+  .course-row, .open-source-row, .membership-card, .hackathon-card { overflow-wrap: anywhere; }
+  .social-row { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .systems-index-card:hover, .technology-group:hover, .social-row a:hover { transform: none; }
+}
+html.motion-off .mantis-depth-glyph { transform: none !important; }
