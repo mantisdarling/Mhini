@@ -1239,8 +1239,12 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 .mobile-image-reveal { transition: opacity 560ms cubic-bezier(0.23, 1, 0.32, 1); }
 @media (max-width: 800px) {
   .mobile-image-reveal:not(.is-loaded) { opacity: 0 !important; }
-  .rebuild-project-carousel-hint { display: flex; align-items: center; gap: 0.65rem; margin: -1rem 0 0.85rem; color: rgba(233, 231, 225, 0.58); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.16em; }
+  .rebuild-project-carousel-hint { display: flex; align-items: center; gap: 0.65rem; margin: -1rem 0 0.55rem; color: rgba(233, 231, 225, 0.58); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.16em; }
   .rebuild-project-carousel-hint i { display: block; width: 34px; height: 1px; background: var(--red); }
+  .rebuild-project-position { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 0.65rem; color: rgba(233, 231, 225, 0.55); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.13em; }
+  .rebuild-project-position-dots { display: flex; align-items: center; gap: 0.28rem; }
+  .rebuild-project-position-dots i { display: block; width: 0.55rem; height: 2px; background: rgba(233, 231, 225, 0.3); transition: width 180ms ease, background-color 180ms ease, opacity 180ms ease; }
+  .rebuild-project-position-dots i.is-active { width: 1.25rem; background: var(--red); opacity: 1; }
   .rebuild-project-grid { display: flex; gap: 0.75rem; margin: 0 -0.35rem; padding: 0 0.35rem 0.55rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 0.35rem; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .rebuild-project-grid::-webkit-scrollbar { display: none; }
   .rebuild-project-card, .rebuild-project-card.is-featured { display: flex; flex: 0 0 min(calc(100vw - 2.5rem), 350px); width: min(calc(100vw - 2.5rem), 350px); flex-direction: column; grid-column: auto; scroll-snap-align: start; scroll-snap-stop: always; }
@@ -1253,11 +1257,12 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-project-open { display: none; }
 }
 @media (min-width: 801px) {
-  .rebuild-project-carousel-hint { display: none; }
+  .rebuild-project-carousel-hint, .rebuild-project-position { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .mobile-image-reveal { transition-duration: 0.01ms; }
   .rebuild-project-grid { scroll-behavior: auto; }
+  .rebuild-project-position-dots i { transition: none; }
 }
 
 /* Final device pass: restore the card telemetry grid and make narrow touch layouts deliberate. */

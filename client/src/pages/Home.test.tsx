@@ -135,10 +135,15 @@ describe("rebuilt Mantis Home page", () => {
   it("exposes the project archive as a touch carousel on narrow screens", () => {
     renderHome();
     const carousel = container?.querySelector<HTMLElement>('[role="region"][aria-roledescription="carousel"]');
+    const position = container?.querySelector<HTMLElement>(".rebuild-project-position");
     expect(carousel).toBeTruthy();
     expect(carousel?.getAttribute("aria-label")).toBe("Project archive");
     expect(carousel?.querySelectorAll(".rebuild-project-card")).toHaveLength(projects.length);
     expect(carousel?.tabIndex).toBe(0);
+    expect(position?.getAttribute("aria-label")).toBe("Project carousel position");
+    expect(position?.querySelector('[aria-live="polite"]')?.textContent).toBe(`01 / ${String(projects.length).padStart(2, "0")}`);
+    expect(position?.querySelectorAll(".rebuild-project-position-dots i")).toHaveLength(projects.length);
+    expect(position?.querySelector(".rebuild-project-position-dots i.is-active")).toBeTruthy();
   });
 
   it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {

@@ -195,8 +195,56 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const storyRef = useRef<HTMLElement>(null);
+  const projectGridRef = useRef<HTMLDivElement>(null);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   useStoryParallax(storyRef);
   const displayedProjects = useMemo<DisplayProject[]>(() => [...resumeProjects, ...(publicProjectsQuery.data ?? [])], [publicProjectsQuery.data]);
+
+  useEffect(() => {
+    const grid = projectGridRef.current;
+    if (!grid) return;
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".rebuild-project-card"));
+    setActiveProjectIndex(0);
+    if (cards.length === 0) return;
+
+    const updateFromScroll = () => {
+      const nextIndex = cards.reduce((closestIndex, card, index) => {
+        const cardDistance = Math.abs(card.offsetLeft - grid.scrollLeft);
+        const closestDistance = Math.abs(cards[closestIndex].offsetLeft - grid.scrollLeft);
+        return cardDistance < closestDistance ? index : closestIndex;
+      }, 0);
+      setActiveProjectIndex(nextIndex);
+    };
+
+    if (typeof IntersectionObserver !== "undefined") {
+      const observer = new IntersectionObserver(entries => {
+        const visibleEntry = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+        if (!visibleEntry) return;
+        const nextIndex = cards.indexOf(visibleEntry.target as HTMLElement);
+        if (nextIndex >= 0) setActiveProjectIndex(nextIndex);
+      }, { root: grid, threshold: [0.55, 0.8] });
+      cards.forEach(card => observer.observe(card));
+      updateFromScroll();
+      return () => observer.disconnect();
+    }
+
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        updateFromScroll();
+      });
+    };
+    grid.addEventListener("scroll", onScroll, { passive: true });
+    updateFromScroll();
+    return () => {
+      grid.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [displayedProjects]);
 
   useEffect(() => {
     document.body.classList.add("rebuild-body");
@@ -261,7 +309,11 @@ export default function Home() {
           <SceneBackdrop src={ASSETS.caseStudy} mobileSrc={ASSETS.story.mobile.caseStudy} />
           <div className="rebuild-section-heading"><div><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p>{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
           <div className="rebuild-project-carousel-hint" aria-hidden="true"><span>SWIPE TO BROWSE</span><i /></div>
-          <div className="rebuild-project-grid" role="region" aria-roledescription="carousel" aria-label="Project archive" tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
+          <div className="rebuild-project-position" aria-label="Project carousel position">
+            <span aria-live="polite">{String(activeProjectIndex + 1).padStart(2, "0")} / {String(displayedProjects.length).padStart(2, "0")}</span>
+            <span className="rebuild-project-position-dots" aria-hidden="true">{displayedProjects.map((project, index) => <i className={index === activeProjectIndex ? "is-active" : ""} key={project.id} />)}</span>
+          </div>
+          <div ref={projectGridRef} className="rebuild-project-grid" role="region" aria-roledescription="carousel" aria-label="Project archive" tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">
