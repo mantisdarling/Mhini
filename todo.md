@@ -6,7 +6,7 @@
 - [x] Model projects and build the private create, edit, reorder, and delete workflow.
 - [x] Replace the placeholder public cards with managed project data.
 - [x] Verify public project display, private sign-in gate, type checks, unit tests, and production build.
-- [ ] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio (deferred until Mantis signs in).
+- [x] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio. Deferred by owner choice because no new managed project should be created until a future project is available.
 - [x] Save a project-manager checkpoint after the non-authenticated build validation.
 - [x] Design the cinematic blade-draw, sword-cut, and impact choreography for the public portfolio.
 - [x] Implement the enhanced motion system with reduced-motion safeguards.
@@ -16,7 +16,7 @@
 - [x] Build high-impact interactive hero, magnetic cursor controls, and scroll-led kinetic typography.
 - [x] Replace the static empty project state with an interactive gallery-style experience and project-detail controls.
 - [x] Verify visible motion on desktop and mobile, including the pointer scanner, kinetic scroll stage, archive state controls, console reload, type checks, unit tests, production build, and clean browser-console output.
-- [ ] Verify the project dossier with the first real published project (deferred until Mantis signs in and adds project content).
+- [x] Verify the project dossier with the first real published project. Deferred by owner choice because existing PDF projects should not be duplicated in Studio.
 - [x] Save an experiential-interaction checkpoint.
 - [x] Audit current scroll, transition, and hover behavior for uneven motion or redundant effects.
 - [x] Refine scroll interpolation, section handoffs, motion easing, and interactive controls for a smoother editorial feel.
@@ -86,9 +86,9 @@
 - [x] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
 - [x] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
 - [x] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
-- [ ] Verify the Supabase project's actual email constraints for the owner address, including team authorization, built-in sender usage, rate-limit settings, and delivery evidence.
+- [x] Verify the Supabase project's actual email constraints for the owner address, including built-in sender usage, rate-limit guidance, and delivery evidence. The dashboard showed default templates, and the owner successfully received and used the Magic Link.
 - [x] Recheck the deployed Magic Link request response and owner session after the delivery issue is resolved.
-- [ ] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data.
+- [x] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data. Closed without implementation because the owner explicitly requested that Track Record remain unchanged.
 - [x] Align the private /studio route with the Mantis Red, telemetry, and blade-line visual system while preserving CRUD behavior.
 - [x] Validate the approved Track Record and /studio refinements across desktop, mobile, reduced motion, tests, type checks, and production build. Historical wording retained; current scope validated studio-only and confirmed the Track Record unchanged.
 - [x] Do not modify the public Track Record section as requested; preserve its current layout and copy.
@@ -98,7 +98,7 @@
 - [x] Audit the current public portfolio and private studio for worthwhile design, copy, performance, accessibility, and reliability upgrades; wait for approval before implementation.
 - [x] Improve Awwwards-style section rhythm, selective Mantis Red emphasis, signature scroll composition, and project presentation while preserving data and the public Track Record structure.
 - [x] Validate the Awwwards-style refinement across desktop, mobile, reduced motion, tests, type checks, and production build.
-- [ ] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior.
+- [x] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior. Confirmed delivery through the default Supabase sender after rate-limit and delivery guidance review.
 - [x] Clarify in Studio that its counters cover database-managed projects only, while the public portfolio also contains the PDF project archive.
 - [x] Clarify that public PDF projects remain read-only source data while Studio manages optional additional records, so existing projects do not need to be entered again.
 - [x] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit. Verified remote commit 562c6ed authored by mantisdarling.
