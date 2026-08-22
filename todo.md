@@ -275,3 +275,7 @@
 - [x] Restore vertical page scrolling while preserving horizontal project swiping and modal-only scroll locking. Enabled pan-x pan-y for the carousel, clipped only horizontal body overflow, and kept modal body locking unchanged.
 - [x] Validate phone scrolling, carousel interaction, modal behavior, desktop layout, tests, types, build, audit, and runtime errors. Reviewed 390px full-page and 1440px desktop previews; 38 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.
 - [x] Commit, push, and checkpoint the scroll repair as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the Stack markup and mobile visual-layer structure causing the artwork to render as a separate block. The mobile picture was constrained to 72svh inside an absolute backdrop, leaving the rest of the section unfilled.
+- [x] Move the Stack artwork behind the mobile heading and technology list with a controlled crop and readable overlay while preserving desktop behavior. The picture now fills the section, with the duplicate atmosphere layer still suppressed on phones.
+- [x] Validate phone, tablet, desktop, accessibility, tests, types, build, audit, and runtime behavior. Reviewed 390px full-page and 1440px desktop captures; 38 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.
+- [x] Commit, push, and checkpoint the Stack mobile composition repair as mantisdarling. Checkpoint follows after source cleanup.

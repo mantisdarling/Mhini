@@ -1294,14 +1294,14 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 /* Stack phone crop: one restrained image field behind the list, without layering the same artwork twice. */
 @media (max-width: 700px) {
   .cinematic-section#stack > .cinematic-scene-backdrop { opacity: 0.34; }
-  .cinematic-section#stack > .cinematic-scene-backdrop picture { height: min(72svh, 640px); }
+  .cinematic-section#stack > .cinematic-scene-backdrop picture { height: 100%; }
   .cinematic-section#stack > .cinematic-scene-backdrop img { object-position: 70% 16%; filter: grayscale(0.68) saturate(0.56) contrast(1.04); }
   .cinematic-section#stack > .cinematic-scene-backdrop span { background: linear-gradient(90deg, rgba(217, 214, 206, 0.94) 0%, rgba(217, 214, 206, 0.78) 54%, rgba(217, 214, 206, 0.34) 100%), linear-gradient(180deg, rgba(217, 214, 206, 0.14), rgba(217, 214, 206, 0.94) 92%); }
   .cinematic-section#stack .rebuild-section-atmosphere-stack { display: none; }
 }
 @supports not (height: 100svh) {
   @media (max-width: 700px) {
-    .cinematic-section#stack > .cinematic-scene-backdrop picture { height: min(72vh, 640px); }
+    .cinematic-section#stack > .cinematic-scene-backdrop picture { height: 100%; }
   }
 }
 
