@@ -180,4 +180,4 @@
 - [x] Audit the full public page for visible Manus attribution, spelling, content completeness, media failures, visual misalignments, and low-quality presentation. Public attribution scan is clear, the Mantis-only hero is aligned on desktop and phone, media is visible, and preserved profile and project content remain present.
 - [x] Fix all discovered responsive, visual, copy, media, accessibility, and security issues without removing real portfolio content.
 - [x] Re-run the full regression, security, type, build, runtime, and cross-device review after the final pass. 32 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and browser logs were clean.
-- [ ] Commit, push, and checkpoint the final audited website as mantisdarling.
+- [x] Commit, push, and checkpoint the final audited website as mantisdarling. Pushed commit 83b9043 authored by mantisdarling to GitHub main; checkpoint follows.
