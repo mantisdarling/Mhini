@@ -170,3 +170,9 @@
 - [x] Remove the custom foreground samurai helmet and sword illustration from the hero while keeping the moving samurai video background and Mantis identity.
 - [x] Validate the cleaned hero on desktop and phone with preserved content, readable overlays, no overflow, passing tests, type checks, production build, and clean runtime behavior. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
 - [x] Commit, push, and checkpoint the hero cleanup as mantisdarling. Pushed commit eed0f9c authored by mantisdarling to GitHub main; checkpoint follows.
+- [x] Add a full-width background image scene immediately below the hero so the scroll journey continues cinematically.
+- [x] Generate and integrate a custom lightweight hero poster frame for the first moving video.
+- [x] Strengthen the hero identity as bold Mantis Builds typography and tune the mobile text position.
+- [x] Add smooth cinematic load-in motion with a reduced-motion fallback and no layout shift.
+- [x] Validate the polished hero and first scroll scene across desktop and phone with tests, types, build, audit, and runtime checks. 32 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
+- [ ] Commit, push, and checkpoint the final cinematic polish as mantisdarling.

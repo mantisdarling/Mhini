@@ -50,6 +50,7 @@ const ASSETS = {
     finalFrame: "/manus-storage/1000237112_04ac6804.jpg",
     heroVideo: "https://v1.pinimg.com/videos/iht/expMp4/22/bd/98/22bd9828506f050e48c10f0e9024ee85_720w.mp4",
     closingVideo: "https://v1.pinimg.com/videos/iht/expMp4/0d/96/51/0d965150aded2a004aa629c909118540_720w.mp4",
+    heroPoster: "/manus-storage/mantis-hero-poster_cb1c6127.jpg",
   },
 };
 
@@ -123,8 +124,8 @@ function SceneBackdrop({ src, alt = "" }: { src: string; alt?: string }) {
   return <div className="cinematic-scene-backdrop" aria-hidden="true"><img src={src} alt={alt} loading="eager" decoding="async" /><span /></div>;
 }
 
-function VideoBackdrop({ src, fallbackSrc }: { src: string; fallbackSrc: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><video src={src} autoPlay muted loop playsInline preload="metadata" /><span /></div>;
+function VideoBackdrop({ src, fallbackSrc, poster }: { src: string; fallbackSrc: string; poster?: string }) {
+  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><video src={src} poster={poster} autoPlay muted loop playsInline preload="auto" /><span /></div>;
 }
 
 export default function Home() {
@@ -166,7 +167,7 @@ export default function Home() {
 
       <main>
         <section className="rebuild-hero cinematic-hero" id="top">
-          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} />
+          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} poster={ASSETS.story.heroPoster} />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy">
             <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
@@ -225,7 +226,7 @@ export default function Home() {
         </section>
 
         <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
-          <VideoBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} />
+          <VideoBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} poster={ASSETS.story.finalFrame} />
           <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
         </section>
 

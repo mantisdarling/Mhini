@@ -846,8 +846,8 @@ body.rebuild-body::before { display: none; }
 .rebuild-marker span { color: var(--red); }
 .rebuild-marker i { width: 34px; height: 1px; background: currentColor; }
 .rebuild-kicker { margin: clamp(3rem, 7vw, 6.5rem) 0 1.2rem; color: var(--gold); font-family: "Barlow Condensed", sans-serif; font-size: clamp(0.72rem, 1vw, 0.9rem); letter-spacing: 0.18em; }
-.rebuild-hero h1 { max-width: 700px; margin: 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(4.6rem, 11.6vw, 11.5rem); font-weight: 500; letter-spacing: -0.1em; line-height: 0.78; }
-.rebuild-hero h1 em { color: var(--red); font-style: normal; }
+.rebuild-hero h1 { max-width: 700px; margin: 0; color: var(--paper); font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(4.9rem, 12vw, 11.8rem); font-weight: 700; letter-spacing: -0.105em; line-height: 0.76; text-wrap: balance; }
+.rebuild-hero h1 em { color: var(--red); font-style: normal; font-weight: 700; }
 .rebuild-lede { max-width: 430px; margin: 2rem 0 0; color: rgba(233, 231, 225, 0.75); font-size: clamp(1rem, 1.6vw, 1.22rem); line-height: 1.5; }
 .rebuild-hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.4rem; margin-top: 2.1rem; }
 .rebuild-primary, .rebuild-secondary { display: inline-flex; align-items: center; gap: 0.75rem; min-height: 44px; padding: 0.78rem 1rem; border: 1px solid var(--red); color: var(--paper); cursor: pointer; font-family: "Barlow Condensed", sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
@@ -860,7 +860,7 @@ body.rebuild-body::before { display: none; }
 .rebuild-hero-foot { position: absolute; right: clamp(1.25rem, 7vw, 7.5rem); bottom: 1.4rem; z-index: 4; display: flex; align-items: center; gap: 0.7rem; color: rgba(233, 231, 225, 0.55); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.15em; }
 .rebuild-hero-foot i { display: block; width: 46px; height: 1px; background: var(--red); }
 .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact { padding: clamp(5rem, 11vw, 10rem) clamp(1.25rem, 7vw, 7.5rem); }
-.rebuild-intro { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(3rem, 10vw, 11rem); border-bottom: 1px solid var(--line); }
+.rebuild-intro { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(3rem, 10vw, 11rem); min-height: min(86svh, 780px); align-items: center; border-bottom: 1px solid var(--line); }
 .rebuild-section-lead { align-self: start; }
 .rebuild-section-lead .rebuild-marker, .rebuild-section-heading .rebuild-marker, .rebuild-contact .rebuild-marker { color: rgba(21, 21, 21, 0.62); }
 .rebuild-section-lead h2, .rebuild-section-heading h2, .rebuild-contact h2 { max-width: 660px; margin: clamp(2rem, 4vw, 4rem) 0 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(3.4rem, 7.4vw, 8.3rem); font-weight: 500; letter-spacing: -0.09em; line-height: 0.82; }
@@ -997,9 +997,9 @@ body.rebuild-body::before { display: none; }
   .rebuild-nav.is-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
   .rebuild-nav button { justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid rgba(233, 231, 225, 0.1); }
   .rebuild-menu { display: inline-flex; }
-  .rebuild-hero-copy { min-height: 690px; padding-top: 6rem; padding-bottom: 3.5rem; }
+  .rebuild-hero-copy { min-height: 720px; padding-top: 7.2rem; padding-bottom: 4rem; }
   .rebuild-kicker { margin-top: 3.4rem; }
-  .rebuild-hero h1 { font-size: clamp(4.2rem, 21vw, 7rem); }
+  .rebuild-hero h1 { max-width: 300px; font-size: clamp(4.55rem, 22vw, 7.5rem); }
   .rebuild-lede { max-width: 290px; font-size: 0.94rem; }
   .rebuild-hero-actions { align-items: stretch; flex-direction: column; max-width: 240px; }
   .rebuild-primary, .rebuild-secondary { justify-content: space-between; width: 100%; }
@@ -1137,9 +1137,14 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 .cinematic-hero .cinematic-video-backdrop span { background: linear-gradient(90deg, rgba(17, 17, 17, 0.95) 0%, rgba(17, 17, 17, 0.82) 35%, rgba(17, 17, 17, 0.22) 100%), linear-gradient(0deg, rgba(17, 17, 17, 0.8), transparent 48%, rgba(17, 17, 17, 0.26)); }
 .cinematic-section .cinematic-scene-backdrop { opacity: 0.34; }
 .cinematic-section#work .cinematic-scene-backdrop { opacity: 0.25; }
-.cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.28; }
+.cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.58; }
 .cinematic-section#stack .cinematic-scene-backdrop,
 .cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.2; }
+.rebuild-profile-name { margin: 1.8rem 0 0; color: var(--red); font-family: "Barlow Condensed", sans-serif; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.rebuild-site > main > section { animation: cinematic-rise 900ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.rebuild-site > main > section:nth-child(2) { animation-delay: 90ms; }
+.rebuild-site > main > section:nth-child(3) { animation-delay: 140ms; }
+@keyframes cinematic-rise { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
 .cinematic-section#stack > .rebuild-section-atmosphere,
 .cinematic-section#evidence > .rebuild-section-atmosphere { z-index: 1; }
 .cinematic-story { position: relative; display: grid; grid-template-columns: minmax(230px, 0.58fr) minmax(0, 1.42fr); gap: clamp(2.5rem, 8vw, 9rem); background: #24231f; color: var(--paper); }
@@ -1171,3 +1176,12 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
   .cinematic-video-backdrop video { transform: none !important; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-site > main > section { animation: none; }
+}
+@media (max-width: 700px) {
+  .rebuild-intro { min-height: 720px; align-items: start; padding-top: 6.5rem; }
+  .cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.38; }
+  .rebuild-profile-name { margin-top: 1.25rem; }
+}
+
