@@ -175,4 +175,4 @@
 - [x] Strengthen the hero identity as bold Mantis Builds typography and tune the mobile text position.
 - [x] Add smooth cinematic load-in motion with a reduced-motion fallback and no layout shift.
 - [x] Validate the polished hero and first scroll scene across desktop and phone with tests, types, build, audit, and runtime checks. 32 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
-- [ ] Commit, push, and checkpoint the final cinematic polish as mantisdarling.
+- [x] Commit, push, and checkpoint the final cinematic polish as mantisdarling. Pushed commit b2106b3 authored by mantisdarling to GitHub main; checkpoint follows.
