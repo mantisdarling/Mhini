@@ -744,3 +744,17 @@ html.motion-off .hero-field { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .route-content-enter { animation: none; }
 }
+
+
+@keyframes route-chunk-error-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.route-chunk-error-enter {
+  animation: route-chunk-error-in 360ms var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-chunk-error-enter { animation: none; }
+}

@@ -137,3 +137,5 @@
 - [x] Fix the shared Skeleton primitive JSX runtime import exposed by the new route loading tests.
 - [x] Add a smooth fade-in transition when route skeletons are replaced by loaded content.
 - [x] Respect reduced-motion preferences and validate the transition with tests, type checks, build, and visual review.
+- [x] Add a custom route chunk error boundary with a branded fade-in recovery state and retry action.
+- [x] Add focused failure-path tests and validate reduced-motion behavior, type safety, production build, and route integration.

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { lazy, Suspense, type ReactNode } from "react";
 import { Route, Switch } from "wouter";
 import RouteLoadingSkeleton from "./components/RouteLoadingSkeleton";
+import RouteChunkErrorBoundary from "./components/RouteChunkErrorBoundary";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import PrivacyConsent from "./components/PrivacyConsent";
@@ -20,19 +21,19 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><RouteContent><Home /></RouteContent></Suspense>
+        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><RouteContent><Home /></RouteContent></Suspense></RouteChunkErrorBoundary>
       </Route>
       <Route path="/studio">
-        <Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><RouteContent><ProjectConsole /></RouteContent></Suspense>
+        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><RouteContent><ProjectConsole /></RouteContent></Suspense></RouteChunkErrorBoundary>
       </Route>
       <Route path="/privacy">
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><Privacy /></RouteContent></Suspense>
+        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><Privacy /></RouteContent></Suspense></RouteChunkErrorBoundary>
       </Route>
       <Route path="/404">
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense>
+        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense></RouteChunkErrorBoundary>
       </Route>
       <Route>
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense>
+        <RouteChunkErrorBoundary><Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense></RouteChunkErrorBoundary>
       </Route>
     </Switch>
   );
