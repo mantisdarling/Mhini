@@ -207,3 +207,7 @@
 - [x] Align evidence text and panels directly inside the image-backed frame with responsive crop and readability overlays.
 - [x] Validate the exact phone and desktop evidence composition, preserved data, media separation, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and 390px mobile plus 1280px desktop previews were reviewed.
 - [x] Commit, push, and checkpoint the evidence background correction as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Verify whether mhini.vercel.app is serving the bd2a15f build and compare its live evidence DOM and computed geometry with local code. Live geometry showed the evidence backdrop was position-relative and occupying 1,858px in normal flow.
+- [x] Fix the true deployment or selector root cause causing the giant evidence image lead-in to persist on phone and desktop-mode mobile. Set the evidence backdrop to position absolute with inset 0.
+- [x] Confirm the live page shows the supplied evidence image behind the evidence content, with no isolated dark image block or duplicate image layer. Local visual verification now shows one image-backed evidence field and no extra atmosphere layer.
+- [x] Revalidate live and local media, layouts, accessibility, content preservation, tests, types, build, audit, and runtime logs before pushing and checkpointing as mantisdarling. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and exact phone and desktop previews were reviewed.
