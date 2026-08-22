@@ -322,3 +322,8 @@
 - [x] Change Evidence accordion header text color on hover without changing the closed state, arrow behavior, focus styling, or content. Pointer-capable devices now transition the header label to Mantis red while touch and keyboard behavior remain unchanged.
 - [x] Validate the hover refinement across mobile and desktop and rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the accordion hover-color refinement as mantisdarling. Commit 9d71c90 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [x] Add a smooth 180-degree rotation to each Evidence accordion arrow when its section opens and closes. The closed state is explicit at 0 degrees and the open state rotates to 180 degrees with a 320ms transform transition.
+- [x] Preserve the current hover color, focus state, closed-by-default behavior, and reduced-motion fallback. The transform is centered and GPU-friendly, while reduced-motion rules disable the transition.
+- [x] Validate the arrow rotation on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the arrow rotation enhancement as mantisdarling.
