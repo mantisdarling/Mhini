@@ -219,3 +219,7 @@
 - [x] Preserve all seven project records and samurai visuals while making the grid visually intentional on desktop, tablet, and mobile.
 - [x] Validate card images, row spans, spacing, accessibility, preserved data, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop, tablet, and phone layout rules were reviewed.
 - [x] Commit, push, and checkpoint the closed project grid as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Remove the dead gray image-to-copy band inside every project card so the visual and project title meet directly. Project images now fill the entire visual wrapper with absolute inset positioning.
+- [x] Preserve the seven real project records and samurai visuals while tightening card rhythm across desktop, tablet, and phone.
+- [x] Validate card density, image crops, typography, row closure, accessibility, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and 390px phone plus 1280px desktop previews were reviewed.
+- [x] Commit, push, and checkpoint the project-card hollow-band correction as mantisdarling. Checkpoint follows after source cleanup.
