@@ -321,4 +321,4 @@
 
 - [x] Change Evidence accordion header text color on hover without changing the closed state, arrow behavior, focus styling, or content. Pointer-capable devices now transition the header label to Mantis red while touch and keyboard behavior remain unchanged.
 - [x] Validate the hover refinement across mobile and desktop and rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
-- [ ] Commit, push, and checkpoint the accordion hover-color refinement as mantisdarling.
+- [x] Commit, push, and checkpoint the accordion hover-color refinement as mantisdarling. Commit 9d71c90 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
