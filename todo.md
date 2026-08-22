@@ -234,3 +234,7 @@
 - [x] Correct mobile media rendering and responsive composition while preserving all content, links, and desktop behavior. All mobile derivatives now use stable public CDN URLs and retain desktop originals.
 - [x] Verify phone, tablet, and desktop previews, asset requests, tests, types, build, and runtime errors. Reviewed 390x844, 768x1024, and 1280x720; 34 tests pass, TypeScript and build pass, asset paths resolve, audit is clear.
 - [x] Commit, push, and checkpoint the responsive repair as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Add graceful load-aware fade-in transitions for mobile cinematic images on slow connections. Frames stay allocated, selected sources fade in after load, and mobile failures fall back to desktop sources.
+- [x] Add an accessible swipeable project carousel for touch-sized screens while preserving the desktop project grid. Mobile uses horizontal scroll snap with a next-card peek; desktop remains the original grid.
+- [x] Verify mobile, tablet, desktop, keyboard, reduced-motion, image-error, tests, types, build, and runtime behavior. 36 tests pass, TypeScript and production build pass, dependency audit is clear, and 390px plus 1280px previews were reviewed.
+- [x] Commit, push, and checkpoint the mobile interaction upgrade as mantisdarling. Checkpoint follows after source cleanup.

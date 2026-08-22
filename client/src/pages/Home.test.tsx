@@ -83,6 +83,24 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector(".cinematic-finale .cinematic-video-backdrop video")).toBeTruthy();
   });
 
+  it("reveals mobile imagery after the selected source loads", () => {
+    renderHome();
+    const image = container?.querySelector<HTMLImageElement>('.cinematic-story-scene img.mobile-image-reveal');
+    expect(image).toBeTruthy();
+    expect(image?.classList.contains("is-loaded")).toBe(false);
+    act(() => image?.dispatchEvent(new Event("load")));
+    expect(image?.classList.contains("is-loaded")).toBe(true);
+  });
+
+  it("exposes the project archive as a touch carousel on narrow screens", () => {
+    renderHome();
+    const carousel = container?.querySelector<HTMLElement>('[role="region"][aria-roledescription="carousel"]');
+    expect(carousel).toBeTruthy();
+    expect(carousel?.getAttribute("aria-label")).toBe("Project archive");
+    expect(carousel?.querySelectorAll(".rebuild-project-card")).toHaveLength(projects.length);
+    expect(carousel?.tabIndex).toBe(0);
+  });
+
   it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {
     renderHome();
     const mobileSources = container?.querySelectorAll('source[media="(max-width: 800px)"]') ?? [];

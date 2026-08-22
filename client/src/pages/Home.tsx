@@ -90,6 +90,38 @@ function SectionMarker({ number, label }: { number: string; label: string }) {
   return <p className="rebuild-marker"><span>{number}</span><i aria-hidden="true" />{label}</p>;
 }
 
+function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "lazy" }: { src: string; mobileSrc?: string; alt?: string; className?: string; loading?: "eager" | "lazy" }) {
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [mobileFailed, setMobileFailed] = useState(false);
+
+  useEffect(() => {
+    const image = imageRef.current;
+    if (image?.complete && image.naturalWidth > 0) setLoaded(true);
+  }, [src, mobileSrc]);
+
+  return <picture>
+    {mobileSrc && !mobileFailed && <source media="(max-width: 800px)" srcSet={mobileSrc} />}
+    <img
+      ref={imageRef}
+      className={`mobile-image-reveal ${className} ${loaded ? "is-loaded" : ""}`.trim()}
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      onError={() => {
+        if (mobileSrc && !mobileFailed) {
+          setMobileFailed(true);
+          setLoaded(false);
+        } else {
+          setLoaded(true);
+        }
+      }}
+    />
+  </picture>;
+}
+
 function ProjectCard({ project, index, onOpen }: { project: DisplayProject; index: number; onOpen: (project: DisplayProject) => void }) {
   const title = project.title ?? project.name ?? "Untitled project";
   return (
@@ -107,11 +139,8 @@ function ProjectCard({ project, index, onOpen }: { project: DisplayProject; inde
       }}
     >
       <div className="rebuild-project-visual">
-        <picture>
-          <source media="(max-width: 800px)" srcSet={project.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} />
-          <img src={project.imageUrl ?? ASSETS.caseStudy} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.caseStudy; }} />
-        </picture>
-        <div className="rebuild-project-grid" aria-hidden="true" />
+        <ResponsiveImage src={project.imageUrl ?? ASSETS.caseStudy} mobileSrc={project.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} className="rebuild-project-image" />
+        <div className="rebuild-project-overlay" aria-hidden="true" />
         <span className="rebuild-project-index">{String(index + 1).padStart(2, "0")}</span>
         <span className="rebuild-project-open">Open dossier <ArrowUpRight size={15} aria-hidden="true" /></span>
       </div>
@@ -129,15 +158,15 @@ function DetailBlock({ label, children }: { label: string; children: React.React
 }
 
 function SceneBackdrop({ src, mobileSrc, alt = "" }: { src: string; mobileSrc?: string; alt?: string }) {
-  return <div className="cinematic-scene-backdrop" aria-hidden="true"><picture>{mobileSrc && <source media="(max-width: 800px)" srcSet={mobileSrc} />}<img src={src} alt={alt} loading="lazy" decoding="async" /></picture><span /></div>;
+  return <div className="cinematic-scene-backdrop" aria-hidden="true"><ResponsiveImage src={src} mobileSrc={mobileSrc} alt={alt} /></div>;
 }
 
 function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <picture>{mobileFallbackSrc && <source media="(max-width: 800px)" srcSet={mobileFallbackSrc} />}<img src={fallbackSrc} alt="" loading="eager" decoding="async" /></picture>}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
+  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" />}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
 }
 
 function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: string; label: string; title: string }) {
-  return <article className="cinematic-story-scene"><picture><source media="(max-width: 800px)" srcSet={mobileSrc} /><img className="cinematic-story-image" data-parallax src={src} alt="" loading="lazy" decoding="async" /></picture><span>{label}</span><h3>{title}</h3></article>;
+  return <article className="cinematic-story-scene"><ResponsiveImage src={src} mobileSrc={mobileSrc} className="cinematic-story-image" /><span>{label}</span><h3>{title}</h3></article>;
 }
 
 export default function Home() {
@@ -211,12 +240,13 @@ export default function Home() {
         <section className="rebuild-work cinematic-section" id="work">
           <SceneBackdrop src={ASSETS.caseStudy} mobileSrc={ASSETS.story.mobile.caseStudy} />
           <div className="rebuild-section-heading"><div><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p>{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
-          <div className="rebuild-project-grid">{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
+          <div className="rebuild-project-carousel-hint" aria-hidden="true"><span>SWIPE TO BROWSE</span><i /></div>
+          <div className="rebuild-project-grid" role="region" aria-roledescription="carousel" aria-label="Project archive" tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">
           <SceneBackdrop src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} />
-          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><picture><source media="(max-width: 800px)" srcSet={ASSETS.story.mobile.blade} /><img src={ASSETS.story.blade} alt="" loading="lazy" decoding="async" /></picture><span /></div>
+          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><ResponsiveImage src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p>Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>
@@ -250,7 +280,7 @@ export default function Home() {
       <footer className="rebuild-footer"><span>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span>HARSHIT KUMAR / EAST INDIA</span><a href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><picture><source media="(max-width: 800px)" srcSet={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} /><img src={selectedProject.imageUrl ?? ASSETS.caseStudy} alt="" /></picture></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
       </AnimatePresence>
     </div>
   );
