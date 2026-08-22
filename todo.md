@@ -286,4 +286,4 @@
 - [x] Audit the actual 360px phone rendering section by section and identify every remaining image, spacing, overflow, and layer failure. Reviewed 360px, 390px, 768px, and 1440px captures; the Stack issue was the duplicated atmosphere image plus a constrained phone picture treatment.
 - [x] Rebuild the verified mobile image and content layers so each section has an intentional phone composition. Removed the duplicate Stack artwork, kept one direct cinematic backdrop, and layered the Stack heading and technology list above it.
 - [x] Validate 360px, 390px, tablet, and desktop behavior, including scroll, carousel, media, accessibility, tests, types, build, audit, and runtime errors. 40 tests passed, TypeScript passed, production build passed, high-severity dependency audit found no known vulnerabilities, and 360px, 390px, 768px, and 1440px previews were reviewed.
-- [ ] Commit, push, and checkpoint the verified phone repair as mantisdarling.
+- [x] Commit, push, and checkpoint the verified phone repair as mantisdarling. Commit bb87ea1 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
