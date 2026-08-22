@@ -144,4 +144,4 @@
 - [x] Transform the Mantis portfolio into an image-led storytelling experience with Mantis as the opening identity, Harshit Kumar moved into the profile chapter, visual moments throughout, approved media references handled safely, and all existing content preserved. Added field-note, motion reference, blade, depth, stillness, and closing frame chapters.
 - [x] Add the uploaded samurai, katana, landscape, and closing-frame media through the approved external asset workflow, with lazy loading and responsive crops.
 - [x] Validate media loading, content completeness, responsive story flow, accessibility, and performance. 29 tests passed, TypeScript and production build passed, dependency audit passed, desktop and phone full-page captures were reviewed, and current browser logs show no new runtime errors.
-- [ ] Commit, push, and checkpoint the image-led storytelling redesign as mantisdarling.
+- [x] Commit, push, and checkpoint the image-led storytelling redesign as mantisdarling. Committed as f425f9d and pushed to GitHub main under mantisdarling; checkpoint follows.
