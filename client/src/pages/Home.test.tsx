@@ -68,8 +68,8 @@ describe("rebuilt Mantis Home page", () => {
 
   it("renders blended atmosphere layers for stack and evidence", () => {
     renderHome();
-    expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack img")?.getAttribute("src")).toContain("1000237109");
-    expect(container?.querySelector("#evidence .rebuild-section-atmosphere-evidence img")?.getAttribute("src")).toContain("1000237108");
+    expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack img")?.getAttribute("src")).toContain("files.manuscdn.com");
+    expect(container?.querySelector("#evidence .rebuild-section-atmosphere-evidence img")?.getAttribute("src")).toContain("files.manuscdn.com");
     expect(container?.querySelector("#stack .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
     expect(container?.querySelector("#evidence .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
   });
@@ -80,8 +80,8 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector('a[href="https://in.pinterest.com/pin/894105332291615495/"]')).toBeNull();
     expect(container?.querySelector("#top .cinematic-video-backdrop video")?.getAttribute("autoplay")).toBe("");
     expect(container?.querySelector(".cinematic-finale .cinematic-video-backdrop video")?.getAttribute("loop")).toBe("");
-    expect(container?.querySelector('video[src="https://v1.pinimg.com/videos/iht/expMp4/22/bd/98/22bd9828506f050e48c10f0e9024ee85_720w.mp4"]')).toBeTruthy();
-    expect(container?.querySelector('video[src="https://v1.pinimg.com/videos/iht/expMp4/0d/96/51/0d965150aded2a004aa629c909118540_720w.mp4"]')).toBeTruthy();
+    expect(container?.querySelector('video[src*="files.manuscdn.com"][src$="dQgTwaCcLKHSusnt.mp4"]')).toBeTruthy();
+    expect(container?.querySelector('video[src*="files.manuscdn.com"][src$="qPIGKaMzyrRrveJB.mp4"]')).toBeTruthy();
     expect(container?.querySelectorAll(".cinematic-story-scene")).toHaveLength(4);
     expect(container?.querySelectorAll(".cinematic-section .cinematic-scene-backdrop img").length).toBeGreaterThanOrEqual(4);
   });

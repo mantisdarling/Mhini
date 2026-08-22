@@ -41,16 +41,16 @@ type DisplayProject = {
 const ASSETS = {
   hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
   mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
-  caseStudy: "/manus-storage/mantis-samurai-case-study-cover_5c9adaba.webp",
+  caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/USqfDrBUsSRPObfw.webp",
   story: {
-    motion: "/manus-storage/1000237115_990b6409.jpg",
-    blade: "/manus-storage/1000237109_fe3157cb.jpg",
-    descent: "/manus-storage/1000237108_520eca52.jpg",
-    stillness: "/manus-storage/1000237111_d1ae622f.jpg",
-    finalFrame: "/manus-storage/1000237112_04ac6804.jpg",
-    heroVideo: "https://v1.pinimg.com/videos/iht/expMp4/22/bd/98/22bd9828506f050e48c10f0e9024ee85_720w.mp4",
-    closingVideo: "https://v1.pinimg.com/videos/iht/expMp4/0d/96/51/0d965150aded2a004aa629c909118540_720w.mp4",
-    heroPoster: "/manus-storage/mantis-hero-poster_cb1c6127.jpg",
+    motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/FByzXgbgQiswqlog.jpg",
+    blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/OaurgvWfMCgyVyCP.jpg",
+    descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/QMRiiKxlvqBUSZxk.jpg",
+    stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/CglFXlEULjwNYZzM.jpg",
+    finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/OmMDaJlcEpZMUkQZ.jpg",
+    heroVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dQgTwaCcLKHSusnt.mp4",
+    closingVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/qPIGKaMzyrRrveJB.mp4",
+    heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/ZkrXSluZpNaFkhcC.jpg",
   },
 };
 
