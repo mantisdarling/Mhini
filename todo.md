@@ -135,3 +135,5 @@
 - [x] Add branded skeleton loading screens to the main portfolio, privacy, and Studio routes.
 - [x] Add focused tests for route loading states and validate type safety, production build, and responsive rendering.
 - [x] Fix the shared Skeleton primitive JSX runtime import exposed by the new route loading tests.
+- [x] Add a smooth fade-in transition when route skeletons are replaced by loaded content.
+- [x] Respect reduced-motion preferences and validate the transition with tests, type checks, build, and visual review.

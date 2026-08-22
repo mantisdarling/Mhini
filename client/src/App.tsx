@@ -3,7 +3,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { Route, Switch } from "wouter";
 import RouteLoadingSkeleton from "./components/RouteLoadingSkeleton";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -20,22 +20,26 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><Home /></Suspense>
+        <Suspense fallback={<RouteLoadingSkeleton variant="portfolio" />}><RouteContent><Home /></RouteContent></Suspense>
       </Route>
       <Route path="/studio">
-        <Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><ProjectConsole /></Suspense>
+        <Suspense fallback={<RouteLoadingSkeleton variant="studio" />}><RouteContent><ProjectConsole /></RouteContent></Suspense>
       </Route>
       <Route path="/privacy">
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><Privacy /></Suspense>
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><Privacy /></RouteContent></Suspense>
       </Route>
       <Route path="/404">
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><NotFound /></Suspense>
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense>
       </Route>
       <Route>
-        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><NotFound /></Suspense>
+        <Suspense fallback={<RouteLoadingSkeleton variant="privacy" />}><RouteContent><NotFound /></RouteContent></Suspense>
       </Route>
     </Switch>
   );
+}
+
+function RouteContent({ children }: { children: ReactNode }) {
+  return <div className="route-content-enter">{children}</div>;
 }
 
 function App() {

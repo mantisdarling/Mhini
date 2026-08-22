@@ -730,3 +730,17 @@ html.motion-off .hero-field { display: none; }
     transform: none;
   }
 }
+
+
+@keyframes route-content-in {
+  from { opacity: 0; transform: translateY(0.35rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.route-content-enter {
+  animation: route-content-in 420ms var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-content-enter { animation: none; }
+}
