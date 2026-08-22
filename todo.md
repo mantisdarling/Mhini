@@ -155,4 +155,4 @@
 - [x] Commit, push, and checkpoint the completed media redesign as mantisdarling. Final synchronization follows.
 - [x] Add restrained blended background visuals to the tech stack and evidence sections while preserving all existing content and readability. Added clipped, low-opacity blade and descent imagery with section-specific overlays.
 - [x] Validate the new visual layers across desktop, phone, accessibility, reduced motion, tests, type checks, production build, dependency safety, and browser behavior. Regression suite, TypeScript, production build, high-severity dependency audit, desktop preview, phone preview, and current browser logs passed.
-- [ ] Commit, push, and checkpoint the stack and evidence visual integration as mantisdarling.
+- [x] Commit, push, and checkpoint the stack and evidence visual integration as mantisdarling. Pushed commit f34af9e authored by mantisdarling to GitHub main; checkpoint follows.
