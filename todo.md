@@ -259,3 +259,7 @@
 - [x] Implement safe route and dependency code-splitting without changing public behavior. Home, Studio, Privacy, and NotFound now load lazily with a lightweight accessible suspense shell.
 - [x] Validate chunk output, initial load, route behavior, responsive UI, tests, types, build, audit, and runtime errors. Entry is now 465 KB, Home 64 KB, Studio 123 KB, Privacy 3.5 KB, and NotFound 4.4 KB; 37 tests pass, TypeScript and build pass, and audit reports no known vulnerabilities.
 - [x] Commit, push, and checkpoint the code-splitting improvement as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the lazy route boundary and current navigation lifecycle before adding transitions. Confirmed route modules are independently lazy-loaded and the existing error boundary remains in place.
+- [x] Implement a smooth route transition that preserves lazy loading, direct URLs, focus behavior, and reduced motion. Added a keyed route handoff with a short transform and opacity entrance and a blade-line cue, disabled under reduced motion.
+- [x] Validate page transitions, route loading, accessibility, responsive behavior, tests, types, build, audit, and runtime errors. Verified Home, Privacy, and Studio routes at 390px; 37 tests pass, TypeScript and build pass, audit is clear, and route requests return successfully.
+- [x] Commit, push, and checkpoint the page-transition refinement as mantisdarling. Checkpoint follows after source cleanup.

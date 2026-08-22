@@ -1316,3 +1316,13 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 @media (prefers-reduced-motion: reduce) {
   .route-loading::before { box-shadow: none; }
 }
+
+/* Route handoff: a short blade-line cue keeps split chunks feeling like one continuous page. */
+.route-transition { position: relative; animation: route-enter 420ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.route-transition::before { content: ""; position: fixed; inset: 0 0 auto; z-index: 1000; height: 1px; pointer-events: none; background: var(--red, #c92028); transform-origin: left center; animation: route-line 520ms cubic-bezier(0.77, 0, 0.175, 1) both; }
+@keyframes route-enter { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+@keyframes route-line { from { transform: scaleX(0); opacity: 0; } 18% { opacity: 1; } to { transform: scaleX(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .route-transition { animation: none; }
+  .route-transition::before { display: none; animation: none; }
+}

@@ -4,7 +4,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { lazy, Suspense, type ReactNode } from "react";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import PrivacyConsent from "./components/PrivacyConsent";
@@ -22,8 +22,13 @@ function RouteLoading() {
   );
 }
 
+function RouteTransition({ children }: { children: ReactNode }) {
+  const [location] = useLocation();
+  return <div key={location} className="route-transition" data-route-transition>{children}</div>;
+}
+
 function LazyRoute({ children }: { children: ReactNode }) {
-  return <Suspense fallback={<RouteLoading />}>{children}</Suspense>;
+  return <RouteTransition><Suspense fallback={<RouteLoading />}>{children}</Suspense></RouteTransition>;
 }
 
 function HomeRoute() {
