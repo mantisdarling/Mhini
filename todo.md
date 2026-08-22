@@ -153,3 +153,6 @@
 - [x] Place the supplied Pinterest video as an in-page closing experience rather than a link, using an embed or licensed direct media fallback. Added a Pinterest embed inside the final chapter with an on-page fallback and a secondary source link.
 - [x] Capture honest desktop and phone previews after the media redesign and validate loading, accessibility, responsiveness, tests, type checks, production build, and security. 31 tests passed, TypeScript and production build passed, dependency audit passed, CSP coverage passed, and desktop and phone full-page previews were reviewed.
 - [x] Commit, push, and checkpoint the completed media redesign as mantisdarling. Final synchronization follows.
+- [x] Add restrained blended background visuals to the tech stack and evidence sections while preserving all existing content and readability. Added clipped, low-opacity blade and descent imagery with section-specific overlays.
+- [x] Validate the new visual layers across desktop, phone, accessibility, reduced motion, tests, type checks, production build, dependency safety, and browser behavior. Regression suite, TypeScript, production build, high-severity dependency audit, desktop preview, phone preview, and current browser logs passed.
+- [ ] Commit, push, and checkpoint the stack and evidence visual integration as mantisdarling.

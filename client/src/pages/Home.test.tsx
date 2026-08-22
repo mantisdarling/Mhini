@@ -62,6 +62,14 @@ describe("rebuilt Mantis Home page", () => {
     expect(stackButton?.getAttribute("aria-expanded")).toBe("true");
   });
 
+  it("renders blended atmosphere layers for stack and evidence", () => {
+    renderHome();
+    expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack img")?.getAttribute("src")).toContain("1000237109");
+    expect(container?.querySelector("#evidence .rebuild-section-atmosphere-evidence img")?.getAttribute("src")).toContain("1000237108");
+    expect(container?.querySelector("#stack .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
+    expect(container?.querySelector("#evidence .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");

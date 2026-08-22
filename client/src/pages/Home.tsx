@@ -204,11 +204,13 @@ export default function Home() {
         </section>
 
         <section className="rebuild-stack" id="stack">
+          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><img src={ASSETS.story.blade} alt="" loading="lazy" /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p>Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>
 
         <section className="rebuild-evidence" id="evidence">
+          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-evidence" aria-hidden="true"><img src={ASSETS.story.descent} alt="" loading="lazy" /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="04" label="EVIDENCE" /><h2>Depth<br /><em>over noise.</em></h2></div><p>Education, credentials, courses, communities, research, and the long view. Nothing omitted, just organized.</p></div>
           <div className="rebuild-evidence-grid">
             <div className="rebuild-evidence-column"><h3>Education</h3>{education.map(item => <article className="rebuild-record" key={item.degree}><div><span>{item.status}</span><b>{item.degree}</b><small>{item.institution}</small></div><p>{item.dates}<br />{item.note}</p></article>)}</div>
