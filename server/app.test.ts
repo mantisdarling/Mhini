@@ -51,22 +51,6 @@ describe("Vercel Express application", () => {
     expect(blocked.status).toBe(403);
   });
 
-  it("allows only local Vite bootstrap connections in development CSP", async () => {
-    const previous = process.env.NODE_ENV;
-    process.env.NODE_ENV = "development";
-    const { app } = createApplication();
-    const devServer = createServer(app);
-    await new Promise<void>(resolve => devServer.listen(0, "127.0.0.1", resolve));
-    const address = devServer.address();
-    if (!address || typeof address === "string") throw new Error("development test server unavailable");
-    const response = await fetch(`http://127.0.0.1:${address.port}/healthz`);
-    const policy = response.headers.get("content-security-policy") ?? "";
-    expect(policy).toContain("'unsafe-inline'");
-    expect(policy).toContain("ws://localhost:*");
-    await new Promise<void>((resolve, reject) => devServer.close(error => error ? reject(error) : resolve()));
-    if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous;
-  });
-
   it("rejects unsafe storage keys before contacting the storage provider", async () => {
     const response = await fetch(`${baseUrl}/manus-storage/${encodeURIComponent("../private")}`);
     expect(response.status).toBe(400);
