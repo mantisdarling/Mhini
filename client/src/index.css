@@ -857,16 +857,6 @@ body.rebuild-body::before { display: none; }
 .rebuild-hero-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 600px; margin-top: clamp(3.5rem, 8vw, 7rem); border-top: 1px solid rgba(233, 231, 225, 0.22); }
 .rebuild-hero-proof span { display: grid; gap: 0.38rem; padding: 0.85rem 0.7rem 0 0; color: rgba(233, 231, 225, 0.58); font-family: "Barlow Condensed", sans-serif; font-size: 0.57rem; letter-spacing: 0.1em; }
 .rebuild-hero-proof b { color: var(--red); font-weight: 500; }
-.rebuild-hero-art { position: relative; min-height: 100%; overflow: hidden; }
-.rebuild-sun { position: absolute; top: 19%; right: 12%; width: min(28vw, 330px); aspect-ratio: 1; border-radius: 50%; background: rgba(201, 32, 40, 0.84); box-shadow: 0 0 0 1px rgba(233, 231, 225, 0.08), 0 0 80px rgba(201, 32, 40, 0.14); }
-.rebuild-samurai { position: absolute; right: 5%; bottom: -4%; z-index: 2; width: min(47vw, 555px); height: 92%; overflow: visible; }
-.rebuild-samurai .samurai-body { fill: #080808; }
-.rebuild-samurai .samurai-armor { fill: rgba(233, 231, 225, 0.2); stroke: rgba(233, 231, 225, 0.52); stroke-width: 1.2; }
-.rebuild-samurai .samurai-helmet { fill: rgba(233, 231, 225, 0.27); stroke: rgba(233, 231, 225, 0.65); stroke-width: 1.2; }
-.rebuild-samurai .samurai-blade { fill: var(--paper); opacity: 0.94; }
-.rebuild-samurai .samurai-hilt { fill: var(--red); }
-.rebuild-samurai .samurai-rim { fill: none; stroke: var(--red); stroke-width: 2.4; opacity: 0.9; }
-.rebuild-art-label { position: absolute; right: clamp(1rem, 4vw, 4rem); bottom: 6%; z-index: 3; color: rgba(233, 231, 225, 0.56); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.15em; writing-mode: vertical-rl; transform: rotate(180deg); }
 .rebuild-hero-foot { position: absolute; right: clamp(1.25rem, 7vw, 7.5rem); bottom: 1.4rem; z-index: 4; display: flex; align-items: center; gap: 0.7rem; color: rgba(233, 231, 225, 0.55); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.15em; }
 .rebuild-hero-foot i { display: block; width: 46px; height: 1px; background: var(--red); }
 .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact { padding: clamp(5rem, 11vw, 10rem) clamp(1.25rem, 7vw, 7.5rem); }
@@ -997,10 +987,6 @@ body.rebuild-body::before { display: none; }
 @media (max-width: 900px) {
   .rebuild-hero { grid-template-columns: 1fr; min-height: auto; }
   .rebuild-hero-copy { min-height: 700px; padding-right: 1.25rem; }
-  .rebuild-hero-art { position: absolute; inset: 0 0 0 38%; opacity: 0.55; }
-  .rebuild-hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--charcoal) 0%, rgba(21, 21, 21, 0.86) 33%, rgba(21, 21, 21, 0.1) 100%); }
-  .rebuild-samurai { width: min(58vw, 520px); height: 78%; right: 0; }
-  .rebuild-sun { right: 13%; }
   .rebuild-hero-proof { position: relative; z-index: 4; }
   .rebuild-project-card, .rebuild-project-card.is-featured { grid-column: span 6; }
   .rebuild-project-card.is-featured .rebuild-project-visual { min-height: 320px; }
@@ -1019,10 +1005,6 @@ body.rebuild-body::before { display: none; }
   .rebuild-primary, .rebuild-secondary { justify-content: space-between; width: 100%; }
   .rebuild-hero-proof { margin-top: 3.2rem; }
   .rebuild-hero-proof span { font-size: 0.49rem; }
-  .rebuild-hero-art { left: 29%; opacity: 0.45; }
-  .rebuild-samurai { right: -4rem; width: 75vw; height: 65%; }
-  .rebuild-sun { top: 23%; right: 4%; width: 52vw; }
-  .rebuild-art-label { display: none; }
   .rebuild-intro, .rebuild-contact { grid-template-columns: 1fr; gap: 2.5rem; }
   .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact { padding: 4.2rem 1.25rem; }
   .rebuild-section-heading { display: grid; gap: 1.6rem; margin-bottom: 2.8rem; }

@@ -80,20 +80,6 @@ function SectionMarker({ number, label }: { number: string; label: string }) {
   return <p className="rebuild-marker"><span>{number}</span><i aria-hidden="true" />{label}</p>;
 }
 
-function SamuraiMark() {
-  return (
-    <svg className="rebuild-samurai" viewBox="0 0 360 560" aria-hidden="true" focusable="false">
-      <circle className="samurai-sun" cx="250" cy="175" r="115" />
-      <path className="samurai-body" d="M235 78c26 8 43 31 43 58 0 17-7 32-20 43 26 20 46 48 57 82l22 69-28 10-33-68 16 107 38 91-50 22-43-95-10 76 38 92-67 9-26-104-6 99-61-4 15-126 27-82 6-69c-18 8-34 25-48 49l-27-15 28-52c16-28 37-49 63-63-10-12-16-27-16-45 0-32 23-59 54-65l24-27 10 28z" />
-      <path className="samurai-armor" d="M129 222c26-25 58-37 96-37 32 0 62 11 87 31l-18 43-71-11-73 17zm-10 62 72-19 77 15-5 32-77 12-72-15zm7 63 59-11 74 9 9 49-80 14-65-16z" />
-      <path className="samurai-helmet" d="M165 107c12-32 39-51 70-51 29 0 53 14 67 40l-18 18-16-13-3 31-75 5-3-24-16 11z" />
-      <path className="samurai-blade" d="m177 281 183-188 2 11-166 217z" />
-      <path className="samurai-hilt" d="m161 277 34 31-16 17-34-31z" />
-      <path className="samurai-rim" d="M235 78c26 8 43 31 43 58 0 17-7 32-20 43 26 20 46 48 57 82l22 69" />
-    </svg>
-  );
-}
-
 function ProjectCard({ project, index, onOpen }: { project: DisplayProject; index: number; onOpen: (project: DisplayProject) => void }) {
   const title = project.title ?? project.name ?? "Untitled project";
   return (
@@ -190,7 +176,6 @@ export default function Home() {
             <div className="rebuild-hero-actions"><button className="rebuild-primary" type="button" onClick={() => scrollTo("work")}>See the work <ArrowUpRight size={17} aria-hidden="true" /></button><a className="rebuild-secondary" href={`mailto:${profile.secondaryEmail}`}>Start a conversation</a></div>
             <div className="rebuild-hero-proof"><span><b>01</b> MANTIS / FOUNDER</span><span><b>02</b> IIT MADRAS / CS</span><span><b>03</b> AI / SYSTEMS</span></div>
           </div>
-          <div className="rebuild-hero-art" aria-hidden="true"><div className="rebuild-sun" /><SamuraiMark /><div className="rebuild-art-label">DISCIPLINE / PRECISION / PACE</div></div>
           <div className="rebuild-hero-foot"><span>SCROLL TO READ</span><i aria-hidden="true" /></div>
         </section>
 

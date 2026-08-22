@@ -167,3 +167,6 @@
 - [x] Remove broken image and empty player presentation from the public experience with verified visual fallbacks and mobile-safe media behavior.
 - [x] Revalidate all preserved portfolio data, Studio behavior, responsiveness, accessibility, reduced motion, tests, production build, security, and browser rendering. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, native MP4 playback was visible after CSP restart, and desktop and phone full-page captures were reviewed.
 - [x] Commit, push, and checkpoint the corrected cinematic rebuild as mantisdarling. Pushed commit a62f967 authored by mantisdarling to GitHub main; checkpoint follows.
+- [x] Remove the custom foreground samurai helmet and sword illustration from the hero while keeping the moving samurai video background and Mantis identity.
+- [x] Validate the cleaned hero on desktop and phone with preserved content, readable overlays, no overflow, passing tests, type checks, production build, and clean runtime behavior. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
+- [ ] Commit, push, and checkpoint the hero cleanup as mantisdarling.
