@@ -166,4 +166,4 @@
 - [x] Keep the second supplied Pinterest video visibly embedded in the final scene, with no primary source link replacing the player.
 - [x] Remove broken image and empty player presentation from the public experience with verified visual fallbacks and mobile-safe media behavior.
 - [x] Revalidate all preserved portfolio data, Studio behavior, responsiveness, accessibility, reduced motion, tests, production build, security, and browser rendering. 32 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, native MP4 playback was visible after CSP restart, and desktop and phone full-page captures were reviewed.
-- [ ] Commit, push, and checkpoint the corrected cinematic rebuild as mantisdarling.
+- [x] Commit, push, and checkpoint the corrected cinematic rebuild as mantisdarling. Pushed commit a62f967 authored by mantisdarling to GitHub main; checkpoint follows.
