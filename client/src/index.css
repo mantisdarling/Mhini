@@ -944,7 +944,10 @@ body.rebuild-body::before { display: none; }
 .rebuild-dossier-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: clamp(3rem, 7vw, 6rem); }
 .rebuild-dossier { overflow: hidden; border-color: rgba(233, 231, 225, 0.2); }
 .rebuild-dossier-heading { margin: 0; }
-.rebuild-dossier-summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; border: 0; padding: 1.1rem 0; background: transparent; color: var(--paper); cursor: pointer; text-align: left; }
+.rebuild-dossier-summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; border: 0; padding: 1.1rem 0; background: transparent; color: var(--paper); cursor: pointer; text-align: left; transition: color 180ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  .rebuild-dossier-summary:hover { color: var(--red); }
+}
 .rebuild-dossier-summary:focus-visible { outline: 2px solid var(--red); outline-offset: 5px; }
 .rebuild-dossier-summary svg { flex: 0 0 auto; color: var(--red); transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1); }
 .rebuild-dossier.is-open .rebuild-dossier-summary svg { transform: rotate(180deg); }

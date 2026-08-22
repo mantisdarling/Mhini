@@ -318,3 +318,7 @@
 - [x] Preserve native summary toggle semantics, focus behavior, content accessibility, and reduced-motion preferences during the transition. Controlled buttons expose expanded state and panel relationships, hidden panels are inert, and reduced motion disables transitions.
 - [x] Validate the accordion animation on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the accordion transition enhancement as mantisdarling. Commit 70dd817 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [x] Change Evidence accordion header text color on hover without changing the closed state, arrow behavior, focus styling, or content. Pointer-capable devices now transition the header label to Mantis red while touch and keyboard behavior remain unchanged.
+- [x] Validate the hover refinement across mobile and desktop and rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the accordion hover-color refinement as mantisdarling.
