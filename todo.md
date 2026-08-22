@@ -101,4 +101,4 @@
 - [ ] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior.
 - [x] Clarify in Studio that its counters cover database-managed projects only, while the public portfolio also contains the PDF project archive.
 - [x] Clarify that public PDF projects remain read-only source data while Studio manages optional additional records, so existing projects do not need to be entered again.
-- [ ] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit.
+- [x] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit. Verified remote commit 562c6ed authored by mantisdarling.
