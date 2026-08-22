@@ -297,4 +297,4 @@
 - [x] Fix the mobile Work chapter where the desktop project grid is overflowing the phone viewport and making the first card dominate the composition. Rebuilt the phone archive as compact snap cards with controlled media ratios and no desktop-width overflow.
 - [x] Preserve every project, link, metadata field, and card interaction while recomposing the Work archive for phone widths. All project records remain present, touch targets stay active, and the desktop grid rules are unchanged.
 - [x] Validate the Work fix at 320px, 360px, 390px, 412px, tablet, and desktop widths, then rerun tests, types, build, audit, and runtime checks. Reviewed 320px, 360px, 390px, 412px, 768px, and 1440px captures; 41 tests passed, TypeScript and build passed, audit was clear, and current runtime logs showed no new errors or network failures.
-- [ ] Commit, push, and checkpoint the mobile Work repair as mantisdarling.
+- [x] Commit, push, and checkpoint the mobile Work repair as mantisdarling. Commit bae225a was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
