@@ -160,3 +160,23 @@
 - [x] Refine verified copy, hierarchy, layout rhythm, responsive composition, and Awwwards-inspired art direction without fabricating portfolio data.
 - [x] Validate accessibility, motion, touch behavior, reduced motion, desktop, tablet, mobile, tests, type safety, and production build. Visual capture was attempted but no preview URL was available.
 - [x] Replace the remaining Express 4 wildcard middleware paths in the Vite adapter and verify clean preview startup before visual review.
+- [ ] Push the comprehensive Awwwards visual refinement to GitHub as mantisdarling and verify the remote commit identity and clean tree.
+- [ ] Audit the current presentation layer, animation ownership, asset weight, and performance-sensitive surfaces.
+- [ ] Build modular Kanji, film-grain, cursor, slash-transition, split-header, and katana-gleam presentation effects.
+- [ ] Add bounded scroll storytelling and an optional low-cost displacement treatment without changing backend APIs, database connections, or routing.
+- [ ] Validate 60fps-oriented safeguards, layout stability, accessibility, reduced motion, mobile touch behavior, tests, type safety, production build, and visual rendering.
+- [ ] Add a full-page decorative WebGL Mantis field with adaptive quality on desktop, tablet, and phone.
+- [ ] Add WebGL fallback, reduced-motion behavior, visibility pausing, touch-safe input, and performance regression coverage.
+- [ ] Add an adaptive full-page fluid or ink GPU backdrop with sword-like pointer interaction and a static fallback.
+- [ ] Add a bounded horizontal Mantis narrative section that preserves keyboard and touch access.
+- [ ] Add asymmetric Kanji typography and a scroll-linked Three.js katana storytelling section.
+- [ ] Validate GPU resource cleanup, reduced motion, low-power and coarse-pointer tiers, layout stability, accessibility, tests, type safety, production build, and visual rendering.
+- [ ] Curate a small set of memorable Mantis moments that make the site feel cool and distinctive without visual overload.
+- [x] Split the Three.js katana scene into a lazy chunk so the initial portfolio payload stays responsive while preserving the 3D section.
+- [ ] Incorporate the attached split-header katana slash behavior with scoped presentation styles and no business logic changes.
+- [ ] Strengthen asymmetric Kanji difference typography with a Safari-safe fallback.
+- [ ] Ensure creative Canvas and WebGL initialization is lazy or load-deferred and all listeners clean up on unmount.
+- [ ] Add or verify low-cost film grain behavior and touch, reduced-motion, and low-power fallbacks.
+- [ ] Validate Unicode-safe handling for any animated text input without changing existing data flows.
+- [ ] Re-run regression, security, type, build, performance, and visual checks, then synchronize the completed refinement as mantisdarling.
+- [x] Commit and push the current Mantis creative refinement as mantisdarling, then verify remote identity and clean tree.

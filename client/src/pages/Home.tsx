@@ -2,11 +2,17 @@
  * Mantis design reminder: cinematic brutalism meets Japanese precision engineering.
  * Favor the telemetry spine, blade-thin dividers, generous black space, Mantis Red only for intent, and composed motion.
  */
+import { lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { CredentialsSection, EcosystemSection, PersonalSignalSection, ProfileIdentitySection, TechnologySection } from "@/components/ProfileDataSections";
 import { MantisSilhouette } from "@/components/MantisSilhouette";
+import { MantisFluidField } from "@/components/MantisFluidField";
+import { MantisNarrative } from "@/components/MantisNarrative";
+
 import { profile, projects as profileProjects } from "@/data/profileData";
+
+const LazyMantisKatanaScene = lazy(() => import("@/components/MantisKatanaScene").then(({ MantisKatanaScene }) => ({ default: MantisKatanaScene })));
 import { gsap } from "gsap";
 import { DrawSVGPlugin, ScrollTrigger, SplitText } from "gsap/all";
 import Lenis from "lenis";
@@ -602,6 +608,7 @@ export default function Home() {
         </section>
       )}
 
+      <MantisFluidField />
       <div className="noise-overlay" aria-hidden="true" />
       <div className="ambient-sweep" aria-hidden="true" />
       <div className="cursor-dot" ref={cursorDot} aria-hidden="true" />
@@ -706,6 +713,18 @@ export default function Home() {
             <div className="kinetic-track" aria-hidden="true"><span>FIND THE SIGNAL</span><em>THEN</em><span>HOLD THE LINE</span><em>THEN</em><span>MAKE THE MOVE</span></div>
             <p className="kinetic-caption">Scroll to calibrate the field.</p>
           </div>
+        </section>
+
+        <MantisNarrative />
+        <section className="katana-study section-pad" id="katana-study" aria-label="Mantis katana study">
+          <div className="katana-study-copy reveal">
+            <p className="section-caption">OBJECT STUDY / SCROLL SIGNAL</p>
+            <h2>Hold the<br /><em>edge.</em></h2>
+            <p>Scroll to rotate through the instrument. The blade is the interface between intent and release.</p>
+          </div>
+          <Suspense fallback={<div className="katana-scene katana-scene-loading" aria-label="Loading Mantis katana study"><div className="katana-fallback" aria-hidden="true" /></div>}>
+            <LazyMantisKatanaScene />
+          </Suspense>
         </section>
 
         <ProfileIdentitySection />

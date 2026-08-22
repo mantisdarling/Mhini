@@ -799,3 +799,49 @@ button, .social-row a, .menu-button { min-height: 44px; min-width: 44px; }
   .systems-index-card:hover, .technology-group:hover, .social-row a:hover { transform: none; }
 }
 html.motion-off .mantis-depth-glyph { transform: none !important; }
+
+.mantis-fluid-field { position: fixed; z-index: -6; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0.32; mix-blend-mode: screen; background: radial-gradient(circle at 65% 30%, rgba(200, 30, 30, 0.12), transparent 45%), #090909; }
+.mantis-fluid-field.is-fallback { opacity: 0.16; background: radial-gradient(circle at 68% 28%, rgba(200, 30, 30, 0.2), transparent 38%), #090909; }
+@media (max-width: 760px) { .mantis-fluid-field { opacity: 0.2; } }
+@media (pointer: coarse) { .mantis-fluid-field { opacity: 0.16; } }
+@media (prefers-reduced-motion: reduce) { .mantis-fluid-field { display: none; } }
+
+.mantis-narrative { position: relative; min-height: 165vh; overflow: clip; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); background: #0c0c0b; }
+.mantis-narrative-sticky { position: sticky; top: 0; display: grid; align-content: center; min-height: 100svh; padding: 6rem var(--page-padding) 5rem calc(var(--page-padding) + var(--rail-width)); }
+.mantis-narrative-heading { position: relative; z-index: 2; max-width: 360px; }
+.mantis-narrative-heading p, .katana-study-copy > p:first-child { margin: 0; color: var(--gold); font-family: "Barlow Condensed", sans-serif; font-size: 0.62rem; letter-spacing: 0.16em; }
+.mantis-narrative-heading h2, .katana-study-copy h2 { margin: 1rem 0 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(3.8rem, 8vw, 8.8rem); font-weight: 500; line-height: 0.78; letter-spacing: -0.09em; }
+.mantis-narrative-heading h2 em, .katana-study-copy h2 em { color: var(--red); font-style: normal; }
+.mantis-narrative-track { position: absolute; top: 50%; left: max(36vw, 410px); display: flex; gap: 1px; width: max-content; transform: translateY(-50%); background: var(--hairline); }
+.mantis-narrative-card { display: grid; grid-template-rows: auto 1fr; width: clamp(210px, 22vw, 315px); min-height: 390px; padding: 1.35rem; background: #111110; }
+.mantis-narrative-card > span { color: var(--red); font-family: "Barlow Condensed", sans-serif; font-size: 0.64rem; letter-spacing: 0.16em; }
+.mantis-narrative-card > div { align-self: end; }
+.mantis-narrative-card p { margin: 0; color: var(--gold); font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.14em; }
+.mantis-narrative-card h3 { margin: 0.7rem 0 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(2.2rem, 4vw, 4rem); font-weight: 500; line-height: 0.85; letter-spacing: -0.07em; }
+.mantis-narrative-card div > span { display: block; margin-top: 1rem; color: var(--muted-ivory); font-size: 0.8rem; line-height: 1.55; }
+.mantis-narrative-hint { position: absolute; right: var(--page-padding); bottom: 2rem; margin: 0; color: #77736e; font-family: "Barlow Condensed", sans-serif; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.katana-study { display: grid; grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr); gap: 2rem; align-items: center; min-height: 100svh; overflow: hidden; background: linear-gradient(130deg, #0a0a09, #15100f 65%, #0b0b0b); }
+.katana-study-copy { position: relative; z-index: 1; max-width: 420px; }
+.katana-study-copy > p:last-child { max-width: 320px; margin: 1.8rem 0 0; color: var(--muted-ivory); font-size: 0.92rem; line-height: 1.7; }
+.katana-scene { position: relative; min-height: 620px; width: 100%; contain: layout paint; }
+.katana-canvas { display: block; width: 100%; height: 100%; min-height: 620px; }
+.katana-fallback { position: absolute; inset: 12% 10%; border: 1px solid rgba(200, 30, 30, 0.22); border-radius: 50%; transform: rotate(-18deg); box-shadow: 0 0 0 3rem rgba(200, 30, 30, 0.035), 0 0 0 6rem rgba(212, 175, 55, 0.02); }
+.katana-fallback::after { content: ""; position: absolute; top: 50%; right: 12%; left: 12%; height: 1px; background: linear-gradient(90deg, transparent, var(--red), var(--gold), transparent); transform: rotate(-24deg); }
+@media (max-width: 980px) {
+  .mantis-narrative { min-height: auto; }
+  .mantis-narrative-sticky { position: relative; min-height: auto; padding: 5rem var(--page-padding); }
+  .mantis-narrative-track { position: relative; top: auto; left: auto; overflow-x: auto; width: 100%; margin-top: 3rem; padding-bottom: 1rem; transform: none; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .mantis-narrative-card { flex: 0 0 min(76vw, 300px); min-height: 330px; scroll-snap-align: start; }
+  .mantis-narrative-hint { position: relative; right: auto; bottom: auto; margin-top: 1rem; }
+  .katana-study { grid-template-columns: 1fr; min-height: auto; }
+  .katana-study-copy { max-width: 520px; }
+  .katana-scene, .katana-canvas { min-height: 480px; }
+}
+@media (max-width: 760px) {
+  .mantis-narrative-heading h2, .katana-study-copy h2 { font-size: clamp(3.2rem, 16vw, 5.8rem); }
+  .katana-scene, .katana-canvas { min-height: 390px; }
+  .katana-study { gap: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .katana-fallback { transform: none; }
+}
