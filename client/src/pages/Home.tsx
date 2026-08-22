@@ -5,6 +5,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { CredentialsSection, EcosystemSection, PersonalSignalSection, ProfileIdentitySection, TechnologySection } from "@/components/ProfileDataSections";
+import { MantisSilhouette } from "@/components/MantisSilhouette";
 import { profile, projects as profileProjects } from "@/data/profileData";
 import { gsap } from "gsap";
 import { DrawSVGPlugin, ScrollTrigger, SplitText } from "gsap/all";
@@ -525,6 +526,21 @@ export default function Home() {
         scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.75 },
       });
 
+      if (window.matchMedia("(pointer: fine)").matches) {
+        gsap.to(".mantis-depth-glyph-back", {
+          yPercent: -8,
+          xPercent: -3,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.9 },
+        });
+        gsap.to(".mantis-depth-glyph-front", {
+          yPercent: 12,
+          xPercent: 4,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1.1 },
+        });
+      }
+
       gsap.to(".hero-katana", {
         yPercent: -12,
         xPercent: 4,
@@ -565,6 +581,9 @@ export default function Home() {
             Skip intro <span aria-hidden="true">↗</span>
           </button>
           <div className="intro-center">
+            <div className="intro-mantis-scene" aria-hidden="true">
+              <MantisSilhouette className="intro-mantis" />
+            </div>
             <svg className="intro-monogram" viewBox="0 0 132 112" aria-hidden="true">
               <path className="intro-blade" d="M17 94L52 18L70 58L108 12" />
               <path className="intro-blade" d="M49 96L72 50L115 95" />
@@ -634,6 +653,10 @@ export default function Home() {
         <section className="hero" id="top" ref={heroRef} onMouseMove={trackHeroPointer} onMouseLeave={resetHeroPointer}>
           <img className="hero-art" src={ASSETS.hero} alt="" fetchPriority="high" />
           <div className="hero-shade" aria-hidden="true" />
+          <div className="mantis-depth" aria-hidden="true">
+            <MantisSilhouette className="mantis-depth-glyph mantis-depth-glyph-back" />
+            <MantisSilhouette className="mantis-depth-glyph mantis-depth-glyph-front" />
+          </div>
           <div className="hero-field" aria-hidden="true"><i /><b /><span /></div>
           <div className="hero-cut-flash" aria-hidden="true" />
           <svg className="hero-katana" viewBox="0 0 1440 820" preserveAspectRatio="none" aria-hidden="true">
@@ -761,6 +784,7 @@ export default function Home() {
       <AnimatePresence>
         {selectedProject && (
           <motion.div className="project-dossier-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}>
+            <div className="mantis-slash-transition" aria-hidden="true" />
             <motion.article className="project-dossier" role="dialog" aria-modal="true" aria-label={`${selectedProject.title} project dossier`} initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 28, scale: 0.98 }} transition={{ duration: 0.34, ease: [0.23, 1, 0.32, 1] }} onClick={event => event.stopPropagation()}>
               <button className="dossier-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={19} /></button>
               <div className="dossier-visual">{selectedProject.imageUrl ? <img src={selectedProject.imageUrl} alt="" /> : <div className="dossier-fallback">M / PROJECT DOSSIER</div>}</div>

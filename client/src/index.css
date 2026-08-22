@@ -730,3 +730,47 @@ html.motion-off .hero-field { display: none; }
     transform: none;
   }
 }
+
+/* Mantis identity layers stay lightweight and decorative. */
+.intro-mantis-scene { position: relative; width: clamp(7rem, 18vw, 12rem); aspect-ratio: 320 / 420; margin-bottom: -0.35rem; filter: drop-shadow(0 0 28px rgba(200, 30, 30, 0.3)); }
+.intro-mantis { display: block; width: 100%; height: 100%; overflow: visible; }
+.mantis-sun { fill: rgba(200, 30, 30, 0.92); }
+.mantis-figure { fill: #090909; stroke: rgba(242, 239, 233, 0.42); stroke-width: 1.2; stroke-linejoin: round; }
+.mantis-blade { fill: #090909; stroke: var(--gold); stroke-width: 1.5; }
+.mantis-antenna { fill: none; stroke: var(--red); stroke-width: 1.4; stroke-linecap: round; }
+.mantis-depth { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+.mantis-depth-glyph { position: absolute; display: block; width: clamp(18rem, 38vw, 33rem); height: auto; opacity: 0; transform: translate3d(0, 0, 0); filter: blur(0.2px); }
+.mantis-depth-glyph-back { top: 8%; right: 4%; opacity: 0.08; transform: translate3d(0, 2.5rem, 0) rotate(9deg) scale(1.18); }
+.mantis-depth-glyph-front { right: 19%; bottom: -13%; opacity: 0.06; transform: translate3d(0, -1rem, 0) rotate(-8deg) scale(0.86); }
+.mantis-depth .mantis-sun { fill: var(--red); }
+.mantis-depth .mantis-figure { fill: #050505; stroke: rgba(212, 175, 55, 0.34); }
+.mantis-depth .mantis-blade { fill: #050505; stroke: rgba(242, 239, 233, 0.45); }
+.blade-button, .project-card, .header-contact { isolation: isolate; }
+.blade-button::before, .project-card::before, .header-contact::before { content: ""; position: absolute; z-index: 2; top: -20%; left: -48%; width: 24%; height: 140%; background: linear-gradient(105deg, transparent, rgba(242, 239, 233, 0.72), transparent); transform: skewX(-20deg) translateX(-160%); pointer-events: none; opacity: 0; }
+.blade-button::before { transition: transform 520ms var(--ease), opacity 180ms ease; }
+.blade-button:hover::before, .blade-button:focus-visible::before { transform: skewX(-20deg) translateX(620%); opacity: 0.75; }
+.project-card::before { transition: transform 620ms var(--ease), opacity 180ms ease; }
+.project-card:hover::before, .project-card:focus-visible::before { transform: skewX(-20deg) translateX(720%); opacity: 0.48; }
+.header-contact { position: relative; overflow: hidden; }
+.header-contact::before { transition: transform 520ms var(--ease), opacity 180ms ease; }
+.header-contact:hover::before, .header-contact:focus-visible::before { transform: skewX(-20deg) translateX(680%); opacity: 0.7; }
+@media (max-width: 767px) {
+  .intro-mantis-scene { width: clamp(6rem, 32vw, 8.5rem); }
+  .mantis-depth-glyph { width: 15rem; }
+  .mantis-depth-glyph-back { top: 16%; right: -12%; }
+  .mantis-depth-glyph-front { right: -18%; bottom: 8%; }
+}
+@media (pointer: coarse) {
+  .mantis-depth-glyph { opacity: 0.045; }
+  .blade-button::before, .project-card::before, .header-contact::before { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mantis-depth-glyph { opacity: 0.055; transform: none; }
+  .blade-button::before, .project-card::before, .header-contact::before { display: none; }
+}
+
+.mantis-slash-transition { position: absolute; z-index: 0; inset: -10%; pointer-events: none; background: linear-gradient(112deg, transparent 0 43%, rgba(242, 239, 233, 0.96) 43.3% 43.55%, var(--red) 43.7% 47.1%, rgba(10, 10, 10, 0.96) 47.3% 100%); clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); animation: mantis-dossier-cut 620ms var(--ease) forwards; }
+.project-dossier { position: relative; z-index: 1; }
+@keyframes mantis-dossier-cut { 0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); opacity: 0.7; } 45% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; } 100% { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); opacity: 0; } }
+@media (max-width: 767px) { .mantis-slash-transition { inset: -4%; animation-duration: 480ms; } }
+@media (prefers-reduced-motion: reduce) { .mantis-slash-transition { display: none; } }

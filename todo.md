@@ -150,3 +150,8 @@
 - [x] Enable the repository security workflow, trigger its first main-branch run, and review every gate result.
 - [x] Fix the security workflow’s pnpm version mismatch, rerun the first Actions job, and review every gate result.
 - [x] Remove the duplicate pnpm version declaration from the workflow, rerun Actions, and review the actual security gates.
+- [x] Create and validate a reusable defensive resilience skill based on the completed security, recovery, CI, and incident-response workflow.
+- [x] Build the approved Mantis-centered visual motif without Sumi-e styling.
+- [x] Add mantis-led slash transitions, silhouette treatment, selective blade gleam, and restrained depth effects.
+- [x] Validate the visual pass across desktop, tablet, mobile, touch, keyboard, reduced motion, tests, type safety, and production build. Automated validation passed; preview capture was unavailable.
+- [x] Verify the Mantis visual effects remain smooth and usable on desktop, tablet, phone, touch, keyboard, low-power, and reduced-motion devices. Responsive and reduced-motion rules were verified in source; visual preview capture was unavailable.
