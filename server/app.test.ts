@@ -34,10 +34,59 @@ describe("Vercel Express application", () => {
     expect(missingApi.status).toBe(404);
   });
 
+  it("sets browser security headers and rejects untrusted preflight origins", async () => {
+    const response = await fetch(`${baseUrl}/healthz`, { headers: { Origin: "https://mhini.vercel.app" } });
+    expect(response.headers.get("strict-transport-security")).toContain("max-age=31536000");
+    expect(response.headers.get("content-security-policy")).toContain("frame-ancestors 'none'");
+    expect(response.headers.get("x-frame-options")).toBe("DENY");
+    expect(response.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(response.headers.get("referrer-policy")).toBe("strict-origin-when-cross-origin");
+    expect(response.headers.get("access-control-allow-origin")).toBe("https://mhini.vercel.app");
+    expect(response.headers.get("cross-origin-resource-policy")).toBe("cross-origin");
+
+    const blocked = await fetch(`${baseUrl}/healthz`, {
+      method: "OPTIONS",
+      headers: { Origin: "https://attacker.example", "Access-Control-Request-Method": "POST" },
+    });
+    expect(blocked.status).toBe(403);
+  });
+
+  it("rejects unsafe storage keys before contacting the storage provider", async () => {
+    const response = await fetch(`${baseUrl}/manus-storage/${encodeURIComponent("../private")}`);
+    expect(response.status).toBe(400);
+    await expect(response.text()).resolves.toBe("Invalid storage key");
+  });
+
   it("rejects an unsigned Vercel cron invocation", async () => {
     const response = await fetch(`${baseUrl}/api/cron/recoverySnapshot`);
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toEqual({ error: "unauthorized" });
+  });
+
+  it("redacts internal errors from an authorized Vercel cron response", async () => {
+    const originalSecret = process.env.CRON_SECRET;
+    process.env.CRON_SECRET = "test-cron-secret";
+    const { app } = createApplication({
+      vercelRecoveryHandler: createVercelRecoverySnapshotHandler(async () => {
+        throw new Error("private storage credential detail");
+      }),
+    });
+    const errorServer = createServer(app);
+    await new Promise<void>(resolve => errorServer.listen(0, "127.0.0.1", resolve));
+    const address = errorServer.address();
+    if (!address || typeof address === "string") throw new Error("error server address unavailable");
+
+    try {
+      const response = await fetch(`http://127.0.0.1:${address.port}/api/cron/recoverySnapshot`, {
+        headers: { Authorization: "Bearer test-cron-secret" },
+      });
+      expect(response.status).toBe(500);
+      await expect(response.json()).resolves.toEqual({ error: "recovery snapshot failed" });
+    } finally {
+      await new Promise<void>((resolve, reject) => errorServer.close(error => error ? reject(error) : resolve()));
+      if (originalSecret === undefined) delete process.env.CRON_SECRET;
+      else process.env.CRON_SECRET = originalSecret;
+    }
   });
 
   it("executes an authorized Vercel cron invocation through the injected snapshot handler", async () => {

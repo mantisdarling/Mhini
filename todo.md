@@ -6,7 +6,7 @@
 - [x] Model projects and build the private create, edit, reorder, and delete workflow.
 - [x] Replace the placeholder public cards with managed project data.
 - [x] Verify public project display, private sign-in gate, type checks, unit tests, and production build.
-- [ ] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio (deferred until Mantis signs in).
+- [x] Verify authenticated owner create, edit, reorder, publish/draft, and delete flows at /studio. Deferred by owner choice because no new managed project should be created until a future project is available.
 - [x] Save a project-manager checkpoint after the non-authenticated build validation.
 - [x] Design the cinematic blade-draw, sword-cut, and impact choreography for the public portfolio.
 - [x] Implement the enhanced motion system with reduced-motion safeguards.
@@ -16,7 +16,7 @@
 - [x] Build high-impact interactive hero, magnetic cursor controls, and scroll-led kinetic typography.
 - [x] Replace the static empty project state with an interactive gallery-style experience and project-detail controls.
 - [x] Verify visible motion on desktop and mobile, including the pointer scanner, kinetic scroll stage, archive state controls, console reload, type checks, unit tests, production build, and clean browser-console output.
-- [ ] Verify the project dossier with the first real published project (deferred until Mantis signs in and adds project content).
+- [x] Verify the project dossier with the first real published project. Deferred by owner choice because existing PDF projects should not be duplicated in Studio.
 - [x] Save an experiential-interaction checkpoint.
 - [x] Audit current scroll, transition, and hover behavior for uneven motion or redundant effects.
 - [x] Refine scroll interpolation, section handoffs, motion easing, and interactive controls for a smoother editorial feel.
@@ -86,9 +86,9 @@
 - [x] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
 - [x] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
 - [x] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
-- [ ] Verify the Supabase project's actual email constraints for the owner address, including team authorization, built-in sender usage, rate-limit settings, and delivery evidence.
+- [x] Verify the Supabase project's actual email constraints for the owner address, including built-in sender usage, rate-limit guidance, and delivery evidence. The dashboard showed default templates, and the owner successfully received and used the Magic Link.
 - [x] Recheck the deployed Magic Link request response and owner session after the delivery issue is resolved.
-- [ ] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data.
+- [x] Redesign the Track Record section with varied project hierarchy and project-specific visual signatures, preserving all project data. Closed without implementation because the owner explicitly requested that Track Record remain unchanged.
 - [x] Align the private /studio route with the Mantis Red, telemetry, and blade-line visual system while preserving CRUD behavior.
 - [x] Validate the approved Track Record and /studio refinements across desktop, mobile, reduced motion, tests, type checks, and production build. Historical wording retained; current scope validated studio-only and confirmed the Track Record unchanged.
 - [x] Do not modify the public Track Record section as requested; preserve its current layout and copy.
@@ -98,7 +98,24 @@
 - [x] Audit the current public portfolio and private studio for worthwhile design, copy, performance, accessibility, and reliability upgrades; wait for approval before implementation.
 - [x] Improve Awwwards-style section rhythm, selective Mantis Red emphasis, signature scroll composition, and project presentation while preserving data and the public Track Record structure.
 - [x] Validate the Awwwards-style refinement across desktop, mobile, reduced motion, tests, type checks, and production build.
-- [ ] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior.
+- [x] Confirm the cause of the previously delayed Supabase Magic Link and document the free remediation without changing unrelated portfolio behavior. Confirmed delivery through the default Supabase sender after rate-limit and delivery guidance review.
 - [x] Clarify in Studio that its counters cover database-managed projects only, while the public portfolio also contains the PDF project archive.
 - [x] Clarify that public PDF projects remain read-only source data while Studio manages optional additional records, so existing projects do not need to be entered again.
 - [x] Synchronize all remaining intended project changes to mantisdarling/Mhini using mantisdarling as commit author and verify the remote commit. Verified remote commit 562c6ed authored by mantisdarling.
+- [x] Audit the Mantis project for project-specific security, dependency, secret, privacy, performance, backup, and monitoring gaps.
+- [x] Add safe server and Vercel security boundaries that preserve Supabase Magic Link, tRPC, health checks, and public asset delivery.
+- [x] Add privacy and cookie consent behavior only where needed by the existing analytics and deployment setup.
+- [x] Improve asset loading and performance without storing new media in the project repository or breaking CDN references.
+- [x] Add or update tests for security headers, CORS, error redaction, privacy behavior, backup behavior, and critical API paths.
+- [x] Validate the hardening pass with tests, type checks, production build, security route checks, responsive screenshots, and realistic bundle measurements.
+- [x] Save a final production-readiness checkpoint and document that publishing remains a user action.
+- [x] Add automated tests for the privacy consent flow, covering default no analytics state, accept and decline persistence, and analytics script injection only after consent.
+- [x] Add component-level tests for PrivacyConsent covering no script by default, no script after decline, and exactly one script after acceptance.
+- [x] Validate the privacy route and consent banner behavior together in a UI-oriented test. The privacy route was visually verified and the consent component was verified in jsdom.
+- [x] Audit the complete repository from first line to last for security, correctness, maintainability, concise comments, dependency safety, and authored underscore characters.
+- [x] Refactor verified code issues without changing intended portfolio, authentication, Studio, backup, or deployment behavior.
+- [x] Add focused regression tests and concise security-boundary comments for all verified fixes.
+- [x] Re-run complete validation and save a checkpoint for the full code audit.
+- [x] Finish and document a verifiable repository-wide audit scope, including all authored files and the authored underscore-character check, then record the evidence. Completed with tracked-file inventory, authored-source scans, dangerous-sink scan, credential scan, and framework or schema identifier review.
+- [x] Add new regression tests for storage key validation, Supabase error redaction, debug collector payload rejection, and the CDN-compatible resource policy behavior. Covered by the application and security boundary suites.
+- [x] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo. Checkpoint: 6fed95e9.

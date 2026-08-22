@@ -67,8 +67,8 @@ function normalizeKey(relKey: string): string {
 function appendHashSuffix(relKey: string): string {
   const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
   const lastDot = relKey.lastIndexOf(".");
-  if (lastDot === -1) return `${relKey}_${hash}`;
-  return `${relKey.slice(0, lastDot)}_${hash}${relKey.slice(lastDot)}`;
+  if (lastDot === -1) return `${relKey}-${hash}`;
+  return `${relKey.slice(0, lastDot)}-${hash}${relKey.slice(lastDot)}`;
 }
 
 export async function storagePut(
@@ -107,8 +107,8 @@ export async function storagePut(
   });
 
   if (!presignResp.ok) {
-    const msg = await presignResp.text().catch(() => presignResp.statusText);
-    throw new Error(`Storage presign failed (${presignResp.status}): ${msg}`);
+    console.error("[Storage] Forge presign failed", { status: presignResp.status });
+    throw new Error("Storage presign failed.");
   }
 
   const { url: s3Url } = (await presignResp.json()) as { url: string };
@@ -118,7 +118,7 @@ export async function storagePut(
   const blob =
     typeof data === "string"
       ? new Blob([data], { type: contentType })
-      : new Blob([data as any], { type: contentType });
+      : new Blob([Uint8Array.from(data).buffer], { type: contentType });
 
   const uploadResp = await fetch(s3Url, {
     method: "PUT",
@@ -127,7 +127,8 @@ export async function storagePut(
   });
 
   if (!uploadResp.ok) {
-    throw new Error(`Storage upload to S3 failed (${uploadResp.status})`);
+    console.error("[Storage] Object upload failed", { status: uploadResp.status });
+    throw new Error("Storage upload failed.");
   }
 
   return { key, url: `/manus-storage/${key}` };
@@ -159,8 +160,8 @@ export async function storageGetSignedUrl(relKey: string): Promise<string> {
   });
 
   if (!resp.ok) {
-    const msg = await resp.text().catch(() => resp.statusText);
-    throw new Error(`Storage signed URL failed (${resp.status}): ${msg}`);
+    console.error("[Storage] Forge signed URL failed", { status: resp.status });
+    throw new Error("Storage signed URL failed.");
   }
 
   const { url } = (await resp.json()) as { url: string };

@@ -51,9 +51,10 @@ async function rest(path: string, init: RequestInit = {}) {
   return fetch(`${baseUrl}/rest/v1/${path}`, { ...init, headers });
 }
 
-async function responseJson<T>(response: Response): Promise<T> {
+export async function responseJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+    console.error("[Supabase] Database request failed", { status: response.status });
+    throw new Error("Supabase database request failed.");
   }
   return response.json() as Promise<T>;
 }
@@ -166,7 +167,10 @@ export async function updateProject(id: number, values: Partial<InsertProject>) 
 
 export async function deleteProject(id: number) {
   const response = await rest(`projects?id=eq.${id}`, { method: "DELETE" });
-  if (!response.ok) throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+  if (!response.ok) {
+    console.error("[Supabase] Project deletion failed", { status: response.status });
+    throw new Error("Supabase project deletion failed.");
+  }
   return { id };
 }
 

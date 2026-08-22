@@ -17,6 +17,21 @@ const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
 const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6); // Trim to 60% to avoid constant re-trimming
 
 type LogSource = "browserConsole" | "networkRequests" | "sessionReplay";
+type DebugPayload = {
+  consoleLogs: unknown[];
+  networkRequests: unknown[];
+  sessionEvents: unknown[];
+};
+
+export function parseDebugPayload(value: unknown): DebugPayload {
+  if (!value || typeof value !== "object") throw new Error("invalid debug payload");
+  const record = value as Record<string, unknown>;
+  return {
+    consoleLogs: Array.isArray(record.consoleLogs) ? record.consoleLogs : [],
+    networkRequests: Array.isArray(record.networkRequests) ? record.networkRequests : [],
+    sessionEvents: Array.isArray(record.sessionEvents) ? record.sessionEvents : [],
+  };
+}
 
 function ensureLogDir() {
   if (!fs.existsSync(LOG_DIR)) {
@@ -104,7 +119,8 @@ function vitePluginManusDebugCollector(): Plugin {
           return next();
         }
 
-        const handlePayload = (payload: any) => {
+        const handlePayload = (rawPayload: unknown) => {
+          const payload = parseDebugPayload(rawPayload);
           // Write logs directly to files
           if (payload.consoleLogs?.length > 0) {
             writeToLogFile("browserConsole", payload.consoleLogs);
@@ -126,7 +142,8 @@ function vitePluginManusDebugCollector(): Plugin {
             handlePayload(reqBody);
           } catch (e) {
             res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, error: String(e) }));
+            console.warn("[Debug collector] Rejected malformed payload");
+            res.end(JSON.stringify({ success: false, error: "invalid debug payload" }));
           }
           return;
         }
@@ -138,11 +155,11 @@ function vitePluginManusDebugCollector(): Plugin {
 
         req.on("end", () => {
           try {
-            const payload = JSON.parse(body);
-            handlePayload(payload);
+            handlePayload(JSON.parse(body) as unknown);
           } catch (e) {
             res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, error: String(e) }));
+            console.warn("[Debug collector] Rejected malformed payload");
+            res.end(JSON.stringify({ success: false, error: "invalid debug payload" }));
           }
         });
       });
@@ -168,6 +185,15 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          motion: ["framer-motion", "gsap", "lenis"],
+          ui: ["lucide-react", "sonner", "wouter"],
+          query: ["@tanstack/react-query", "@trpc/client", "@trpc/react-query"],
+        },
+      },
+    },
   },
   server: {
     host: true,
