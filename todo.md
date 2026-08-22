@@ -77,8 +77,12 @@
 - [x] Configure the Supabase provider environment variables in Vercel and redeploy the mhini project.
 - [x] Bridge Vercel’s automatically supplied Supabase integration namespace into the Vite client configuration without duplicating secret values.
 - [ ] Validate the deployed Supabase Magic Link sign-in gate and preserve setup evidence, while deferring owner-only project CRUD until Mantis signs in.
-- [ ] Correct and verify Vercel API routing so production health, readiness, and Supabase-backed tRPC endpoints reach the serverless function.
+- [x] Correct and verify Vercel API routing so production health, readiness, and Supabase-backed tRPC endpoints reach the serverless function.
 - [x] Diagnose and correct the Vercel serverless-function startup crash exposed by the live health check.
-- [ ] Verify a live deployed tRPC authentication request reaches the Vercel serverless function and returns the expected unauthenticated result.
-- [ ] Correct the Vercel catch-all routing rule so dotted deployed tRPC procedure paths such as `/api/trpc/auth.me` reach the function.
+- [x] Verify a live deployed tRPC authentication request reaches the Vercel serverless function and returns the expected unauthenticated result.
+- [x] Correct the Vercel catch-all routing rule so dotted deployed tRPC procedure paths such as `/api/trpc/auth.me` reach the function.
+- [x] Verify a live deployed Supabase-backed public project query reaches the Vercel function and returns correctly.
 - [ ] Send and verify the deployed owner Magic Link request without server errors before deferring the owner click-through and CRUD checks.
+- [ ] Capture a successful deployed studio Magic Link response or visible success state after submitting the owner email.
+- [ ] Verify the owner browser session after the Magic Link is opened, including authenticated studio access or a non-null `auth.me` response.
+- [ ] Resend the owner Magic Link to mantisdarling@proton.me and verify the visible delivery response.
