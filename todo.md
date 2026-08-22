@@ -94,3 +94,7 @@
 - [x] Do not modify the public Track Record section as requested; preserve its current layout and copy.
 - [x] Confirm the exact /studio visual alignment changes before implementation.
 - [x] Implement only the approved /studio alignment and validate the untouched public Track Record.
+
+- [x] Audit the current public portfolio and private studio for worthwhile design, copy, performance, accessibility, and reliability upgrades; wait for approval before implementation.
+- [x] Improve Awwwards-style section rhythm, selective Mantis Red emphasis, signature scroll composition, and project presentation while preserving data and the public Track Record structure.
+- [x] Validate the Awwwards-style refinement across desktop, mobile, reduced motion, tests, type checks, and production build.
