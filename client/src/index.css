@@ -1185,3 +1185,32 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-profile-name { margin-top: 1.25rem; }
 }
 
+
+/* Production composition correction: visible imagery, purposeful pacing, no empty editorial bands. */
+.cinematic-section .cinematic-scene-backdrop { opacity: 0.44; }
+.cinematic-section#work .cinematic-scene-backdrop { opacity: 0.36; }
+.cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.48; }
+.cinematic-section#stack .cinematic-scene-backdrop,
+.cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.3; }
+.rebuild-intro,
+.rebuild-work,
+.rebuild-stack,
+.rebuild-evidence,
+.rebuild-contact { padding-top: clamp(3.8rem, 7vw, 6.5rem); padding-bottom: clamp(3.8rem, 7vw, 6.5rem); }
+.rebuild-intro { min-height: min(74svh, 680px); }
+.rebuild-section-heading { margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+.cinematic-story { gap: clamp(2rem, 5vw, 5rem); }
+.cinematic-story-scene { min-height: clamp(220px, 28vw, 340px); }
+@media (max-width: 800px) {
+  .cinematic-section .cinematic-scene-backdrop { opacity: 0.32; }
+  .cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.4; }
+  .cinematic-section#stack .cinematic-scene-backdrop,
+  .cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.27; }
+  .rebuild-intro,
+  .rebuild-work,
+  .rebuild-stack,
+  .rebuild-evidence,
+  .rebuild-contact { padding-top: 3.5rem; padding-bottom: 4rem; }
+  .rebuild-intro { min-height: auto; }
+  .cinematic-story-scene { min-height: 220px; }
+}
