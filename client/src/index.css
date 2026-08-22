@@ -1043,3 +1043,43 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   body.rebuild-body aside[aria-label="Privacy choices"] div.mt-4 { margin-top: 0.7rem; }
   body.rebuild-body aside[aria-label="Privacy choices"] button { padding: 0.55rem 0.75rem; font-size: 0.58rem; }
 }
+
+/* Image-led story chapters. The media carries atmosphere; the copy stays functional and HTML based. */
+.rebuild-story { display: grid; grid-template-columns: minmax(240px, 0.68fr) minmax(0, 1.32fr); gap: clamp(2.5rem, 8vw, 9rem); padding: clamp(4.5rem, 10vw, 9rem) clamp(1.25rem, 7vw, 7.5rem); background: #c8c5bc; color: var(--charcoal); }
+.rebuild-story-intro { align-self: start; position: sticky; top: 110px; }
+.rebuild-story-intro h2, .rebuild-epilogue-copy h2 { margin: 2rem 0 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(3.3rem, 6vw, 6.7rem); font-weight: 500; letter-spacing: -0.09em; line-height: 0.82; }
+.rebuild-story-intro h2 em, .rebuild-epilogue-copy h2 em { color: var(--red); font-style: normal; }
+.rebuild-story-intro > p:last-child, .rebuild-epilogue-copy > p { max-width: 320px; margin: 2rem 0 0; color: rgba(21, 21, 21, 0.68); font-size: 0.86rem; line-height: 1.65; }
+.rebuild-story-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.rebuild-story-frame { position: relative; display: block; min-width: 0; margin: 0; overflow: hidden; background: #171717; text-decoration: none; }
+.rebuild-story-frame img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.7) contrast(1.04); transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1), filter 300ms ease; }
+.rebuild-story-frame:hover img { filter: saturate(0.88) contrast(1.08); transform: scale(1.035); }
+.rebuild-story-motion { grid-column: 1 / span 8; aspect-ratio: 16 / 10; }
+.rebuild-story-blade { grid-column: 9 / span 4; aspect-ratio: 0.8; }
+.rebuild-story-descent { grid-column: 2 / span 5; aspect-ratio: 0.78; margin-top: 2rem; }
+.rebuild-story-stillness { grid-column: 7 / span 6; aspect-ratio: 1.55; margin-top: 7rem; }
+.rebuild-story-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.58)); }
+.rebuild-story-frame > span, .rebuild-story-frame figcaption { position: absolute; right: 0.85rem; bottom: 0.8rem; left: 0.85rem; z-index: 2; color: #f5f3ed; font-family: "Barlow Condensed", sans-serif; font-size: 0.62rem; letter-spacing: 0.11em; text-transform: uppercase; }
+.rebuild-story-frame > span { display: flex; align-items: center; justify-content: space-between; }
+.rebuild-story-frame figcaption { color: rgba(245, 243, 237, 0.72); }
+.rebuild-epilogue { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); min-height: min(680px, 72svh); background: #101010; color: var(--paper); }
+.rebuild-epilogue-image { min-height: 520px; overflow: hidden; }
+.rebuild-epilogue-image img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.12); }
+.rebuild-epilogue-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 6vw, 6rem); }
+.rebuild-epilogue-copy .rebuild-marker { color: rgba(233, 231, 225, 0.58); }
+.rebuild-epilogue-copy h2 { color: var(--paper); }
+.rebuild-epilogue-copy > p { color: rgba(233, 231, 225, 0.66); }
+.rebuild-epilogue-link { align-self: start; margin-top: 2rem; }
+@media (max-width: 800px) {
+  .rebuild-story { grid-template-columns: 1fr; gap: 2.8rem; padding: 4.1rem 1.25rem; }
+  .rebuild-story-intro { position: static; }
+  .rebuild-story-intro h2, .rebuild-epilogue-copy h2 { font-size: clamp(3.2rem, 16vw, 5.5rem); }
+  .rebuild-story-grid { gap: 0.7rem; }
+  .rebuild-story-motion { grid-column: 1 / span 12; aspect-ratio: 1.28; }
+  .rebuild-story-blade { grid-column: 1 / span 5; aspect-ratio: 0.72; }
+  .rebuild-story-descent { grid-column: 6 / span 7; margin-top: 2.4rem; aspect-ratio: 0.74; }
+  .rebuild-story-stillness { grid-column: 1 / span 12; margin-top: 0.7rem; aspect-ratio: 1.42; }
+  .rebuild-epilogue { grid-template-columns: 1fr; min-height: auto; }
+  .rebuild-epilogue-image { min-height: 280px; max-height: 44svh; }
+  .rebuild-epilogue-copy { padding: 3.7rem 1.25rem 4.2rem; }
+}

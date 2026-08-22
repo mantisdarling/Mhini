@@ -41,6 +41,13 @@ const ASSETS = {
   hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
   mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
   caseStudy: "/manus-storage/mantis-samurai-case-study-cover_5c9adaba.webp",
+  story: {
+    motion: "/manus-storage/1000237115_8b0e09c1.jpg",
+    blade: "/manus-storage/1000237109_816dcef4.jpg",
+    descent: "/manus-storage/1000237108_5000beb5.jpg",
+    stillness: "/manus-storage/1000237111_401cecb1.jpg",
+    finalFrame: "/manus-storage/1000237112_a359eaa2.jpg",
+  },
 };
 
 const resumeProjects: DisplayProject[] = profileProjects.map((project, index) => ({
@@ -178,6 +185,16 @@ export default function Home() {
           <div className="rebuild-intro-body"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
         </section>
 
+        <section className="rebuild-story" aria-label="Mantis visual story">
+          <div className="rebuild-story-intro"><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. The first reference opens the motion study externally, while the stills remain lightweight and readable inside the page.</p></div>
+          <div className="rebuild-story-grid">
+            <a className="rebuild-story-frame rebuild-story-motion" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer"><img src={ASSETS.story.motion} alt="Samurai figure standing in a misty landscape" loading="lazy" /><span>OPEN MOTION STUDY <ArrowUpRight size={15} aria-hidden="true" /></span></a>
+            <figure className="rebuild-story-frame rebuild-story-blade"><img src={ASSETS.story.blade} alt="Katana arranged on a quiet neutral field" loading="lazy" /><figcaption>01 / EDGE / A precise line is enough.</figcaption></figure>
+            <figure className="rebuild-story-frame rebuild-story-descent"><img src={ASSETS.story.descent} alt="Figure carrying a katana through dense leaves" loading="lazy" /><figcaption>02 / DEPTH / Go lower than the obvious layer.</figcaption></figure>
+            <figure className="rebuild-story-frame rebuild-story-stillness"><img src={ASSETS.story.stillness} alt="Overgrown house and quiet road in a deep green landscape" loading="lazy" /><figcaption>03 / SYSTEM / Let the environment carry the weight.</figcaption></figure>
+          </div>
+        </section>
+
         <section className="rebuild-work" id="work">
           <div className="rebuild-section-heading"><div><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p>{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
           <div className="rebuild-project-grid">{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
@@ -200,6 +217,11 @@ export default function Home() {
             <details className="rebuild-dossier"><summary>Research and competition <ChevronDown size={17} aria-hidden="true" /></summary><div><article><span>{writing.platform}</span><b>{writing.title}</b><p>{writing.description}</p><ExternalLink href={writing.url}>Read article</ExternalLink></article>{hackathons.map(item => <article key={item.name}><span>{item.status}{"organizer" in item && item.organizer ? ` / ${item.organizer}` : ""}</span><b>{item.name}</b><p>{item.description}</p></article>)}</div></details>
             <details className="rebuild-dossier"><summary>Life outside the stack <ChevronDown size={17} aria-hidden="true" /></summary><div><article><span>Languages</span><p>{languages.join(" / ")}</p></article><article><span>Interests and hobbies</span><p>{interests.join(" / ")}</p></article><article><span>Core positioning</span><b>{vision.core}</b><p>{vision.landingMessage}</p></article><article><span>Short term goals</span>{vision.shortTerm.map(item => <p key={item}>{item}</p>)}</article><article><span>Long term vision</span>{vision.longTerm.map(item => <p key={item}>{item}</p>)}</article></div></details>
           </div>
+        </section>
+
+        <section className="rebuild-epilogue" aria-label="Closing visual reference">
+          <div className="rebuild-epilogue-image"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div>
+          <div className="rebuild-epilogue-copy"><SectionMarker number="05A" label="CLOSING FRAME" /><h2>Build the<br /><em>quiet proof.</em></h2><p>The final frame is an invitation to slow down. The reference link opens the original Pinterest post in a new tab and remains separate from the portfolio’s functional content.</p><a className="rebuild-primary rebuild-epilogue-link" href="https://in.pinterest.com/pin/894105332291615495/" target="_blank" rel="noreferrer">Open closing reference <ArrowUpRight size={17} aria-hidden="true" /></a></div>
         </section>
 
         <section className="rebuild-contact" id="contact">

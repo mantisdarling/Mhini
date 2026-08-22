@@ -61,4 +61,13 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.textContent).toContain(technologyGroups[0].items[0]);
     expect(stackButton?.getAttribute("aria-expanded")).toBe("true");
   });
+
+  it("keeps the image-led story references separate from functional portfolio content", () => {
+    renderHome();
+    expect(container?.textContent).toContain("Enter through");
+    expect(container?.querySelector('a[href="https://pin.it/1uzOHjzz9"]')).toBeTruthy();
+    expect(container?.querySelector('a[href="https://in.pinterest.com/pin/894105332291615495/"]')).toBeTruthy();
+    expect(container?.querySelectorAll(".rebuild-story-frame img")).toHaveLength(4);
+    expect(container?.querySelectorAll(".rebuild-epilogue-image img")).toHaveLength(1);
+  });
 });
