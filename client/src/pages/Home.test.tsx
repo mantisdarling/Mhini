@@ -83,6 +83,18 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector(".cinematic-finale .cinematic-video-backdrop video")).toBeTruthy();
   });
 
+  it("serves mobile derivatives for the cinematic backgrounds and project visuals", () => {
+    renderHome();
+    const mobileSources = container?.querySelectorAll('source[media="(max-width: 800px)"]') ?? [];
+    expect(mobileSources.length).toBe(projects.length + 10);
+    expect(container?.querySelector('source[srcset="/manus-storage/story-descent-mobile_73eebaf4.webp"]')).toBeTruthy();
+    expect(container?.querySelector('source[srcset="/manus-storage/case-study-mobile_61f212a1.webp"]')).toBeTruthy();
+    expect(container?.querySelector('#stack .rebuild-section-atmosphere source[srcset="/manus-storage/story-blade-mobile_6e2c2d3c.webp"]')).toBeTruthy();
+    container?.querySelectorAll(".rebuild-project-card").forEach(card => {
+      expect(card.querySelector('source[media="(max-width: 800px)"]')).toBeTruthy();
+    });
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");

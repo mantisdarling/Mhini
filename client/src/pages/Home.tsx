@@ -28,6 +28,7 @@ type DisplayProject = {
   role?: string;
   description: string;
   imageUrl?: string | null;
+  mobileImageUrl?: string | null;
   projectUrl?: string | null;
   tags: string[];
   tagline?: string;
@@ -51,6 +52,13 @@ const ASSETS = {
     heroVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dQgTwaCcLKHSusnt.mp4",
     closingVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/qPIGKaMzyrRrveJB.mp4",
     heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/ZkrXSluZpNaFkhcC.jpg",
+    mobile: {
+      motion: "/manus-storage/story-motion-mobile_ff0d0a4d.webp",
+      blade: "/manus-storage/story-blade-mobile_6e2c2d3c.webp",
+      descent: "/manus-storage/story-descent-mobile_73eebaf4.webp",
+      stillness: "/manus-storage/story-stillness-mobile_8962b25c.webp",
+      caseStudy: "/manus-storage/case-study-mobile_61f212a1.webp",
+    },
   },
 };
 
@@ -60,6 +68,7 @@ const resumeProjects: DisplayProject[] = profileProjects.map((project, index) =>
   title: project.name,
   category: project.role ? `${project.status} / ${project.role}` : project.status,
   imageUrl: index === 0 ? ASSETS.caseStudy : null,
+  mobileImageUrl: index === 0 ? ASSETS.story.mobile.caseStudy : null,
   projectUrl: project.liveUrl ?? project.githubUrl ?? null,
   tags: [...project.technologies],
 }));
@@ -98,7 +107,10 @@ function ProjectCard({ project, index, onOpen }: { project: DisplayProject; inde
       }}
     >
       <div className="rebuild-project-visual">
-        <img src={project.imageUrl ?? ASSETS.caseStudy} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.caseStudy; }} />
+        <picture>
+          <source media="(max-width: 800px)" srcSet={project.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} />
+          <img src={project.imageUrl ?? ASSETS.caseStudy} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = ASSETS.caseStudy; }} />
+        </picture>
         <div className="rebuild-project-grid" aria-hidden="true" />
         <span className="rebuild-project-index">{String(index + 1).padStart(2, "0")}</span>
         <span className="rebuild-project-open">Open dossier <ArrowUpRight size={15} aria-hidden="true" /></span>
@@ -116,12 +128,16 @@ function DetailBlock({ label, children }: { label: string; children: React.React
   return <div className="rebuild-detail-block"><p>{label}</p><div>{children}</div></div>;
 }
 
-function SceneBackdrop({ src, alt = "" }: { src: string; alt?: string }) {
-  return <div className="cinematic-scene-backdrop" aria-hidden="true"><img src={src} alt={alt} loading="eager" decoding="async" /><span /></div>;
+function SceneBackdrop({ src, mobileSrc, alt = "" }: { src: string; mobileSrc?: string; alt?: string }) {
+  return <div className="cinematic-scene-backdrop" aria-hidden="true"><picture>{mobileSrc && <source media="(max-width: 800px)" srcSet={mobileSrc} />}<img src={src} alt={alt} loading="lazy" decoding="async" /></picture><span /></div>;
 }
 
-function VideoBackdrop({ src, fallbackSrc, poster }: { src: string; fallbackSrc?: string; poster?: string }) {
-  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <img src={fallbackSrc} alt="" loading="eager" decoding="async" />}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
+function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string }) {
+  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <picture>{mobileFallbackSrc && <source media="(max-width: 800px)" srcSet={mobileFallbackSrc} />}<img src={fallbackSrc} alt="" loading="eager" decoding="async" /></picture>}<video src={src} {...(poster ? { poster } : {})} autoPlay muted loop playsInline preload="auto" /><span /></div>;
+}
+
+function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: string; label: string; title: string }) {
+  return <article className="cinematic-story-scene"><picture><source media="(max-width: 800px)" srcSet={mobileSrc} /><img className="cinematic-story-image" data-parallax src={src} alt="" loading="lazy" decoding="async" /></picture><span>{label}</span><h3>{title}</h3></article>;
 }
 
 export default function Home() {
@@ -163,7 +179,7 @@ export default function Home() {
 
       <main>
         <section className="rebuild-hero cinematic-hero" id="top">
-          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} poster={ASSETS.story.heroPoster} />
+          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} mobileFallbackSrc={ASSETS.story.mobile.motion} poster={ASSETS.story.heroPoster} />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy">
             <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
@@ -177,7 +193,7 @@ export default function Home() {
         </section>
 
         <section className="rebuild-intro cinematic-section" id="profile">
-          <SceneBackdrop src={ASSETS.story.stillness} />
+          <SceneBackdrop src={ASSETS.story.stillness} mobileSrc={ASSETS.story.mobile.stillness} />
           <div className="rebuild-section-lead"><SectionMarker number="01" label="PROFILE" /><p className="rebuild-profile-name">Harshit Kumar</p><h2>Not a portfolio.<br /><em>A working record.</em></h2></div>
           <div className="rebuild-intro-body"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
         </section>
@@ -185,28 +201,28 @@ export default function Home() {
         <section className="rebuild-story cinematic-story" ref={storyRef} aria-label="Mantis visual story">
           <div className="rebuild-story-intro"><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. Each frame is a chapter in the same field, not a separate card.</p></div>
           <div className="cinematic-story-scenes">
-            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.motion})` }}><span>01 / ARRIVAL</span><h3>Read the atmosphere before the system.</h3></article>
-            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.blade})` }}><span>02 / EDGE</span><h3>A precise line is enough.</h3></article>
-            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.descent})` }}><span>03 / DEPTH</span><h3>Go lower than the obvious layer.</h3></article>
-            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.stillness})` }}><span>04 / SYSTEM</span><h3>Let the environment carry the weight.</h3></article>
+            <StoryScene src={ASSETS.story.motion} mobileSrc={ASSETS.story.mobile.motion} label="01 / ARRIVAL" title="Read the atmosphere before the system." />
+            <StoryScene src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} label="02 / EDGE" title="A precise line is enough." />
+            <StoryScene src={ASSETS.story.descent} mobileSrc={ASSETS.story.mobile.descent} label="03 / DEPTH" title="Go lower than the obvious layer." />
+            <StoryScene src={ASSETS.story.stillness} mobileSrc={ASSETS.story.mobile.stillness} label="04 / SYSTEM" title="Let the environment carry the weight." />
           </div>
         </section>
 
         <section className="rebuild-work cinematic-section" id="work">
-          <SceneBackdrop src={ASSETS.caseStudy} />
+          <SceneBackdrop src={ASSETS.caseStudy} mobileSrc={ASSETS.story.mobile.caseStudy} />
           <div className="rebuild-section-heading"><div><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p>{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
           <div className="rebuild-project-grid">{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">
-          <SceneBackdrop src={ASSETS.story.blade} />
-          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><img src={ASSETS.story.blade} alt="" loading="lazy" /><span /></div>
+          <SceneBackdrop src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} />
+          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><picture><source media="(max-width: 800px)" srcSet={ASSETS.story.mobile.blade} /><img src={ASSETS.story.blade} alt="" loading="lazy" decoding="async" /></picture><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p>Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>
 
         <section className="rebuild-evidence cinematic-section" id="evidence">
-          <SceneBackdrop src={ASSETS.story.descent} />
+          <SceneBackdrop src={ASSETS.story.descent} mobileSrc={ASSETS.story.mobile.descent} />
           <div className="rebuild-section-heading"><div><SectionMarker number="04" label="EVIDENCE" /><h2>Depth<br /><em>over noise.</em></h2></div><p>Education, credentials, courses, communities, research, and the long view. Nothing omitted, just organized.</p></div>
           <div className="rebuild-evidence-grid">
             <div className="rebuild-evidence-column"><h3>Education</h3>{education.map(item => <article className="rebuild-record" key={item.degree}><div><span>{item.status}</span><b>{item.degree}</b><small>{item.institution}</small></div><p>{item.dates}<br />{item.note}</p></article>)}</div>
@@ -234,7 +250,7 @@ export default function Home() {
       <footer className="rebuild-footer"><span>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span>HARSHIT KUMAR / EAST INDIA</span><a href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><img src={selectedProject.imageUrl ?? ASSETS.caseStudy} alt="" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><picture><source media="(max-width: 800px)" srcSet={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} /><img src={selectedProject.imageUrl ?? ASSETS.caseStudy} alt="" /></picture></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
       </AnimatePresence>
     </div>
   );

@@ -226,3 +226,7 @@
 - [x] Increase the evidence section background image visibility by approximately 20% without reducing copy readability. Effective opacity is now 0.50 on desktop and 0.47 on mobile.
 - [x] Verify the adjusted evidence backdrop on mobile and desktop, then run focused regression checks. Reviewed 390px and 1280px captures; 33 tests, TypeScript, production build, and high-severity audit passed.
 - [x] Save and push the evidence backdrop opacity refinement as mantisdarling. Checkpoint follows after commit.
+- [x] Create optimized mobile derivatives for the cinematic background images. Five source stills now have 720px WebP mobile derivatives, reducing the combined transferred image bytes by roughly 84% for mobile image requests.
+- [x] Wire mobile derivatives into responsive scene, story, project, atmosphere, and dossier rendering through picture source media queries.
+- [x] Validate mobile derivative loading paths, visual fidelity, and project regression safety. All five uploaded paths return 200, 34 tests pass, TypeScript and production build pass, and no high-severity dependency vulnerabilities are reported.
+- [x] Commit, push, and checkpoint the mobile derivative optimization as mantisdarling. Checkpoint follows after source cleanup.
