@@ -207,7 +207,6 @@ export default function Home() {
 
         <section className="rebuild-evidence cinematic-section" id="evidence">
           <SceneBackdrop src={ASSETS.story.descent} />
-          <div className="rebuild-section-atmosphere rebuild-section-atmosphere-evidence" aria-hidden="true"><img src={ASSETS.story.descent} alt="" loading="lazy" /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="04" label="EVIDENCE" /><h2>Depth<br /><em>over noise.</em></h2></div><p>Education, credentials, courses, communities, research, and the long view. Nothing omitted, just organized.</p></div>
           <div className="rebuild-evidence-grid">
             <div className="rebuild-evidence-column"><h3>Education</h3>{education.map(item => <article className="rebuild-record" key={item.degree}><div><span>{item.status}</span><b>{item.degree}</b><small>{item.institution}</small></div><p>{item.dates}<br />{item.note}</p></article>)}</div>

@@ -69,9 +69,9 @@ describe("rebuilt Mantis Home page", () => {
   it("renders blended atmosphere layers for stack and evidence", () => {
     renderHome();
     expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack img")?.getAttribute("src")).toContain("files.manuscdn.com");
-    expect(container?.querySelector("#evidence .rebuild-section-atmosphere-evidence img")?.getAttribute("src")).toContain("files.manuscdn.com");
+    expect(container?.querySelector("#evidence > .cinematic-scene-backdrop img")?.getAttribute("src")).toContain("files.manuscdn.com");
     expect(container?.querySelector("#stack .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
-    expect(container?.querySelector("#evidence .rebuild-section-atmosphere")?.getAttribute("aria-hidden")).toBe("true");
+    expect(container?.querySelector("#evidence .rebuild-section-atmosphere")).toBeNull();
   });
 
   it("gives every project card a samurai visual and keeps the closing scene video-only", () => {

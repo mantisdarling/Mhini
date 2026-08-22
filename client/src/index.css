@@ -914,11 +914,8 @@ body.rebuild-body::before { display: none; }
 .rebuild-section-atmosphere span { position: absolute; inset: 0; display: block; background: linear-gradient(90deg, var(--paper-deep) 0%, rgba(233, 231, 225, 0.7) 42%, rgba(233, 231, 225, 0.08) 100%); }
 .rebuild-section-atmosphere-stack { top: 12rem; right: -5rem; width: min(46vw, 650px); height: 72%; transform: rotate(-7deg); }
 .rebuild-evidence { position: relative; isolation: isolate; overflow: hidden; background: var(--charcoal); color: var(--paper); }
-.rebuild-section-atmosphere-evidence { top: 7rem; right: -8rem; width: min(52vw, 760px); height: 80%; opacity: 0.22; mix-blend-mode: screen; transform: rotate(5deg); }
-.rebuild-section-atmosphere-evidence span { background: linear-gradient(90deg, var(--charcoal) 0%, rgba(21, 21, 21, 0.82) 38%, rgba(21, 21, 21, 0.12) 100%); }
 @media (max-width: 700px) {
   .rebuild-section-atmosphere-stack { top: 14rem; right: -8rem; width: 92vw; height: 58%; opacity: 0.22; }
-  .rebuild-section-atmosphere-evidence { top: 16rem; right: -10rem; width: 110vw; height: 62%; opacity: 0.14; }
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
   .rebuild-section-atmosphere img { filter: grayscale(1) contrast(1.08); }
@@ -1215,17 +1212,11 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .cinematic-story-scene { min-height: 220px; }
 }
 
-/* Evidence chapter correction: keep the information dense and let the artwork support it instead of occupying the lead-in. */
-.rebuild-evidence > .cinematic-scene-backdrop { inset: auto 0 0; top: auto; height: min(34vw, 430px); opacity: 0.22; }
-.rebuild-evidence > .rebuild-section-atmosphere-evidence { top: auto; right: -5rem; bottom: 3rem; width: min(42vw, 580px); height: min(430px, 34%); opacity: 0.16; }
-.rebuild-evidence .rebuild-section-heading { position: relative; z-index: 3; }
-.rebuild-evidence-grid,
-.rebuild-dossier-grid { position: relative; z-index: 3; }
-.rebuild-evidence-grid { gap: clamp(1.5rem, 4vw, 4.5rem); }
-.rebuild-dossier-grid { margin-top: clamp(2.25rem, 4vw, 4rem); }
+/* Single evidence field: one image behind the complete record, never an isolated image strip or duplicated composite. */
+.rebuild-evidence > .cinematic-scene-backdrop { inset: 0; height: auto; opacity: 0.34; }
+.rebuild-evidence > .cinematic-scene-backdrop span { background: linear-gradient(90deg, rgba(15, 15, 15, 0.9) 0%, rgba(15, 15, 15, 0.72) 48%, rgba(15, 15, 15, 0.46) 100%), linear-gradient(180deg, rgba(15, 15, 15, 0.35), rgba(15, 15, 15, 0.72)); }
+.rebuild-section-atmosphere-evidence { display: none; }
 @media (max-width: 800px) {
-  .rebuild-evidence > .cinematic-scene-backdrop { height: 250px; opacity: 0.2; }
-  .rebuild-evidence > .rebuild-section-atmosphere-evidence { right: -8rem; bottom: 2rem; width: 105vw; height: 230px; opacity: 0.13; }
-  .rebuild-evidence-grid { gap: 1.8rem; }
-  .rebuild-dossier-grid { margin-top: 2.2rem; }
+  .rebuild-evidence > .cinematic-scene-backdrop { opacity: 0.29; }
+  .rebuild-evidence > .cinematic-scene-backdrop span { background: linear-gradient(90deg, rgba(15, 15, 15, 0.91) 0%, rgba(15, 15, 15, 0.74) 100%), linear-gradient(180deg, rgba(15, 15, 15, 0.3), rgba(15, 15, 15, 0.76)); }
 }

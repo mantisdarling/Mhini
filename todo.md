@@ -199,3 +199,11 @@
 - [x] Keep the evidence samurai image as a controlled side or lower visual layer without stretching it through empty space.
 - [x] Revalidate project imagery, evidence density, closing video separation, responsive behavior, accessibility, tests, types, build, audit, and runtime logs. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
 - [x] Commit, push, and checkpoint the evidence dead-space correction as mantisdarling. Checkpoint follows after the final source cleanup.
+- [x] Remove the evidence SceneBackdrop from the upper evidence flow so it cannot create a giant dark lead-in on mobile or desktop. Replaced the duplicate atmosphere markup with one continuous evidence background field.
+- [x] Keep evidence artwork separate as a short lower visual band or omit it when it harms content density; do not use opacity as a substitute for layout. The evidence scene now uses one background source behind the complete content frame.
+- [x] Validate the exact 360px mobile composition, desktop composition, project samurai imagery, closing video separation, content preservation, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and 390px mobile plus 1280px desktop previews were reviewed.
+- [x] Commit, push, and checkpoint the corrected evidence flow as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Use the supplied evidence image as the continuous background field behind the evidence heading and records rather than as an isolated lower strip.
+- [x] Align evidence text and panels directly inside the image-backed frame with responsive crop and readability overlays.
+- [x] Validate the exact phone and desktop evidence composition, preserved data, media separation, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and 390px mobile plus 1280px desktop previews were reviewed.
+- [x] Commit, push, and checkpoint the evidence background correction as mantisdarling. Checkpoint follows after source cleanup.
