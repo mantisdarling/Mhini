@@ -147,3 +147,6 @@
 - [x] Add free repository-first dependency and secret scanning gates, deterministic backup and restore guidance, and a legally cautious incident-response playbook.
 - [x] Add or extend non-invasive security regression tests and validate the resilience documentation and scripts without touching production data.
 - [x] Remediate the verified development dependency advisories by removing the unnecessary bundled pnpm dependency and upgrading affected toolchain packages to patched releases.
+- [x] Enable the repository security workflow, trigger its first main-branch run, and review every gate result.
+- [x] Fix the security workflow’s pnpm version mismatch, rerun the first Actions job, and review every gate result.
+- [x] Remove the duplicate pnpm version declaration from the workflow, rerun Actions, and review the actual security gates.
