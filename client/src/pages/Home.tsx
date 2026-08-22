@@ -43,11 +43,13 @@ const ASSETS = {
   mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png",
   caseStudy: "/manus-storage/mantis-samurai-case-study-cover_5c9adaba.webp",
   story: {
-    motion: "/manus-storage/1000237115_8b0e09c1.jpg",
-    blade: "/manus-storage/1000237109_816dcef4.jpg",
-    descent: "/manus-storage/1000237108_5000beb5.jpg",
-    stillness: "/manus-storage/1000237111_401cecb1.jpg",
-    finalFrame: "/manus-storage/1000237112_a359eaa2.jpg",
+    motion: "/manus-storage/1000237115_990b6409.jpg",
+    blade: "/manus-storage/1000237109_fe3157cb.jpg",
+    descent: "/manus-storage/1000237108_520eca52.jpg",
+    stillness: "/manus-storage/1000237111_d1ae622f.jpg",
+    finalFrame: "/manus-storage/1000237112_04ac6804.jpg",
+    heroVideo: "https://assets.pinterest.com/ext/embed.html?id=544865254939654931",
+    closingVideo: "https://assets.pinterest.com/ext/embed.html?id=894105332291615495",
   },
 };
 
@@ -131,6 +133,14 @@ function DetailBlock({ label, children }: { label: string; children: React.React
   return <div className="rebuild-detail-block"><p>{label}</p><div>{children}</div></div>;
 }
 
+function SceneBackdrop({ src, alt = "" }: { src: string; alt?: string }) {
+  return <div className="cinematic-scene-backdrop" aria-hidden="true"><img src={src} alt={alt} loading="eager" decoding="async" /><span /></div>;
+}
+
+function PinterestBackdrop({ src, fallbackSrc, title }: { src: string; fallbackSrc: string; title: string }) {
+  return <div className="cinematic-video-backdrop" aria-hidden="true"><img src={fallbackSrc} alt="" loading="eager" decoding="async" /><iframe title={title} src={src} loading="eager" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><span /></div>;
+}
+
 export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
@@ -169,7 +179,8 @@ export default function Home() {
       </header>
 
       <main>
-        <section className="rebuild-hero" id="top">
+        <section className="rebuild-hero cinematic-hero" id="top">
+          <PinterestBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} title="Mantis hero samurai motion study" />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy">
             <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
@@ -183,33 +194,37 @@ export default function Home() {
           <div className="rebuild-hero-foot"><span>SCROLL TO READ</span><i aria-hidden="true" /></div>
         </section>
 
-        <section className="rebuild-intro" id="profile">
+        <section className="rebuild-intro cinematic-section" id="profile">
+          <SceneBackdrop src={ASSETS.story.stillness} />
           <div className="rebuild-section-lead"><SectionMarker number="01" label="PROFILE" /><h2>Not a portfolio.<br /><em>A working record.</em></h2></div>
           <div className="rebuild-intro-body"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
         </section>
 
-        <section className="rebuild-story" ref={storyRef} aria-label="Mantis visual story">
-          <div className="rebuild-story-intro"><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. The first reference opens the motion study externally, while the stills remain lightweight and readable inside the page.</p></div>
-          <div className="rebuild-story-grid">
-            <a className="rebuild-story-frame rebuild-story-motion" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer"><img data-parallax src={ASSETS.story.motion} alt="Samurai figure standing in a misty landscape" loading="lazy" /><span>OPEN MOTION STUDY <ArrowUpRight size={15} aria-hidden="true" /></span></a>
-            <figure className="rebuild-story-frame rebuild-story-blade"><img data-parallax src={ASSETS.story.blade} alt="Katana arranged on a quiet neutral field" loading="lazy" /><figcaption>01 / EDGE / A precise line is enough.</figcaption></figure>
-            <figure className="rebuild-story-frame rebuild-story-descent"><img data-parallax src={ASSETS.story.descent} alt="Figure carrying a katana through dense leaves" loading="lazy" /><figcaption>02 / DEPTH / Go lower than the obvious layer.</figcaption></figure>
-            <figure className="rebuild-story-frame rebuild-story-stillness"><img data-parallax src={ASSETS.story.stillness} alt="Overgrown house and quiet road in a deep green landscape" loading="lazy" /><figcaption>03 / SYSTEM / Let the environment carry the weight.</figcaption></figure>
+        <section className="rebuild-story cinematic-story" ref={storyRef} aria-label="Mantis visual story">
+          <div className="rebuild-story-intro"><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. Each frame is a chapter in the same field, not a separate card.</p></div>
+          <div className="cinematic-story-scenes">
+            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.motion})` }}><span>01 / ARRIVAL</span><h3>Read the atmosphere before the system.</h3></article>
+            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.blade})` }}><span>02 / EDGE</span><h3>A precise line is enough.</h3></article>
+            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.descent})` }}><span>03 / DEPTH</span><h3>Go lower than the obvious layer.</h3></article>
+            <article className="cinematic-story-scene" style={{ backgroundImage: `url(${ASSETS.story.stillness})` }}><span>04 / SYSTEM</span><h3>Let the environment carry the weight.</h3></article>
           </div>
         </section>
 
-        <section className="rebuild-work" id="work">
+        <section className="rebuild-work cinematic-section" id="work">
+          <SceneBackdrop src={ASSETS.caseStudy} />
           <div className="rebuild-section-heading"><div><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p>{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
           <div className="rebuild-project-grid">{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
         </section>
 
-        <section className="rebuild-stack" id="stack">
+        <section className="rebuild-stack cinematic-section" id="stack">
+          <SceneBackdrop src={ASSETS.story.blade} />
           <div className="rebuild-section-atmosphere rebuild-section-atmosphere-stack" aria-hidden="true"><img src={ASSETS.story.blade} alt="" loading="lazy" /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p>Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>
 
-        <section className="rebuild-evidence" id="evidence">
+        <section className="rebuild-evidence cinematic-section" id="evidence">
+          <SceneBackdrop src={ASSETS.story.descent} />
           <div className="rebuild-section-atmosphere rebuild-section-atmosphere-evidence" aria-hidden="true"><img src={ASSETS.story.descent} alt="" loading="lazy" /><span /></div>
           <div className="rebuild-section-heading"><div><SectionMarker number="04" label="EVIDENCE" /><h2>Depth<br /><em>over noise.</em></h2></div><p>Education, credentials, courses, communities, research, and the long view. Nothing omitted, just organized.</p></div>
           <div className="rebuild-evidence-grid">
@@ -224,9 +239,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="rebuild-finale" aria-label="Closing motion and image chapter">
-          <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The Pinterest player is embedded in the page so the closing reference can be watched without leaving the experience.</p><a className="rebuild-source-link" href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">Open source pin <ArrowUpRight size={14} aria-hidden="true" /></a></div>
-          <div className="rebuild-finale-media"><div className="rebuild-final-still"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div><div className="rebuild-inline-video"><iframe title="Mantis closing samurai motion study" src="https://assets.pinterest.com/ext/embed.html?id=544865254939654931" loading="lazy" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><p className="rebuild-video-fallback">If the player is unavailable, <a href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">open the motion study</a>.</p></div></div>
+        <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
+          <PinterestBackdrop src={ASSETS.story.closingVideo} fallbackSrc={ASSETS.story.finalFrame} title="Mantis closing samurai motion study" />
+          <div className="rebuild-finale-copy"><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
+          <div className="rebuild-finale-media"><div className="rebuild-final-still"><img src={ASSETS.story.finalFrame} alt="Black and white mountain landscape with a lone tree and waterfalls" loading="lazy" /></div><div className="rebuild-inline-video"><iframe title="Mantis closing samurai motion study" src={ASSETS.story.closingVideo} loading="lazy" allow="autoplay; fullscreen" referrerPolicy="strict-origin-when-cross-origin" /><p className="rebuild-video-fallback">If the player is unavailable, <a href="https://pin.it/1uzOHjzz9" target="_blank" rel="noreferrer">open the motion study</a>.</p></div></div>
         </section>
 
         <section className="rebuild-contact" id="contact">

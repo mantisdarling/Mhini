@@ -76,8 +76,9 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector('a[href="https://pin.it/1uzOHjzz9"]')).toBeTruthy();
     expect(container?.querySelector('a[href="https://in.pinterest.com/pin/894105332291615495/"]')).toBeNull();
     expect(container?.querySelector('iframe[src="https://assets.pinterest.com/ext/embed.html?id=544865254939654931"]')).toBeTruthy();
+    expect(container?.querySelector('iframe[src="https://assets.pinterest.com/ext/embed.html?id=894105332291615495"]')).toBeTruthy();
     expect(container?.querySelector('a[href="https://pin.it/1uzOHjzz9"]')).toBeTruthy();
-    expect(container?.querySelectorAll(".rebuild-story-frame img")).toHaveLength(4);
-    expect(container?.querySelectorAll(".rebuild-final-still img")).toHaveLength(1);
+    expect(container?.querySelectorAll(".cinematic-story-scene")).toHaveLength(4);
+    expect(container?.querySelectorAll(".cinematic-section .cinematic-scene-backdrop img").length).toBeGreaterThanOrEqual(4);
   });
 });

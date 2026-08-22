@@ -1130,3 +1130,62 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-final-still { aspect-ratio: 16 / 10; }
   .rebuild-inline-video { aspect-ratio: 16 / 11; }
 }
+
+/* Video-first cinematic scenes: media fills the section, while content stays in a readable layer above it. */
+.cinematic-section,
+.cinematic-hero,
+.cinematic-finale { position: relative; isolation: isolate; overflow: hidden; }
+.cinematic-section > :not(.cinematic-scene-backdrop):not(.cinematic-video-backdrop),
+.cinematic-hero > :not(.cinematic-scene-backdrop):not(.cinematic-video-backdrop),
+.cinematic-finale > :not(.cinematic-scene-backdrop):not(.cinematic-video-backdrop) { position: relative; z-index: 2; }
+.cinematic-hero > .rebuild-hero-grid { position: absolute !important; z-index: 1; }
+.cinematic-scene-backdrop,
+.cinematic-video-backdrop { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.cinematic-scene-backdrop img,
+.cinematic-video-backdrop img,
+.cinematic-video-backdrop iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.cinematic-video-backdrop img { position: absolute; inset: 0; z-index: 0; filter: grayscale(0.45) saturate(0.72) contrast(1.08); }
+.cinematic-video-backdrop iframe { position: relative; z-index: 1; background: transparent; }
+.cinematic-scene-backdrop img { filter: grayscale(0.45) saturate(0.72) contrast(1.08); }
+.cinematic-scene-backdrop span,
+.cinematic-video-backdrop span { position: absolute; inset: 0; display: block; background: linear-gradient(90deg, rgba(17, 17, 17, 0.94) 0%, rgba(17, 17, 17, 0.73) 43%, rgba(17, 17, 17, 0.25) 100%), linear-gradient(0deg, rgba(17, 17, 17, 0.76), transparent 48%, rgba(17, 17, 17, 0.34)); }
+.cinematic-hero { background: #111; }
+.cinematic-hero .cinematic-video-backdrop iframe,
+.cinematic-finale .cinematic-video-backdrop iframe { width: 100%; height: 100%; min-width: 100%; min-height: 100%; transform: scale(1.18); opacity: 0.46; }
+.cinematic-hero .cinematic-video-backdrop span { background: linear-gradient(90deg, rgba(17, 17, 17, 0.95) 0%, rgba(17, 17, 17, 0.82) 35%, rgba(17, 17, 17, 0.22) 100%), linear-gradient(0deg, rgba(17, 17, 17, 0.8), transparent 48%, rgba(17, 17, 17, 0.26)); }
+.cinematic-section .cinematic-scene-backdrop { opacity: 0.34; }
+.cinematic-section#work .cinematic-scene-backdrop { opacity: 0.25; }
+.cinematic-section#profile .cinematic-scene-backdrop { opacity: 0.28; }
+.cinematic-section#stack .cinematic-scene-backdrop,
+.cinematic-section#evidence .cinematic-scene-backdrop { opacity: 0.2; }
+.cinematic-section#stack > .rebuild-section-atmosphere,
+.cinematic-section#evidence > .rebuild-section-atmosphere { z-index: 1; }
+.cinematic-story { position: relative; display: grid; grid-template-columns: minmax(230px, 0.58fr) minmax(0, 1.42fr); gap: clamp(2.5rem, 8vw, 9rem); background: #24231f; color: var(--paper); }
+.cinematic-story::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(21, 21, 21, 0.86), rgba(21, 21, 21, 0.22)); }
+.cinematic-story > * { position: relative; z-index: 2; }
+.cinematic-story .rebuild-story-intro { color: var(--paper); }
+.cinematic-story .rebuild-story-intro > p:last-child { color: rgba(245, 243, 237, 0.68); }
+.cinematic-story-scenes { display: grid; gap: 1px; min-width: 0; background: rgba(245, 243, 237, 0.2); }
+.cinematic-story-scene { position: relative; display: flex; min-height: clamp(220px, 34vw, 420px); flex-direction: column; justify-content: flex-end; overflow: hidden; padding: clamp(1.1rem, 2.5vw, 2.4rem); background-position: center; background-size: cover; }
+.cinematic-story-scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10, 10, 10, 0.85), transparent 72%); }
+.cinematic-story-scene > * { position: relative; z-index: 1; }
+.cinematic-story-scene span { color: var(--red); font-family: "Barlow Condensed", sans-serif; font-size: 0.62rem; letter-spacing: 0.15em; }
+.cinematic-story-scene h3 { max-width: 420px; margin: 0.6rem 0 0; color: var(--paper); font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(1.7rem, 3.2vw, 3.2rem); font-weight: 500; letter-spacing: -0.06em; line-height: 0.9; }
+.cinematic-finale { min-height: min(86svh, 860px); grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr); }
+.cinematic-finale .cinematic-video-backdrop iframe { transform: scale(1.1); opacity: 0.65; }
+.cinematic-finale .cinematic-video-backdrop span { background: linear-gradient(90deg, rgba(14, 14, 14, 0.92) 0%, rgba(14, 14, 14, 0.55) 45%, rgba(14, 14, 14, 0.2) 100%), linear-gradient(0deg, rgba(14, 14, 14, 0.76), transparent 54%); }
+.cinematic-finale .rebuild-finale-media { display: none; }
+.cinematic-finale .rebuild-finale-copy { z-index: 3; }
+@media (max-width: 800px) {
+  .cinematic-hero .cinematic-video-backdrop iframe,
+  .cinematic-finale .cinematic-video-backdrop iframe { transform: scale(1.46); }
+  .cinematic-section .cinematic-scene-backdrop { opacity: 0.24; }
+  .cinematic-story { grid-template-columns: 1fr; gap: 2rem; }
+  .cinematic-story-scenes { grid-template-columns: 1fr; }
+  .cinematic-story-scene { min-height: 260px; }
+  .cinematic-finale { min-height: 78svh; }
+  .cinematic-finale .rebuild-finale-copy { max-width: 290px; }
+}
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .cinematic-video-backdrop iframe { transform: none !important; }
+}
