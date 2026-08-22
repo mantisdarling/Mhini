@@ -194,4 +194,4 @@
 - [x] Apply the samurai visual treatment to every project card and project dossier fallback without changing project data.
 - [x] Remove the closing still image from the closing video backdrop so the closing MP4 stands alone.
 - [x] Revalidate project imagery, closing media separation, section pacing, desktop and phone layouts, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and production build passed, audit reported no known vulnerabilities, and desktop and phone previews were reviewed.
-- [ ] Commit, push, and checkpoint the project-card and closing-video separation fix as mantisdarling.
+- [x] Commit, push, and checkpoint the project-card and closing-video separation fix as mantisdarling. Pushed commit e8509de authored by mantisdarling to GitHub main; checkpoint follows.
