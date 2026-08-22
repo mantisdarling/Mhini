@@ -211,3 +211,11 @@
 - [x] Fix the true deployment or selector root cause causing the giant evidence image lead-in to persist on phone and desktop-mode mobile. Set the evidence backdrop to position absolute with inset 0.
 - [x] Confirm the live page shows the supplied evidence image behind the evidence content, with no isolated dark image block or duplicate image layer. Local visual verification now shows one image-backed evidence field and no extra atmosphere layer.
 - [x] Revalidate live and local media, layouts, accessibility, content preservation, tests, types, build, audit, and runtime logs before pushing and checkpointing as mantisdarling. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and exact phone and desktop previews were reviewed.
+- [x] Remove the implied empty project slot and rebalance the seven real project cards into a closed, intentional grid.
+- [x] Keep the consistent samurai visual treatment on every real project without inventing or fabricating a ninth or tenth project.
+- [x] Validate project card alignment, spacing, media, mobile and tablet wrapping, preserved project data, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop, tablet, and phone previews were reviewed.
+- [x] Commit, push, and checkpoint the balanced projects grid as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Close the final empty grid slot by assigning the two final real projects a balanced shared row instead of leaving a dead gray cell.
+- [x] Preserve all seven project records and samurai visuals while making the grid visually intentional on desktop, tablet, and mobile.
+- [x] Validate card images, row spans, spacing, accessibility, preserved data, tests, types, build, audit, and runtime behavior. 33 tests passed, TypeScript and build passed, audit reported no known vulnerabilities, and desktop, tablet, and phone layout rules were reviewed.
+- [x] Commit, push, and checkpoint the closed project grid as mantisdarling. Checkpoint follows after source cleanup.
