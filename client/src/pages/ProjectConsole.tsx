@@ -142,8 +142,8 @@ function ProjectConsoleContent() {
 
   const submitting = createMutation.isPending || updateMutation.isPending;
   return (
-    <div className="mx-auto max-w-6xl space-y-10 py-4">
-      <header className="flex flex-col justify-between gap-5 border-b border-border pb-7 sm:flex-row sm:items-end">
+    <div className="studio-console space-y-10 py-4">
+      <header className="studio-console-header flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="font-mono text-[0.65rem] font-medium tracking-[0.18em] text-primary">M / 06, PRIVATE PROJECT CONSOLE</p>
           <h1 className="project-console-heading">Control the<br /><span className="text-primary">run log.</span></h1>
@@ -152,6 +152,13 @@ function ProjectConsoleContent() {
           VIEW PUBLIC PORTFOLIO <ExternalLink size={14} />
         </a>
       </header>
+
+      <div className="studio-telemetry" aria-label="Project console status">
+        <div className="studio-telemetry-item"><span>TOTAL ENTRIES</span><strong>{String(projects.length).padStart(2, "0")}</strong></div>
+        <div className="studio-telemetry-item"><span>PUBLISHED</span><strong>{String(projects.filter(project => project.status === "published").length).padStart(2, "0")}</strong></div>
+        <div className="studio-telemetry-item"><span>DRAFT QUEUE</span><strong>{String(projects.filter(project => project.status !== "published").length).padStart(2, "0")}</strong></div>
+        <div className="studio-telemetry-item"><span>NEXT POSITION</span><strong>{String(nextOrder).padStart(2, "0")}</strong></div>
+      </div>
 
       <section className="project-console-layout">
         <div className="border border-border bg-card/40 p-5 sm:p-7">
