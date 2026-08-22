@@ -112,3 +112,10 @@
 - [x] Add automated tests for the privacy consent flow, covering default no analytics state, accept and decline persistence, and analytics script injection only after consent.
 - [x] Add component-level tests for PrivacyConsent covering no script by default, no script after decline, and exactly one script after acceptance.
 - [x] Validate the privacy route and consent banner behavior together in a UI-oriented test. The privacy route was visually verified and the consent component was verified in jsdom.
+- [x] Audit the complete repository from first line to last for security, correctness, maintainability, concise comments, dependency safety, and authored underscore characters.
+- [x] Refactor verified code issues without changing intended portfolio, authentication, Studio, backup, or deployment behavior.
+- [x] Add focused regression tests and concise security-boundary comments for all verified fixes.
+- [x] Re-run complete validation and save a checkpoint for the full code audit.
+- [x] Finish and document a verifiable repository-wide audit scope, including all authored files and the authored underscore-character check, then record the evidence. Completed with tracked-file inventory, authored-source scans, dangerous-sink scan, credential scan, and framework or schema identifier review.
+- [x] Add new regression tests for storage key validation, Supabase error redaction, debug collector payload rejection, and the CDN-compatible resource policy behavior. Covered by the application and security boundary suites.
+- [ ] Save a new checkpoint after the full code-audit refactors and validation, then record the checkpoint version in the workflow notes or todo.

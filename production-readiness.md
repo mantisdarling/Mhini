@@ -12,7 +12,10 @@ Vite now emits separate motion, UI, and query chunks. Vercel is configured to ca
 
 ## Validation
 
-The current local validation pass completed with 21 passing Vitest tests, a clean TypeScript check, valid Vercel JSON, a successful production build, and desktop and mobile visual checks for `/` and `/privacy`.
+The complete code audit reviewed authored client, server, shared, build, deployment, dependency, authentication, storage, backup, privacy, and test files. Unsafe provider response bodies are now redacted, storage keys reject traversal segments, the development debug collector validates payloads without `any`, and public CDN assets remain compatible with the resource policy.
+
+
+The current local validation pass completed with 25 passing Vitest tests across ten files, a clean TypeScript check, valid Vercel JSON, a successful production build, and desktop and mobile visual checks for `/` and `/privacy`. The production dependency audit reports zero low, moderate, high, or critical advisories after upgrading Streamdown, React, React DOM, Axios, Express, Drizzle ORM, Nanoid, and patched transitive packages. The Express 5 storage wildcard route was updated to the supported syntax and covered by the application test harness. The legacy server entry was updated for Express 5 and no longer uses a hardcoded port fallback.
 
 The latest local production build emitted these browser assets:
 

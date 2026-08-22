@@ -48,7 +48,8 @@ export function createApplication(options: ApplicationOptions = {}) {
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
     res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
     res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-    res.setHeader("Cross-Origin-Resource-Policy", "same-site");
+    // Public hero assets live on a separate CDN origin and must remain readable.
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     const origin = req.headers.origin;
     if (origin && allowedOrigins.has(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);

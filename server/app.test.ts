@@ -42,12 +42,19 @@ describe("Vercel Express application", () => {
     expect(response.headers.get("x-content-type-options")).toBe("nosniff");
     expect(response.headers.get("referrer-policy")).toBe("strict-origin-when-cross-origin");
     expect(response.headers.get("access-control-allow-origin")).toBe("https://mhini.vercel.app");
+    expect(response.headers.get("cross-origin-resource-policy")).toBe("cross-origin");
 
     const blocked = await fetch(`${baseUrl}/healthz`, {
       method: "OPTIONS",
       headers: { Origin: "https://attacker.example", "Access-Control-Request-Method": "POST" },
     });
     expect(blocked.status).toBe(403);
+  });
+
+  it("rejects unsafe storage keys before contacting the storage provider", async () => {
+    const response = await fetch(`${baseUrl}/manus-storage/${encodeURIComponent("../private")}`);
+    expect(response.status).toBe(400);
+    await expect(response.text()).resolves.toBe("Invalid storage key");
   });
 
   it("rejects an unsigned Vercel cron invocation", async () => {
