@@ -263,3 +263,7 @@
 - [x] Implement a smooth route transition that preserves lazy loading, direct URLs, focus behavior, and reduced motion. Added a keyed route handoff with a short transform and opacity entrance and a blade-line cue, disabled under reduced motion.
 - [x] Validate page transitions, route loading, accessibility, responsive behavior, tests, types, build, audit, and runtime errors. Verified Home, Privacy, and Studio routes at 390px; 37 tests pass, TypeScript and build pass, audit is clear, and route requests return successfully.
 - [x] Commit, push, and checkpoint the page-transition refinement as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the existing route-transition blade-line cue and crimson visual token. Confirmed the one-pixel fixed line and existing transition timing.
+- [x] Add a subtle glow to the blade-line cue without changing timing or layout. Added a compact crimson halo and preserved the existing animation geometry.
+- [x] Validate the glow on phone and desktop, including reduced motion, tests, types, build, audit, and runtime behavior. Reviewed 390px and 1440px routes; 37 tests pass, TypeScript and build pass, audit is clear, and diff hygiene passes.
+- [x] Commit, push, and checkpoint the blade-line glow refinement as mantisdarling. Checkpoint follows after source cleanup.
