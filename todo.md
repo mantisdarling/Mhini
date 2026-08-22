@@ -246,3 +246,7 @@
 - [x] Apply a phone-specific evidence image crop and readable layout while keeping desktop treatment unchanged. Added a phone-only focal crop, reduced saturation, controlled opacity, and a stronger lower readability gradient.
 - [x] Validate phone, tablet, desktop, accessibility, tests, types, build, audit, and runtime behavior. Reviewed 390px phone and 1280px desktop captures; 36 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.
 - [x] Commit, push, and checkpoint the evidence mobile repair as mantisdarling. Checkpoint follows after source cleanup.
+- [x] Audit the Stack background crop, atmosphere layer, and technology list on real phone widths. Confirmed the duplicated atmosphere and full-section crop competed with the mobile list.
+- [x] Apply a phone-specific Stack image crop and readable overlay while keeping desktop treatment unchanged. Added a phone-only focal crop, lower saturation, controlled opacity, readable gradient, and duplicate-layer suppression.
+- [x] Validate phone, tablet, desktop, accessibility, tests, types, build, audit, and runtime behavior. Reviewed 390px phone and 1280px desktop captures; 36 tests pass, TypeScript and build pass, audit reports no known vulnerabilities, and diff hygiene passes.
+- [x] Commit, push, and checkpoint the Stack mobile refinement as mantisdarling. Checkpoint follows after source cleanup.
