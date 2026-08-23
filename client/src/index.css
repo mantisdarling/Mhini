@@ -1371,3 +1371,51 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 .rebuild-share-toast.is-visible { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 @media (prefers-reduced-motion: reduce) { .rebuild-share-button, .rebuild-share-tooltip { transition: none; } .rebuild-share-tooltip { transform: translate3d(-50%, 0, 0); } .rebuild-share-toast { transition: none; transform: none; } .rebuild-share-toast.is-visible { transform: none; } }
 @media (max-width: 600px) { .rebuild-share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .rebuild-share-button { justify-content: center; } .rebuild-share-tooltip { left: 0; transform: translate3d(0, 0.35rem, 0); } .rebuild-share-tooltip::after { left: 1.2rem; } .rebuild-share-tooltip-wrap:hover .rebuild-share-tooltip, .rebuild-share-tooltip-wrap:focus-within .rebuild-share-tooltip { transform: translate3d(0, 0, 0); } .rebuild-share-toast { right: 1rem; left: 1rem; justify-content: center; } }
+
+/* Alignment pass: keep every text block readable, stable, and intentional at each width. */
+.rebuild-site h1, .rebuild-site h2, .rebuild-site h3, .rebuild-site p, .rebuild-site small, .rebuild-site b { text-wrap: pretty; }
+.rebuild-hero-copy, .rebuild-section-lead, .rebuild-section-heading > div, .rebuild-intro-body, .rebuild-contact > div:first-child, .rebuild-contact-card, .rebuild-modal-content { min-width: 0; }
+.rebuild-hero-copy { align-items: flex-start; }
+.rebuild-hero-proof { width: min(100%, 600px); }
+.rebuild-hero-proof span { min-width: 0; text-align: left; line-height: 1.25; }
+.rebuild-section-heading { align-items: flex-end; }
+.rebuild-section-heading > p { flex: 0 1 18rem; }
+.rebuild-intro-body > p { max-width: 58ch; }
+.rebuild-links { align-items: flex-start; }
+.rebuild-project-meta { align-items: flex-start; }
+.rebuild-project-meta > span { min-width: 0; }
+.rebuild-project-meta > span:first-child { flex: 1 1 auto; }
+.rebuild-project-meta > span:last-child { flex: 0 1 48%; max-width: 48%; text-align: right; }
+.rebuild-project-copy h3 { max-width: 22ch; text-wrap: balance; }
+.rebuild-project-copy p { max-width: 48ch; }
+.rebuild-stack-row > button { min-width: 0; text-align: left; }
+.rebuild-stack-row > button strong { min-width: 0; text-wrap: balance; overflow-wrap: anywhere; }
+.rebuild-evidence-grid { align-items: start; }
+.rebuild-record { align-items: start; }
+.rebuild-record > div { min-width: 0; flex: 1 1 auto; }
+.rebuild-record > p { flex: 0 1 clamp(6rem, 14vw, 9rem); margin: 0; text-align: right; line-height: 1.45; }
+.rebuild-record b, .rebuild-dossier article b { display: block; overflow-wrap: anywhere; }
+.rebuild-record small, .rebuild-dossier article small { display: block; line-height: 1.45; overflow-wrap: anywhere; }
+.rebuild-dossier article p, .rebuild-detail-block > div { max-width: 66ch; overflow-wrap: anywhere; }
+.rebuild-contact > div:first-child > p:last-child { max-width: 42ch; }
+.rebuild-contact-card > a { min-width: 0; overflow-wrap: anywhere; }
+.rebuild-socials { justify-content: flex-start; }
+.rebuild-footer { align-items: flex-start; }
+.rebuild-footer > * { min-width: 0; line-height: 1.4; }
+.rebuild-footer span { max-width: 28ch; }
+.rebuild-modal-content h2 { max-width: 12ch; line-height: 0.88; text-wrap: balance; }
+.rebuild-modal-tagline { display: block; max-width: 46ch; margin: 1.25rem 0 0; line-height: 1.4; }
+.rebuild-modal-description { max-width: 66ch; margin: 1.35rem 0 0; }
+@media (max-width: 700px) {
+  .rebuild-hero-proof span { padding-right: 0.35rem; font-size: 0.5rem; }
+  .rebuild-section-heading { align-items: start; }
+  .rebuild-section-heading > p { width: min(100%, 34rem); flex-basis: auto; }
+  .rebuild-project-meta > span:last-child { max-width: 46%; flex-basis: 46%; }
+  .rebuild-record > p { flex-basis: auto; text-align: left; }
+  .rebuild-footer { align-items: start; }
+  .rebuild-footer span { max-width: 34ch; }
+  .rebuild-modal-content h2 { font-size: clamp(2.65rem, 12vw, 4.5rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-share-tooltip { transform: translate3d(-50%, 0, 0); }
+}

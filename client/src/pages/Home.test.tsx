@@ -265,6 +265,16 @@ describe("rebuilt Mantis Home page", () => {
     expect(safeExternalUrl("https://example.com/path")).toBe("https://example.com/path");
   });
 
+  it("keeps chapter copy inside stable alignment owners", () => {
+    renderHome();
+    expect(container?.querySelector(".rebuild-hero-copy .rebuild-lede")).toBeTruthy();
+    expect(container?.querySelector("#profile .rebuild-intro-body")).toBeTruthy();
+    expect(container?.querySelectorAll(".rebuild-section-heading > p")).toHaveLength(3);
+    expect(container?.querySelectorAll(".rebuild-record > div").length).toBeGreaterThan(0);
+    expect(container?.querySelector("#contact .rebuild-contact-card")).toBeTruthy();
+    expect(container?.querySelector(".rebuild-footer > a")).toBeTruthy();
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");
