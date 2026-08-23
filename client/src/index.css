@@ -1499,3 +1499,9 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-stack .rebuild-stack-list { width: 100%; }
   .rebuild-stack .rebuild-stack-list { margin-top: 1.25rem; }
 }
+
+/* Desktop Stack emphasis: a tighter, heavier display lockup keeps the title legible over the landscape field. */
+@media (min-width: 901px) {
+  .rebuild-stack .rebuild-section-heading h2 { font-weight: 650; letter-spacing: -0.1em; line-height: 0.74; text-shadow: 0 0.08em 0 rgba(17, 17, 17, 0.24), 0 0.32em 1.1em rgba(17, 17, 17, 0.34); }
+  .rebuild-stack .rebuild-section-heading h2 em { font-weight: 700; }
+}

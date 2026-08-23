@@ -51,3 +51,7 @@ The Stack chapter now uses one existing artwork element as a full-section backdr
 The Stack heading and supporting copy now share the same aligned content system as the category rows. At 1080px, the uploaded monochrome mountain-and-waterfall artwork appears as the continuous background field behind the Stack chapter instead of an isolated image block. The charcoal scrim keeps the white and red copy readable while retaining the image’s landscape atmosphere.
 
 At 390px, the responsive source continues to use the existing phone-specific blade crop, so the previously approved phone appearance is preserved rather than forcing the wide artwork into a poor mobile crop. The Stack list remains touch-sized and the technology disclosures stay aligned.
+
+## Stack heading emphasis
+
+The Stack display heading now receives a desktop-only typography treatment: heavier display weight, tighter line height, slightly closer tracking, and a restrained shadow for separation from the background field. The 1080px render shows the title reading as a stronger visual anchor without changing the heading’s two-line structure or surrounding row geometry. The 390px render confirms the phone-specific typography remains unchanged.
