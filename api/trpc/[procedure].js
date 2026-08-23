@@ -283,7 +283,8 @@ async function rest(path, init = {}) {
 }
 async function responseJson(response) {
   if (!response.ok) {
-    throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+    console.error("[Supabase] Database request failed", { status: response.status });
+    throw new Error("Supabase database request failed.");
   }
   return response.json();
 }
@@ -385,7 +386,10 @@ async function updateProject(id, values) {
 }
 async function deleteProject(id) {
   const response = await rest(`projects?id=eq.${id}`, { method: "DELETE" });
-  if (!response.ok) throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+  if (!response.ok) {
+    console.error("[Supabase] Project deletion failed", { status: response.status });
+    throw new Error("Supabase project deletion failed.");
+  }
   return { id };
 }
 async function reorderProjects(items) {
@@ -615,8 +619,8 @@ function normalizeKey(relKey) {
 function appendHashSuffix(relKey) {
   const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
   const lastDot = relKey.lastIndexOf(".");
-  if (lastDot === -1) return `${relKey}_${hash}`;
-  return `${relKey.slice(0, lastDot)}_${hash}${relKey.slice(lastDot)}`;
+  if (lastDot === -1) return `${relKey}-${hash}`;
+  return `${relKey.slice(0, lastDot)}-${hash}${relKey.slice(lastDot)}`;
 }
 async function storagePut(relKey, data, contentType = "application/octet-stream") {
   const key = appendHashSuffix(normalizeKey(relKey));
@@ -645,19 +649,20 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
     headers: { Authorization: `Bearer ${forgeKey}` }
   });
   if (!presignResp.ok) {
-    const msg = await presignResp.text().catch(() => presignResp.statusText);
-    throw new Error(`Storage presign failed (${presignResp.status}): ${msg}`);
+    console.error("[Storage] Forge presign failed", { status: presignResp.status });
+    throw new Error("Storage presign failed.");
   }
   const { url: s3Url } = await presignResp.json();
   if (!s3Url) throw new Error("Forge returned empty presign URL");
-  const blob = typeof data === "string" ? new Blob([data], { type: contentType }) : new Blob([data], { type: contentType });
+  const blob = typeof data === "string" ? new Blob([data], { type: contentType }) : new Blob([Uint8Array.from(data).buffer], { type: contentType });
   const uploadResp = await fetch(s3Url, {
     method: "PUT",
     headers: { "Content-Type": contentType },
     body: blob
   });
   if (!uploadResp.ok) {
-    throw new Error(`Storage upload to S3 failed (${uploadResp.status})`);
+    console.error("[Storage] Object upload failed", { status: uploadResp.status });
+    throw new Error("Storage upload failed.");
   }
   return { key, url: `/manus-storage/${key}` };
 }
@@ -959,10 +964,8 @@ async function runScheduledRecoverySnapshot(req, res) {
     const snapshot = await createRecoverySnapshot();
     res.status(200).json({ ok: true, snapshot });
   } catch (error) {
-    res.status(500).json({
-      error: error instanceof Error ? error.message : "recovery snapshot failed",
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
+    console.error("[Recovery] Scheduled snapshot failed", error);
+    res.status(500).json({ error: "recovery snapshot failed" });
   }
 }
 function isAuthorizedVercelCron(authorization, secret = process.env.CRON_SECRET) {
@@ -978,10 +981,8 @@ function createVercelRecoverySnapshotHandler(snapshotCreator = createRecoverySna
       const snapshot = await snapshotCreator();
       res.status(200).json({ ok: true, snapshot });
     } catch (error) {
-      res.status(500).json({
-        error: error instanceof Error ? error.message : "recovery snapshot failed",
-        timestamp: (/* @__PURE__ */ new Date()).toISOString()
-      });
+      console.error("[Recovery] Vercel snapshot failed", error);
+      res.status(500).json({ error: "recovery snapshot failed" });
     }
   };
 }
@@ -1016,7 +1017,7 @@ var projectReorderSchema = z2.object({
 function normalizeTags(value) {
   try {
     const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((tag) => typeof tag === "string") : [];
+    return Array.isArray(parsed) ? parsed.filter((tag) => typeof tag === "string").slice(0, 100) : [];
   } catch {
     return [];
   }
@@ -1047,7 +1048,10 @@ var appRouter = router({
     })
   }),
   projects: router({
-    listPublic: publicProcedure.query(async () => (await getPublishedProjects()).map(presentProject)),
+    listPublic: publicProcedure.query(async ({ ctx }) => {
+      ctx.res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      return (await getPublishedProjects()).map(presentProject);
+    }),
     listPrivate: adminProcedure.query(async () => (await getAllProjects()).map(presentProject)),
     create: adminProcedure.input(projectInputSchema).mutation(async ({ input }) => {
       const created = await createProject2(toProjectValues(input));
@@ -1141,10 +1145,15 @@ function cacheUrl(key, url) {
   });
 }
 function registerStorageProxy(app2) {
-  app2.get("/manus-storage/*", async (req, res) => {
-    const key = req.params[0];
+  app2.get("/manus-storage/{*key}", async (req, res) => {
+    const rawKey = req.params.key;
+    const key = Array.isArray(rawKey) ? rawKey.join("/") : rawKey;
     if (!key) {
       res.status(400).send("Missing storage key");
+      return;
+    }
+    if (key.includes("\0") || key.split("/").includes("..")) {
+      res.status(400).send("Invalid storage key");
       return;
     }
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
@@ -1250,6 +1259,57 @@ function createApplication(options = {}) {
   let acceptingTraffic = true;
   app2.disable("x-powered-by");
   app2.set("trust proxy", 1);
+  const allowedOrigins = new Set([
+    "https://mhini.vercel.app",
+    process.env.PUBLIC_APP_ORIGIN,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : void 0,
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+  ].filter((origin) => Boolean(origin)));
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const contentSecurityPolicy = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    `script-src 'self'${isDevelopment ? " 'unsafe-inline'" : ""} https://manus-analytics.com`,
+    "script-src-attr 'none'",
+    "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
+    "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
+    "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com https://i.pinimg.com",
+    `connect-src 'self' https://manus-analytics.com https://*.supabase.co${isDevelopment ? " ws://localhost:* ws://127.0.0.1:*" : ""}`,
+    "media-src 'self' https://files.manuscdn.com",
+    "frame-src https://assets.pinterest.com",
+    "upgrade-insecure-requests"
+  ].join("; ");
+  app2.use((req, res, next) => {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.setHeader("Content-Security-Policy", contentSecurityPolicy);
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.has(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      res.setHeader("Access-Control-Max-Age", "600");
+    }
+    if (req.method === "OPTIONS") {
+      if (!origin || !allowedOrigins.has(origin)) {
+        res.status(403).json({ error: "origin not allowed" });
+        return;
+      }
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
   app2.use(express.json({ limit: scalePolicy.jsonPayloadLimit }));
   app2.use(express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true }));
   app2.get(["/healthz", "/api/healthz"], (_req, res) => {

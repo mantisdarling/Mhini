@@ -82,16 +82,27 @@ const navItems = [
   ["Contact", "contact"],
 ] as const;
 
-function ExternalLink({ href, children }: { href?: string | null; children: React.ReactNode }) {
+export function safeExternalUrl(href?: string | null) {
   if (!href) return null;
-  return <a className="rebuild-link" href={href} target="_blank" rel="noreferrer">{children}<ArrowUpRight size={14} aria-hidden="true" /></a>;
+  try {
+    const url = new URL(href);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function ExternalLink({ href, children }: { href?: string | null; children: React.ReactNode }) {
+  const safeHref = safeExternalUrl(href);
+  if (!safeHref) return null;
+  return <a className="rebuild-link" href={safeHref} target="_blank" rel="noopener noreferrer">{children}<ArrowUpRight size={14} aria-hidden="true" /></a>;
 }
 
 function SectionMarker({ number, label }: { number: string; label: string }) {
   return <p className="rebuild-marker"><span>{number}</span><i aria-hidden="true" />{label}</p>;
 }
 
-function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "lazy" }: { src: string; mobileSrc?: string; alt?: string; className?: string; loading?: "eager" | "lazy" }) {
+function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "lazy", fetchPriority = "auto" }: { src: string; mobileSrc?: string; alt?: string; className?: string; loading?: "eager" | "lazy"; fetchPriority?: "high" | "low" | "auto" }) {
   const imageRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [mobileFailed, setMobileFailed] = useState(false);
@@ -111,6 +122,7 @@ function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "
       src={src}
       alt={alt}
       loading={loading}
+      fetchPriority={fetchPriority}
       decoding="async"
       onLoad={() => setLoaded(true)}
       onError={() => {
@@ -127,6 +139,7 @@ function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "
 
 function ProjectCard({ project, index, onOpen }: { project: DisplayProject; index: number; onOpen: (project: DisplayProject) => void }) {
   const title = project.title ?? project.name ?? "Untitled project";
+  const projectMeta = project.role ? `${project.status ?? "Project"} / ${project.role}` : project.status ?? "Project";
   return (
     <article
       className={`rebuild-project-card ${index === 0 ? "is-featured" : ""}`}
@@ -148,7 +161,7 @@ function ProjectCard({ project, index, onOpen }: { project: DisplayProject; inde
         <span className="rebuild-project-open">Open dossier <ArrowUpRight size={15} aria-hidden="true" /></span>
       </div>
       <div className="rebuild-project-copy">
-        <div className="rebuild-project-meta"><span>{project.status ?? project.category ?? "Project"}</span><span>{project.tags.slice(0, 3).join(" / ")}</span></div>
+        <div className="rebuild-project-meta"><span>{projectMeta}</span><span>{project.tags.slice(0, 3).join(" / ")}</span></div>
         <h3>{title}</h3>
         {project.tagline && <p>{project.tagline}</p>}
       </div>
@@ -182,7 +195,7 @@ function useCompactViewport() {
 function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster, mobilePoster, preload = "auto" }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string; mobilePoster?: string; preload?: "auto" | "metadata" | "none" }) {
   const isCompact = useCompactViewport();
   const activePoster = isCompact ? mobilePoster ?? poster : poster;
-  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" />}<video src={src} {...(activePoster ? { poster: activePoster } : {})} autoPlay muted loop playsInline preload={preload} /><span /></div>;
+  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" fetchPriority={preload === "auto" ? "high" : "auto"} />}<video src={src} {...(activePoster ? { poster: activePoster } : {})} autoPlay muted loop playsInline preload={preload} /><span /></div>;
 }
 
 function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: string; label: string; title: string }) {
@@ -192,7 +205,6 @@ function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: 
 function EvidenceDossier({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [panelHeight, setPanelHeight] = useState(0);
-  const panelRef = useRef<HTMLDivElement>(null);
   const panelInnerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -238,7 +250,7 @@ function EvidenceDossier({ id, title, children }: { id: string; title: string; c
           <ChevronDown size={17} aria-hidden="true" />
         </button>
       </h3>
-        <div ref={panelRef} id={`${id}-panel`} className="rebuild-dossier-panel" role="region" aria-labelledby={`${id}-summary`} aria-hidden={!open} inert={!open ? true : undefined} style={{ maxHeight: open ? panelHeight : 0 }}>
+        <div id={`${id}-panel`} className="rebuild-dossier-panel" role="region" aria-labelledby={`${id}-summary`} aria-hidden={!open} inert={!open ? true : undefined} style={{ maxHeight: open ? panelHeight : 0 }}>
         <div ref={panelInnerRef} className="rebuild-dossier-panel-inner">{children}</div>
       </div>
     </section>
@@ -407,7 +419,7 @@ export default function Home() {
       <footer className="rebuild-footer"><span>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span>HARSHIT KUMAR / EAST INDIA</span><a href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-label={`${selectedProject.title ?? selectedProject.name ?? "Project"} dossier`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage key={selectedProject.id} src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2>{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}<p className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-labelledby="project-dossier-title" aria-describedby="project-dossier-description" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage key={selectedProject.id} src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2 id="project-dossier-title">{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}{selectedProject.role && <DetailBlock label="Role">{selectedProject.role}</DetailBlock>}<p id="project-dossier-description" className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
       </AnimatePresence>
     </div>
   );

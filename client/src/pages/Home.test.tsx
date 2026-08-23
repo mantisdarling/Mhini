@@ -2,7 +2,7 @@
 import React, { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Home from "./Home";
+import Home, { safeExternalUrl } from "./Home";
 import { profile, projects, technologyGroups } from "@/data/profileData";
 
 vi.mock("@/lib/trpc", () => ({
@@ -37,6 +37,14 @@ function renderHome() {
 }
 
 describe("rebuilt Mantis Home page", () => {
+  it("keeps the verified social links in the profile record", () => {
+    expect(profile.links).toEqual(expect.arrayContaining([
+      { label: "Google Developer Program", url: "https://me.developers.google.com/u/mantisdarling" },
+      { label: "Bluesky", url: "https://bsky.app/profile/mantisdarling.bsky.social" },
+      { label: "Instagram", url: "https://www.instagram.com/mantisdarling/" },
+    ]));
+  });
+
   it("keeps the primary identity and every resume project visible in the public archive", () => {
     renderHome();
     expect(container?.textContent).toContain(profile.fullName);
@@ -46,14 +54,19 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector(".rebuild-wordmark")?.textContent).not.toContain("Builds");
     expect(container?.textContent).toContain("Harshit Kumar");
     for (const project of projects) expect(container?.textContent).toContain(project.name);
+    expect(container?.textContent).toContain("In Progress / Founder");
   });
 
-  it("opens a project dossier without changing the page route", () => {
+  it("opens an accessible project dossier without changing the page route", () => {
     renderHome();
     const firstCard = container?.querySelector<HTMLElement>(".rebuild-project-card");
     expect(firstCard).toBeTruthy();
     act(() => firstCard?.click());
-    expect(container?.querySelector('[role="dialog"]')).toBeTruthy();
+    const dialog = container?.querySelector<HTMLElement>('[role="dialog"]');
+    expect(dialog).toBeTruthy();
+    expect(dialog?.getAttribute("aria-labelledby")).toBe("project-dossier-title");
+    expect(dialog?.getAttribute("aria-describedby")).toBe("project-dossier-description");
+    expect(dialog?.querySelector("#project-dossier-title")?.textContent).toBe(projects[0].name);
     expect(window.location.pathname).toBe("/");
   });
 
@@ -182,9 +195,24 @@ describe("rebuilt Mantis Home page", () => {
     renderHome();
     expect(container?.querySelector(".rebuild-brand img")?.getAttribute("src")).toContain("SzCbbuLdJOszlBMq.webp");
     expect(container?.querySelector("#top .cinematic-video-backdrop video")?.getAttribute("poster")).toContain("DqFlWdeJBdeaAsZf.webp");
+    expect(container?.querySelector("#top .cinematic-video-backdrop img")?.getAttribute("fetchpriority")).toBe("high");
     const closingVideo = container?.querySelector<HTMLVideoElement>(".cinematic-finale .cinematic-video-backdrop video");
     expect(closingVideo?.getAttribute("poster")).toContain("DDtXMipemsimcRFJ.webp");
     expect(closingVideo?.getAttribute("preload")).toBe("metadata");
+  });
+
+  it("keeps external project links on safe web protocols", () => {
+    renderHome();
+    const links = Array.from(container?.querySelectorAll<HTMLAnchorElement>("a[target=\"_blank\"]") ?? []);
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach(link => expect(["http:", "https:"].includes(new URL(link.href).protocol)).toBe(true));
+    links.forEach(link => expect(link.rel).toContain("noopener"));
+  });
+
+  it("rejects unsafe external URL schemes", () => {
+    expect(safeExternalUrl("javascript:alert(1)")).toBeNull();
+    expect(safeExternalUrl("data:text/html,unsafe")).toBeNull();
+    expect(safeExternalUrl("https://example.com/path")).toBe("https://example.com/path");
   });
 
   it("keeps the image-led story references separate from functional portfolio content", () => {

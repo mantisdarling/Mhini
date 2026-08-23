@@ -36,7 +36,9 @@ export const profile = {
     { label: "LinkedIn", url: "https://linkedin.com/in/mantisdarling" },
     { label: "Twitter / X", url: "https://x.com/mantisxdarling" },
     { label: "GitHub Org", url: "https://github.com/XY-COMBINATOR" },
-    { label: "Google Dev Profile", url: "https://g.dev/mantisdarling" },
+    { label: "Google Developer Program", url: "https://me.developers.google.com/u/mantisdarling" },
+    { label: "Bluesky", url: "https://bsky.app/profile/mantisdarling.bsky.social" },
+    { label: "Instagram", url: "https://www.instagram.com/mantisdarling/" },
     { label: "NVIDIA Dev Forums", url: "https://forums.developer.nvidia.com" },
   ],
 } as const;

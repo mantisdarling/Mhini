@@ -52,6 +52,12 @@ describe("Vercel Express application", () => {
     expect(blocked.status).toBe(403);
   });
 
+  it("marks the anonymous project feed as safely cacheable", async () => {
+    const response = await fetch(`${baseUrl}/api/trpc/projects.listPublic?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%7D%7D`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("public, s-maxage=60, stale-while-revalidate=300");
+  });
+
   it("rejects unsafe storage keys before contacting the storage provider", async () => {
     const response = await fetch(`${baseUrl}/manus-storage/${encodeURIComponent("../private")}`);
     expect(response.status).toBe(400);
