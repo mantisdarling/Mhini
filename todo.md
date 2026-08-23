@@ -327,3 +327,8 @@
 - [x] Preserve the current hover color, focus state, closed-by-default behavior, and reduced-motion fallback. The transform is centered and GPU-friendly, while reduced-motion rules disable the transition.
 - [x] Validate the arrow rotation on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the arrow rotation enhancement as mantisdarling. Commit 415eb68 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [x] Add a subtle fade-in to Evidence accordion content when a section opens without changing the height transition or content. Added a 240ms opacity fade with a restrained 0.35rem translate-in and 70ms delay.
+- [x] Preserve the arrow rotation, closed-by-default state, accessible hidden state, and reduced-motion fallback. Existing panel height and arrow motion remain intact, hidden panels stay inert, and reduced motion removes the content transition.
+- [x] Validate the combined accordion motion on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the accordion content fade-in as mantisdarling.
