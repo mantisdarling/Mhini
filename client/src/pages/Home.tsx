@@ -111,22 +111,48 @@ function projectShareUrl(project: DisplayProject) {
 
 function ProjectShareActions({ project }: { project: DisplayProject }) {
   const [feedback, setFeedback] = useState("");
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+  const feedbackTimer = useRef<number | null>(null);
+  const feedbackRemoveTimer = useRef<number | null>(null);
   const title = project.title ?? project.name ?? "Mantis project";
   const shareUrl = projectShareUrl(project);
   const shareText = project.tagline ?? project.description;
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedText = encodeURIComponent(`${title} by Mantis`);
 
+  const clearFeedbackTimers = () => {
+    if (feedbackTimer.current !== null) window.clearTimeout(feedbackTimer.current);
+    if (feedbackRemoveTimer.current !== null) window.clearTimeout(feedbackRemoveTimer.current);
+    feedbackTimer.current = null;
+    feedbackRemoveTimer.current = null;
+  };
+
+  const showFeedback = (message: string) => {
+    clearFeedbackTimers();
+    setFeedback(message);
+    setFeedbackVisible(true);
+    feedbackTimer.current = window.setTimeout(() => {
+      setFeedbackVisible(false);
+      feedbackTimer.current = null;
+      feedbackRemoveTimer.current = window.setTimeout(() => {
+        setFeedback("");
+        feedbackRemoveTimer.current = null;
+      }, 240);
+    }, 2200);
+  };
+
+  useEffect(() => () => clearFeedbackTimers(), []);
+
   const copyLink = async () => {
     if (!navigator.clipboard?.writeText) {
-      setFeedback("Copy unavailable");
+      showFeedback("Copy unavailable");
       return;
     }
     try {
       await navigator.clipboard.writeText(shareUrl);
-      setFeedback("Link copied");
+      showFeedback("Link copied");
     } catch {
-      setFeedback("Copy unavailable");
+      showFeedback("Copy unavailable");
     }
   };
 
@@ -137,10 +163,10 @@ function ProjectShareActions({ project }: { project: DisplayProject }) {
     }
     try {
       await navigator.share({ title, text: shareText, url: shareUrl });
-      setFeedback("Shared");
+      showFeedback("Shared");
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      setFeedback("Share unavailable");
+      showFeedback("Share unavailable");
     }
   };
 
@@ -152,7 +178,7 @@ function ProjectShareActions({ project }: { project: DisplayProject }) {
       <a className="rebuild-share-button" href={`https://x.com/intent/post?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">X</a>
       <a className="rebuild-share-button" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
-    <span className="rebuild-share-feedback" aria-live="polite">{feedback}</span>
+    {feedback && <div className={`rebuild-share-toast${feedbackVisible ? " is-visible" : ""}`} role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true" />{feedback}</div>}
   </div>;
 }
 

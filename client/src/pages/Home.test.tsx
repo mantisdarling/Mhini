@@ -220,6 +220,40 @@ describe("rebuilt Mantis Home page", () => {
     shareLinks.forEach(link => expect(link.rel).toContain("noopener"));
   });
 
+  it("announces copied links with a temporary accessible toast", async () => {
+    const previousClipboard = navigator.clipboard;
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    vi.useFakeTimers();
+
+    try {
+      renderHome();
+      act(() => container?.querySelector<HTMLElement>(".rebuild-project-card")?.click());
+      const copyButton = container?.querySelector<HTMLButtonElement>(".rebuild-share-button[aria-label^=\"Copy link\"]");
+      await act(async () => {
+        copyButton?.click();
+        await Promise.resolve();
+      });
+
+      let toast = container?.querySelector<HTMLElement>(".rebuild-share-toast");
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining("https://"));
+      expect(toast?.textContent).toContain("Link copied");
+      expect(toast?.getAttribute("role")).toBe("status");
+      expect(toast?.getAttribute("aria-live")).toBe("polite");
+      expect(toast?.classList.contains("is-visible")).toBe(true);
+
+      act(() => vi.advanceTimersByTime(2200));
+      toast = container?.querySelector<HTMLElement>(".rebuild-share-toast");
+      expect(toast?.classList.contains("is-visible")).toBe(false);
+
+      act(() => vi.advanceTimersByTime(240));
+      expect(container?.querySelector(".rebuild-share-toast")).toBeNull();
+    } finally {
+      vi.useRealTimers();
+      Object.defineProperty(navigator, "clipboard", { configurable: true, value: previousClipboard });
+    }
+  });
+
   it("rejects unsafe external URL schemes", () => {
     expect(safeExternalUrl("javascript:alert(1)")).toBeNull();
     expect(safeExternalUrl("data:text/html,unsafe")).toBeNull();
