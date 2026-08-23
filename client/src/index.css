@@ -1419,3 +1419,16 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
 @media (prefers-reduced-motion: reduce) {
   .rebuild-share-tooltip { transform: translate3d(-50%, 0, 0); }
 }
+
+/* Scroll reveal: only opacity and transform move, so the page keeps its rhythm while copy enters. */
+.rebuild-site.has-text-reveal [data-text-reveal] { opacity: 0; transform: translate3d(0, 1rem, 0); transition: opacity 520ms cubic-bezier(0.23, 1, 0.32, 1), transform 520ms cubic-bezier(0.23, 1, 0.32, 1); will-change: opacity, transform; }
+.rebuild-site.has-text-reveal [data-text-reveal="delayed"] { transition-delay: 80ms; }
+.rebuild-site.has-text-reveal [data-text-reveal].is-visible { opacity: 1; transform: translate3d(0, 0, 0); }
+@media (max-width: 700px) {
+  .rebuild-site.has-text-reveal [data-text-reveal] { transform: translate3d(0, 0.7rem, 0); transition-duration: 420ms; }
+  .rebuild-site.has-text-reveal [data-text-reveal="delayed"] { transition-delay: 60ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-site.has-text-reveal [data-text-reveal],
+  .rebuild-site.has-text-reveal [data-text-reveal].is-visible { opacity: 1; transform: none; transition: none; will-change: auto; }
+}

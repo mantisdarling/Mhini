@@ -275,6 +275,16 @@ describe("rebuilt Mantis Home page", () => {
     expect(container?.querySelector(".rebuild-footer > a")).toBeTruthy();
   });
 
+  it("keeps the scroll reveal attached to the intended text groups", () => {
+    renderHome();
+    const targets = container?.querySelectorAll("[data-text-reveal]");
+    expect(targets?.length).toBeGreaterThan(10);
+    expect(container?.querySelector('[data-text-reveal="delayed"]')).toBeTruthy();
+    expect(container?.textContent).toContain("Mantis");
+    expect(container?.textContent).toContain("Proof,");
+    expect(container?.textContent).toContain("Depth");
+  });
+
   it("keeps the image-led story references separate from functional portfolio content", () => {
     renderHome();
     expect(container?.textContent).toContain("Enter through");
