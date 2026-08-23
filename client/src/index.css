@@ -1352,3 +1352,14 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .route-transition { animation: none; }
   .route-transition::before { display: none; animation: none; }
 }
+
+.rebuild-share { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(21, 21, 21, 0.14); }
+.rebuild-share-label { display: block; color: rgba(21, 21, 21, 0.58); font-family: "Barlow Condensed", sans-serif; font-size: 0.66rem; letter-spacing: 0.14em; }
+.rebuild-share-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.65rem; }
+.rebuild-share-button { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.4rem; padding: 0.55rem 0.7rem; border: 1px solid rgba(21, 21, 21, 0.2); background: transparent; color: var(--charcoal); font-family: "Barlow Condensed", sans-serif; font-size: 0.68rem; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; cursor: pointer; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, transform 180ms ease; }
+.rebuild-share-button:hover { border-color: var(--red); background: var(--red); color: var(--paper); }
+.rebuild-share-button:active { transform: translate3d(0, 1px, 0); }
+.rebuild-share-button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.rebuild-share-feedback { display: block; min-height: 1.1rem; margin-top: 0.5rem; color: var(--red); font-family: "Barlow Condensed", sans-serif; font-size: 0.66rem; letter-spacing: 0.08em; }
+@media (prefers-reduced-motion: reduce) { .rebuild-share-button { transition: none; } }
+@media (max-width: 600px) { .rebuild-share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .rebuild-share-button { justify-content: center; } }

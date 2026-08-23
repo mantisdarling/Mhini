@@ -209,6 +209,17 @@ describe("rebuilt Mantis Home page", () => {
     links.forEach(link => expect(link.rel).toContain("noopener"));
   });
 
+  it("exposes accessible project sharing fallbacks in the dossier", () => {
+    renderHome();
+    act(() => container?.querySelector<HTMLElement>(".rebuild-project-card")?.click());
+    const share = container?.querySelector<HTMLElement>(".rebuild-share");
+    expect(share?.getAttribute("aria-label")).toBe(`Share ${projects[0].name}`);
+    expect(share?.querySelectorAll("button")).toHaveLength(2);
+    const shareLinks = Array.from(share?.querySelectorAll<HTMLAnchorElement>("a") ?? []);
+    expect(shareLinks.map(link => new URL(link.href).origin)).toEqual(["https://x.com", "https://www.linkedin.com"]);
+    shareLinks.forEach(link => expect(link.rel).toContain("noopener"));
+  });
+
   it("rejects unsafe external URL schemes", () => {
     expect(safeExternalUrl("javascript:alert(1)")).toBeNull();
     expect(safeExternalUrl("data:text/html,unsafe")).toBeNull();

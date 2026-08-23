@@ -15,7 +15,7 @@ import {
   vision,
   writing,
 } from "@/data/profileData";
-import { ArrowUpRight, Check, ChevronDown, Github, Instagram, Linkedin, Mail, Menu, X } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Github, Instagram, Link2, Linkedin, Mail, Menu, Share2, X } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useStoryParallax } from "@/hooks/useStoryParallax";
 
@@ -100,6 +100,60 @@ function ExternalLink({ href, children }: { href?: string | null; children: Reac
 
 function SectionMarker({ number, label }: { number: string; label: string }) {
   return <p className="rebuild-marker"><span>{number}</span><i aria-hidden="true" />{label}</p>;
+}
+
+function projectShareUrl(project: DisplayProject) {
+  if (typeof window === "undefined") return "https://mhini.vercel.app/#work";
+  const url = new URL(window.location.href);
+  url.hash = "work";
+  return safeExternalUrl(project.liveUrl ?? project.projectUrl) ?? url.toString();
+}
+
+function ProjectShareActions({ project }: { project: DisplayProject }) {
+  const [feedback, setFeedback] = useState("");
+  const title = project.title ?? project.name ?? "Mantis project";
+  const shareUrl = projectShareUrl(project);
+  const shareText = project.tagline ?? project.description;
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedText = encodeURIComponent(`${title} by Mantis`);
+
+  const copyLink = async () => {
+    if (!navigator.clipboard?.writeText) {
+      setFeedback("Copy unavailable");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setFeedback("Link copied");
+    } catch {
+      setFeedback("Copy unavailable");
+    }
+  };
+
+  const nativeShare = async () => {
+    if (!navigator.share) {
+      await copyLink();
+      return;
+    }
+    try {
+      await navigator.share({ title, text: shareText, url: shareUrl });
+      setFeedback("Shared");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setFeedback("Share unavailable");
+    }
+  };
+
+  return <div className="rebuild-share" aria-label={`Share ${title}`}>
+    <span className="rebuild-share-label">SHARE THIS RECORD</span>
+    <div className="rebuild-share-actions">
+      <button className="rebuild-share-button" type="button" onClick={nativeShare} aria-label={`Share ${title}`}><Share2 size={14} aria-hidden="true" />Share</button>
+      <button className="rebuild-share-button" type="button" onClick={copyLink} aria-label={`Copy link to ${title}`}><Link2 size={14} aria-hidden="true" />Copy link</button>
+      <a className="rebuild-share-button" href={`https://x.com/intent/post?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">X</a>
+      <a className="rebuild-share-button" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+    <span className="rebuild-share-feedback" aria-live="polite">{feedback}</span>
+  </div>;
 }
 
 function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "lazy", fetchPriority = "auto" }: { src: string; mobileSrc?: string; alt?: string; className?: string; loading?: "eager" | "lazy"; fetchPriority?: "high" | "low" | "auto" }) {
@@ -419,7 +473,7 @@ export default function Home() {
       <footer className="rebuild-footer"><span>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span>HARSHIT KUMAR / EAST INDIA</span><a href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-labelledby="project-dossier-title" aria-describedby="project-dossier-description" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage key={selectedProject.id} src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2 id="project-dossier-title">{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}{selectedProject.role && <DetailBlock label="Role">{selectedProject.role}</DetailBlock>}<p id="project-dossier-description" className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-labelledby="project-dossier-title" aria-describedby="project-dossier-description" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage key={selectedProject.id} src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2 id="project-dossier-title">{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}{selectedProject.role && <DetailBlock label="Role">{selectedProject.role}</DetailBlock>}<p id="project-dossier-description" className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><ProjectShareActions project={selectedProject} /><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
       </AnimatePresence>
     </div>
   );
