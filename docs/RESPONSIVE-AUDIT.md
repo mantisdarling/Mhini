@@ -41,3 +41,13 @@ The 320px capture remains contained after the touch-target and anchor-offset cha
 The 1440px capture preserves the cinematic desktop hierarchy. The larger touch targets do not disturb the visual grid, section spacing remains balanced, and the Work, Stack, Evidence, Finale, and Contact text stays aligned to its intended content columns.
 
 The implementation keeps authored content intact and limits the final adjustments to responsive geometry, interaction affordances, and safe navigation offsets. Interaction and release gates remain outstanding before checkpointing.
+
+## Stack background correction
+
+The Stack chapter now uses one existing artwork element as a full-section backdrop on larger screens, with the heading, explanatory copy, and technology controls layered above it. At 1080px the former isolated image band is gone; the image continues behind the chapter and the list is readable through a controlled charcoal scrim. At 390px the previously working phone composition remains intact with its lighter text treatment and phone-specific crop. At 768px the transition remains a single background field with readable foreground rows and no duplicate image strip.
+
+## Attached Stack artwork integration
+
+The Stack heading and supporting copy now share the same aligned content system as the category rows. At 1080px, the uploaded monochrome mountain-and-waterfall artwork appears as the continuous background field behind the Stack chapter instead of an isolated image block. The charcoal scrim keeps the white and red copy readable while retaining the image’s landscape atmosphere.
+
+At 390px, the responsive source continues to use the existing phone-specific blade crop, so the previously approved phone appearance is preserved rather than forcing the wide artwork into a poor mobile crop. The Stack list remains touch-sized and the technology disclosures stay aligned.

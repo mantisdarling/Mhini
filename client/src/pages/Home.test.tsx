@@ -81,7 +81,7 @@ describe("rebuilt Mantis Home page", () => {
 
   it("renders one blended backdrop for stack and evidence", () => {
     renderHome();
-    expect(container?.querySelector("#stack > .cinematic-scene-backdrop img")?.getAttribute("src")).toContain("files.manuscdn.com");
+    expect(container?.querySelector("#stack > .cinematic-scene-backdrop img")?.getAttribute("src")).toBe("/manus-storage/mantis-stack-mountain-waterfall_e3d55c7e.jpg");
     expect(container?.querySelectorAll("#stack > .cinematic-scene-backdrop")).toHaveLength(1);
     expect(container?.querySelector("#stack .rebuild-section-atmosphere-stack")).toBeNull();
     expect(container?.querySelector("#evidence > .cinematic-scene-backdrop img")?.getAttribute("src")).toContain("files.manuscdn.com");

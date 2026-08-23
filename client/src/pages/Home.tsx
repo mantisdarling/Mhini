@@ -44,6 +44,7 @@ const ASSETS = {
   hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
   mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/SzCbbuLdJOszlBMq.webp",
   caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/USqfDrBUsSRPObfw.webp",
+  stackBackdrop: "/manus-storage/mantis-stack-mountain-waterfall_e3d55c7e.jpg",
   story: {
     motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dXOMgdKzODAwcXzG.webp",
     blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/mLkdLUoOCQEUGqpn.webp",
@@ -471,7 +472,7 @@ export default function Home() {
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">
-          <SceneBackdrop src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} />
+          <SceneBackdrop src={ASSETS.stackBackdrop} mobileSrc={ASSETS.story.mobile.blade} />
           <div className="rebuild-section-heading"><div data-text-reveal><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p data-text-reveal="delayed">Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
           <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button data-text-reveal type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
         </section>

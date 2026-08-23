@@ -1456,3 +1456,46 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-header { padding-inline: clamp(1.25rem, 4vw, 3rem); }
   .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact, .rebuild-story, .rebuild-finale { padding-inline: clamp(1.25rem, 5vw, 4rem); }
 }
+
+/* Stack field: keep the existing blade artwork behind the complete chapter on larger screens. */
+.rebuild-stack { background: #161615; color: var(--paper); }
+.rebuild-stack > .cinematic-scene-backdrop { position: absolute; inset: 0; z-index: 0; opacity: 0.72; }
+.rebuild-stack > .cinematic-scene-backdrop img { object-position: 68% center; filter: grayscale(0.55) saturate(0.62) contrast(1.08); }
+.rebuild-stack > .cinematic-scene-backdrop span { background: linear-gradient(90deg, rgba(17, 17, 17, 0.96) 0%, rgba(17, 17, 17, 0.82) 38%, rgba(17, 17, 17, 0.58) 100%), linear-gradient(180deg, rgba(17, 17, 17, 0.7), rgba(17, 17, 17, 0.86)); }
+.rebuild-stack > .rebuild-section-heading,
+.rebuild-stack > .rebuild-stack-list { position: relative; z-index: 2; }
+.rebuild-stack .rebuild-section-heading > p { color: rgba(233, 231, 225, 0.82); }
+.rebuild-stack .rebuild-section-heading .rebuild-marker { color: rgba(233, 231, 225, 0.76); }
+.rebuild-stack .rebuild-stack-list { border-color: rgba(233, 231, 225, 0.3); background: rgba(17, 17, 17, 0.3); }
+.rebuild-stack .rebuild-stack-row { border-color: rgba(233, 231, 225, 0.3); }
+.rebuild-stack .rebuild-stack-row > button { color: var(--paper); }
+.rebuild-stack .rebuild-stack-row > button svg { color: var(--red); }
+.rebuild-stack .rebuild-chip-list span { border-color: rgba(233, 231, 225, 0.38); color: rgba(233, 231, 225, 0.88); background: rgba(17, 17, 17, 0.34); }
+@media (max-width: 700px) {
+  .rebuild-stack > .cinematic-scene-backdrop { opacity: 0.58; }
+  .rebuild-stack .rebuild-stack-row > button { color: var(--charcoal); }
+  .rebuild-stack .rebuild-stack-list { border-color: var(--line); }
+  .rebuild-stack .rebuild-stack-row { border-color: var(--line); }
+  .rebuild-stack .rebuild-section-heading > p { color: rgba(21, 21, 21, 0.68); }
+  .rebuild-stack .rebuild-section-heading .rebuild-marker { color: rgba(21, 21, 21, 0.68); }
+  .rebuild-stack .rebuild-chip-list span { border-color: rgba(21, 21, 21, 0.3); color: rgba(21, 21, 21, 0.78); background: transparent; }
+}
+
+/* Stack alignment: the title, supporting copy, and category controls share one deliberate reading column. */
+.rebuild-stack .rebuild-section-heading,
+.rebuild-stack .rebuild-stack-list { width: min(100%, 1080px); margin-inline: auto; }
+.rebuild-stack .rebuild-section-heading { grid-template-columns: minmax(0, 1.25fr) minmax(15rem, 0.75fr); }
+.rebuild-stack .rebuild-section-heading > div,
+.rebuild-stack .rebuild-section-heading > p { min-width: 0; }
+.rebuild-stack .rebuild-section-heading > p { align-self: end; }
+.rebuild-stack .rebuild-stack-list { margin-top: clamp(1.5rem, 3vw, 3rem); }
+.rebuild-stack .rebuild-stack-row > button { padding-inline: clamp(0.75rem, 2vw, 1.25rem); }
+@media (max-width: 900px) and (min-width: 701px) {
+  .rebuild-stack .rebuild-section-heading { grid-template-columns: 1fr; gap: 1.25rem; }
+  .rebuild-stack .rebuild-section-heading > p { max-width: 38rem; justify-self: start; }
+}
+@media (max-width: 700px) {
+  .rebuild-stack .rebuild-section-heading,
+  .rebuild-stack .rebuild-stack-list { width: 100%; }
+  .rebuild-stack .rebuild-stack-list { margin-top: 1.25rem; }
+}
