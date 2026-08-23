@@ -356,4 +356,4 @@
 - [x] Add accessible social sharing controls to each project dossier using existing project title, description, and verified links. Added Share and Copy link controls plus X and LinkedIn fallbacks using the existing project metadata.
 - [x] Support browser-native sharing when available plus safe copy-link and verified platform fallback actions without tracking or new dependencies. Native Web Share is preferred, Clipboard is used for copy, and fallback links are HTTP(S)-only, opener-safe, and dependency-free.
 - [x] Validate sharing controls on mobile and desktop, including keyboard access, safe URL handling, and responsive layout, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 47 tests, TypeScript, production and Vercel builds, dependency audit, secret scan, diff checks, and current runtime logs passed.
-- [ ] Commit, push, and checkpoint the project sharing enhancement as mantisdarling.
+- [x] Commit, push, and checkpoint the project sharing enhancement as mantisdarling. Commit f2ea6cf was authored by mantisdarling; the managed project checkpoint will preserve the verified feature state.
