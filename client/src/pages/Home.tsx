@@ -174,7 +174,10 @@ function ProjectShareActions({ project }: { project: DisplayProject }) {
     <span className="rebuild-share-label">SHARE THIS RECORD</span>
     <div className="rebuild-share-actions">
       <button className="rebuild-share-button" type="button" onClick={nativeShare} aria-label={`Share ${title}`}><Share2 size={14} aria-hidden="true" />Share</button>
-      <button className="rebuild-share-button" type="button" onClick={copyLink} aria-label={`Copy link to ${title}`}><Link2 size={14} aria-hidden="true" />Copy link</button>
+      <span className="rebuild-share-tooltip-wrap">
+        <button className="rebuild-share-button rebuild-copy-link-button" type="button" onClick={copyLink} aria-label={`Copy link to ${title}`} aria-describedby={`copy-link-tooltip-${project.id}`}><Link2 size={14} aria-hidden="true" />Copy link</button>
+        <span className="rebuild-share-tooltip" id={`copy-link-tooltip-${project.id}`} role="tooltip">Copy this project link</span>
+      </span>
       <a className="rebuild-share-button" href={`https://x.com/intent/post?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">X</a>
       <a className="rebuild-share-button" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
