@@ -1752,3 +1752,19 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
     opacity: 0;
   }
 }
+
+/* Keep the native pointer visible on laptops; touch devices never need a custom cursor. */
+@media (hover: hover) and (pointer: fine) {
+  .rebuild-body,
+  .rebuild-body a,
+  .rebuild-body button,
+  .rebuild-body [data-cursor] {
+    cursor: auto;
+  }
+
+  .rebuild-body a,
+  .rebuild-body button,
+  .rebuild-body [role="button"] {
+    cursor: pointer;
+  }
+}

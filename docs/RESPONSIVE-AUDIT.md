@@ -67,3 +67,7 @@ The wide desktop composition has strong media hierarchy and stable chapter hando
 ## Second polish verification
 
 The 390px composition remains compact and unclipped after the added keyboard affordances and story-caption emphasis. The 1440px composition retains its project hierarchy, image-led story captions gain separation without becoming noisy, and focus styling does not alter the grid geometry. The second pass remains limited to orientation, clarity, and accessibility rather than extra decorative layers.
+
+## Laptop cursor visibility fix
+
+The desktop-sized composition remains unchanged after restoring the native cursor fallback for fine-pointer devices. Interactive controls retain pointer cursors, keyboard focus, and the existing Mantis visual treatment. The 390px composition remains unchanged because the override is scoped to hover-capable fine pointers; touch behavior and mobile layout are preserved.
