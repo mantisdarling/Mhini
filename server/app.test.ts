@@ -1,7 +1,10 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { createServer, type Server } from "node:http";
 import { createApplication } from "./app";
 import { createVercelRecoverySnapshotHandler } from "./recoverySnapshot";
+import * as db from "./db";
+
+const publishedProjects = vi.spyOn(db, "getPublishedProjects").mockResolvedValue([]);
 
 describe("Vercel Express application", () => {
   let baseUrl = "";
@@ -17,6 +20,7 @@ describe("Vercel Express application", () => {
   });
 
   afterAll(async () => {
+    publishedProjects.mockRestore();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
   });
 
@@ -56,7 +60,7 @@ describe("Vercel Express application", () => {
     const response = await fetch(`${baseUrl}/api/trpc/projects.listPublic?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%7D%7D`);
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("public, s-maxage=60, stale-while-revalidate=300");
-  });
+  }, 15000);
 
   it("rejects unsafe storage keys before contacting the storage provider", async () => {
     const response = await fetch(`${baseUrl}/manus-storage/${encodeURIComponent("../private")}`);

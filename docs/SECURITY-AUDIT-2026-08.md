@@ -40,3 +40,9 @@ The remaining upstream trust boundaries were rechecked for provider stalls and u
 A bounded local smoke test sent 200 requests to the local health endpoint with 25 concurrent workers. All 200 returned HTTP 200; measured p50 was 1 ms and maximum latency was 5 ms in this sandbox. This confirms local endpoint behavior under a small burst only. It does not establish a 50,000-user production capacity claim, provider-level DDoS protection, immutable backups, uptime monitoring, or secret rotation.
 
 The source safety scan found only the existing static chart style generator and scanner imports for `child_process`; no application dynamic execution or unsafe HTML sink was introduced. The known high-severity production dependency audit and repository secret scan passed. Existing uncommitted project URL validation changes were retained because they enforce HTTP(S)-only links and include focused regression tests.
+
+## Repository cleanup update
+
+A tracked-source import inventory confirmed that `add`, `qs`, and `uuid` were direct manifest entries without application imports, so they were removed and the lockfile was refreshed. Four template leftovers were also confirmed unreachable from active routes, tests, and imports, then removed: `ComponentShowcase.tsx`, `ManusDialog.tsx`, `Map.tsx`, and `ProfileDataSections.tsx`. Framework integration helpers and active UI primitives were intentionally retained because they remain part of the runtime or template boundary.
+
+The public-feed integration test was made deterministic by mocking only its project-data seam. This avoids depending on a live provider during a cache-header assertion while leaving production database behavior and the eight-second upstream timeout unchanged. The stabilized test completed in 136 ms, and the full suite passed with 69 tests.
