@@ -55,3 +55,7 @@ At 390px, the responsive source continues to use the existing phone-specific bla
 ## Stack heading emphasis
 
 The Stack display heading now receives a desktop-only typography treatment: heavier display weight, tighter line height, slightly closer tracking, and a restrained shadow for separation from the background field. The 1080px render shows the title reading as a stronger visual anchor without changing the heading’s two-line structure or surrounding row geometry. The 390px render confirms the phone-specific typography remains unchanged.
+
+## Best-polish visual review
+
+The 390px preview preserves the compact header, full-bleed chapter media, readable text overlays, touch-safe controls, project carousel geometry, and contact card spacing. The 1440px preview preserves the asymmetric editorial composition, stable section rhythm, readable background layering, project grid proportions, Stack background field, and footer alignment. The active navigation cue is limited to a thin Mantis Red rule and does not add layout shift or visual clutter. No horizontal clipping was observed in either composition.

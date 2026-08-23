@@ -1644,3 +1644,46 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
     animation: none;
   }
 }
+
+/* The active chapter cue keeps orientation visible without pinning a large overlay. */
+.rebuild-nav button {
+  position: relative;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.rebuild-nav button::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 1.1rem;
+  height: 1px;
+  background: var(--red);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 180ms ease;
+}
+
+.rebuild-nav button.is-active,
+.rebuild-nav button:focus-visible {
+  color: var(--paper);
+}
+
+.rebuild-nav button.is-active::after,
+.rebuild-nav button:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.rebuild-nav button:active,
+.rebuild-menu:active,
+.rebuild-brand:active {
+  transform: translate3d(0, 1px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-nav button,
+  .rebuild-nav button::after {
+    transition: none;
+  }
+}

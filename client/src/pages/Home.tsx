@@ -362,6 +362,7 @@ export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const siteRef = useRef<HTMLDivElement>(null);
   const storyRef = useRef<HTMLElement>(null);
@@ -370,6 +371,23 @@ export default function Home() {
   useStoryParallax(storyRef);
   useTextReveal(siteRef);
   const displayedProjects = useMemo<DisplayProject[]>(() => [...resumeProjects, ...(publicProjectsQuery.data ?? [])], [publicProjectsQuery.data]);
+
+  useEffect(() => {
+    const sections = navItems
+      .map(([, id]) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section instanceof HTMLElement);
+    if (!sections.length || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)[0];
+      if (visible) setActiveSection((visible.target as HTMLElement).id);
+    }, { rootMargin: "-18% 0px -62% 0px", threshold: [0, 0.2, 0.5] });
+
+    sections.forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const grid = projectGridRef.current;
@@ -439,10 +457,10 @@ export default function Home() {
           <img src={ASSETS.mark} alt="" />
           <span>MANTIS</span>
         </button>
-        <nav className={`rebuild-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
-          {navItems.map(([label, id], index) => <button type="button" key={id} onClick={() => scrollTo(id)}><span>0{index + 1}</span>{label}</button>)}
+        <nav id="primary-navigation" className={`rebuild-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
+          {navItems.map(([label, id], index) => <button className={activeSection === id ? "is-active" : undefined} type="button" key={id} onClick={() => scrollTo(id)} aria-current={activeSection === id ? "location" : undefined}><span>0{index + 1}</span>{label}</button>)}
         </nav>
-        <button className="rebuild-menu" type="button" onClick={() => setMenuOpen(open => !open)} aria-expanded={menuOpen} aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
+        <button className="rebuild-menu" type="button" onClick={() => setMenuOpen(open => !open)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
       </header>
 
       <main>

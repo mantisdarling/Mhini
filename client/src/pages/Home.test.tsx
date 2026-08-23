@@ -48,6 +48,15 @@ describe("rebuilt Mantis Home page", () => {
     ]));
   });
 
+  it("keeps the compact navigation connected to its menu control", () => {
+    renderHome();
+    const menu = container?.querySelector<HTMLButtonElement>(".rebuild-menu");
+    const navigation = container?.querySelector<HTMLElement>("#primary-navigation");
+    expect(menu?.getAttribute("aria-controls")).toBe("primary-navigation");
+    expect(navigation?.getAttribute("aria-label")).toBe("Primary navigation");
+    expect(navigation?.querySelectorAll("button")).toHaveLength(5);
+  });
+
   it("shows accessible project skeletons while public records are loading", () => {
     publicProjectsQuery.mockReturnValue({ data: [], isLoading: true });
     renderHome();
