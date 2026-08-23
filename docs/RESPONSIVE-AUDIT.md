@@ -71,3 +71,7 @@ The 390px composition remains compact and unclipped after the added keyboard aff
 ## Laptop cursor visibility fix
 
 The desktop-sized composition remains unchanged after restoring the native cursor fallback for fine-pointer devices. Interactive controls retain pointer cursors, keyboard focus, and the existing Mantis visual treatment. The 390px composition remains unchanged because the override is scoped to hover-capable fine pointers; touch behavior and mobile layout are preserved.
+
+## Project-card hover refinement
+
+The 1440px composition keeps the Work grid stable while project cards gain a restrained lift, shallow shadow, inner red-edge focus cue, image scale, and dossier affordance on fine-pointer hover. The 390px composition remains unchanged because hover motion is disabled for coarse pointers; cards preserve their touch width, carousel flow, and existing project content.
