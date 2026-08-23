@@ -222,6 +222,22 @@ function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "
   </picture>;
 }
 
+function ProjectCardSkeleton() {
+  return (
+    <article className="rebuild-project-card rebuild-project-card-skeleton" aria-hidden="true">
+      <div className="rebuild-project-visual rebuild-skeleton-surface">
+        <span className="rebuild-skeleton-index" />
+        <span className="rebuild-skeleton-corner" />
+      </div>
+      <div className="rebuild-project-copy">
+        <div className="rebuild-project-meta"><span className="rebuild-skeleton-line rebuild-skeleton-meta" /><span className="rebuild-skeleton-line rebuild-skeleton-meta rebuild-skeleton-meta-short" /></div>
+        <span className="rebuild-skeleton-line rebuild-skeleton-title" />
+        <span className="rebuild-skeleton-line rebuild-skeleton-copy" />
+      </div>
+    </article>
+  );
+}
+
 function ProjectCard({ project, index, onOpen }: { project: DisplayProject; index: number; onOpen: (project: DisplayProject) => void }) {
   const title = project.title ?? project.name ?? "Untitled project";
   const projectMeta = project.role ? `${project.status ?? "Project"} / ${project.role}` : project.status ?? "Project";
@@ -468,7 +484,8 @@ export default function Home() {
             <span aria-live="polite">{String(activeProjectIndex + 1).padStart(2, "0")} / {String(displayedProjects.length).padStart(2, "0")}</span>
             <span className="rebuild-project-position-dots" aria-hidden="true">{displayedProjects.map((project, index) => <i className={index === activeProjectIndex ? "is-active" : ""} key={project.id} />)}</span>
           </div>
-          <div ref={projectGridRef} className="rebuild-project-grid" role="region" aria-roledescription="carousel" aria-label="Project archive" tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}</div>
+          {publicProjectsQuery.isLoading && <span className="sr-only" role="status">Loading additional project records</span>}
+          <div ref={projectGridRef} className={`rebuild-project-grid ${publicProjectsQuery.isLoading ? "is-loading" : ""}`} role="region" aria-roledescription="carousel" aria-label="Project archive" aria-busy={publicProjectsQuery.isLoading} tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}{publicProjectsQuery.isLoading && <><ProjectCardSkeleton /><ProjectCardSkeleton /></>}</div>
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">

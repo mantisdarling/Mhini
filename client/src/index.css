@@ -1505,3 +1505,142 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-stack .rebuild-section-heading h2 { font-weight: 650; letter-spacing: -0.1em; line-height: 0.74; text-shadow: 0 0.08em 0 rgba(17, 17, 17, 0.24), 0 0.32em 1.1em rgba(17, 17, 17, 0.34); }
   .rebuild-stack .rebuild-section-heading h2 em { font-weight: 700; }
 }
+
+/* Data loading surfaces stay close to the real layout so the handoff feels intentional. */
+.rebuild-project-card-skeleton {
+  pointer-events: none;
+}
+
+.rebuild-skeleton-surface {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(112deg, rgba(245, 244, 240, 0.08) 22%, rgba(245, 244, 240, 0.18) 38%, rgba(245, 244, 240, 0.08) 54%), rgba(17, 17, 17, 0.72);
+  background-size: 220% 100%;
+  animation: rebuild-skeleton-sheen 1.8s linear infinite;
+}
+
+.rebuild-skeleton-line,
+.rebuild-skeleton-index,
+.rebuild-skeleton-corner {
+  display: block;
+  background: linear-gradient(112deg, currentColor 22%, rgba(245, 244, 240, 0.78) 38%, currentColor 54%);
+  background-size: 220% 100%;
+  animation: rebuild-skeleton-sheen 1.8s linear infinite;
+  color: rgba(17, 17, 17, 0.14);
+}
+
+.rebuild-skeleton-index {
+  position: absolute;
+  inset: 1.1rem auto auto 1.1rem;
+  width: 2.6rem;
+  height: 0.55rem;
+  color: rgba(245, 244, 240, 0.18);
+}
+
+.rebuild-skeleton-corner {
+  position: absolute;
+  inset: auto 1.1rem 1.1rem auto;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  color: rgba(245, 244, 240, 0.12);
+}
+
+.rebuild-skeleton-meta {
+  width: 34%;
+  height: 0.55rem;
+  color: rgba(17, 17, 17, 0.16);
+}
+
+.rebuild-skeleton-meta-short {
+  width: 25%;
+}
+
+.rebuild-skeleton-title {
+  width: 74%;
+  height: 1.05rem;
+  margin-top: 1.05rem;
+  color: rgba(17, 17, 17, 0.2);
+}
+
+.rebuild-skeleton-copy {
+  width: 88%;
+  height: 0.62rem;
+  margin-top: 0.75rem;
+  color: rgba(17, 17, 17, 0.14);
+}
+
+.project-console-loading {
+  display: grid;
+  gap: 0.75rem;
+  min-height: 12rem;
+  padding: 0.75rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.project-console-loading-row {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 8rem;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.project-console-loading-row::before,
+.project-console-loading-row::after,
+.project-console-loading-copy {
+  display: block;
+  height: 0.72rem;
+  background: linear-gradient(112deg, hsl(var(--muted)) 22%, hsl(var(--muted-foreground) / 0.3) 38%, hsl(var(--muted)) 54%);
+  background-size: 220% 100%;
+  animation: rebuild-skeleton-sheen 1.8s linear infinite;
+  content: "";
+}
+
+.project-console-loading-row::before {
+  width: 1.4rem;
+}
+
+.project-console-loading-row::after {
+  width: 100%;
+}
+
+.project-console-loading-copy {
+  width: 100%;
+  opacity: 0.7;
+}
+
+@keyframes rebuild-skeleton-sheen {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+
+@media (max-width: 800px) {
+  .project-console-loading-row {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  .project-console-loading-row::after {
+    grid-column: 2;
+    width: 70%;
+  }
+
+  .project-console-loading-copy {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-skeleton-surface,
+  .rebuild-skeleton-line,
+  .rebuild-skeleton-index,
+  .rebuild-skeleton-corner,
+  .project-console-loading-row::before,
+  .project-console-loading-row::after,
+  .project-console-loading-copy {
+    animation: none;
+  }
+}

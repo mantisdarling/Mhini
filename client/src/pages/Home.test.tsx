@@ -5,11 +5,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import Home, { safeExternalUrl } from "./Home";
 import { profile, projects, technologyGroups } from "@/data/profileData";
 
+const publicProjectsQuery = vi.hoisted(() => vi.fn(() => ({ data: [], isLoading: false })));
+
 vi.mock("@/lib/trpc", () => ({
   trpc: {
     projects: {
       listPublic: {
-        useQuery: () => ({ data: [], isLoading: false }),
+        useQuery: publicProjectsQuery,
       },
     },
   },
@@ -27,6 +29,7 @@ afterEach(() => {
   root = undefined;
   container?.remove();
   container = undefined;
+  publicProjectsQuery.mockReturnValue({ data: [], isLoading: false });
 });
 
 function renderHome() {
@@ -43,6 +46,15 @@ describe("rebuilt Mantis Home page", () => {
       { label: "Bluesky", url: "https://bsky.app/profile/mantisdarling.bsky.social" },
       { label: "Instagram", url: "https://www.instagram.com/mantisdarling/" },
     ]));
+  });
+
+  it("shows accessible project skeletons while public records are loading", () => {
+    publicProjectsQuery.mockReturnValue({ data: [], isLoading: true });
+    renderHome();
+    const grid = container?.querySelector<HTMLElement>(".rebuild-project-grid");
+    expect(grid?.getAttribute("aria-busy")).toBe("true");
+    expect(grid?.querySelectorAll(".rebuild-project-card-skeleton")).toHaveLength(2);
+    expect(container?.textContent).toContain("Mantis");
   });
 
   it("keeps the primary identity and every resume project visible in the public archive", () => {

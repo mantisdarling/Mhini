@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { ArrowDown, ArrowUp, ExternalLink, Image as ImageIcon, Loader2, Pencil, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
 import { projects as profileProjects } from "@/data/profileData";
-import { FormEvent, useMemo, useState } from "react";
+import React, { FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 type ProjectDraft = {
@@ -39,6 +39,19 @@ export default function ProjectConsole() {
     <DashboardLayout>
       <ProjectConsoleContent />
     </DashboardLayout>
+  );
+}
+
+export function ProjectListSkeleton() {
+  return (
+    <div className="project-console-loading" role="status" aria-live="polite">
+      <span className="sr-only">Loading project entries</span>
+      {Array.from({ length: 3 }, (_, index) => (
+        <div className="project-console-loading-row" aria-hidden="true" key={index}>
+          <span className="project-console-loading-copy" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -216,7 +229,7 @@ function ProjectConsoleContent() {
           <div><p className="font-mono text-[0.62rem] tracking-[0.16em] text-primary">CURRENT RUN LOG</p><h2 className="mt-2 text-2xl font-semibold tracking-tight">Project entries</h2></div>
           {projectsQuery.isFetching && <Loader2 size={17} className="animate-spin text-muted-foreground" />}
         </div>
-        {projectsQuery.isLoading ? <div className="grid min-h-48 place-items-center border border-border"><Loader2 className="animate-spin text-primary" /></div> : projects.length === 0 ? (
+        {projectsQuery.isLoading ? <ProjectListSkeleton /> : projects.length === 0 ? (
           <div className="border border-dashed border-border px-6 py-14 text-center"><p className="font-mono text-xs tracking-[0.15em] text-primary">NO ADDITIONAL ENTRIES</p><p className="mt-3 text-sm text-muted-foreground">Your public PDF archive is already active. Use the intake panel only when you want to add a new project outside that archive.</p></div>
         ) : (
           <div className="grid gap-3">
