@@ -1,0 +1,43 @@
+# Responsive audit notes
+
+## 2026-08-23 device review
+
+### 320px phone
+
+The page remains horizontally contained. The header brand and menu control fit within the viewport, the hero title and primary actions remain readable, and the profile, story, work, stack, evidence, finale, and contact sections retain their intended vertical flow. The project area presents a single touch-sized card at a time, avoiding a compressed multi-column grid. No visible text clipping or media overflow was observed.
+
+The narrowest layout is intentionally dense. The hero supporting copy and small telemetry labels are compact, but they remain legible at the captured scale. The stacked profile heading, story captions, and evidence labels wrap without colliding with adjacent content.
+
+### 390px phone
+
+The standard phone layout also remains contained with no visible horizontal overflow. Text and image layering stay aligned in the profile, story, work, stack, evidence, finale, and contact chapters. The project carousel maintains a single-card reading width, and section headings preserve the intended left edge alignment. No visible blank text bands, broken links, or clipped labels were observed.
+
+The remaining audit targets are wider tablet and desktop breakpoints, keyboard and touch interactions, modal and accordion states, reduced-motion behavior, and runtime quality gates. These notes record the visual pass only; they are not a production capacity claim.
+
+### 768px tablet
+
+The layout transitions cleanly to a single-column chapter flow while retaining the editorial split inside the story and the two-column project presentation. The heading and paragraph edges remain aligned, and story captions stay inside their image frames. No clipping or horizontal overflow was visible. Small navigation text is compact but fits the header.
+
+### 1024px desktop-tablet transition
+
+The hero uses the wide composition without crowding the text column. Profile copy maintains a two-column balance, the story remains readable, and the Work grid closes without an implied empty slot. Evidence rows and Stack labels remain aligned to their content columns. No visible media or copy overflow was observed.
+
+The remaining review is the 1280px and 1440px wide desktop composition plus interaction-state verification. The broad review should also confirm that the privacy signal, modal, carousel, accordions, and scroll reveal remain usable rather than only visually aligned.
+
+### 1280px desktop
+
+The content remains centered within the intended max-width rhythm. The hero copy, chapter headings, story captions, Work cards, Stack rows, Evidence field, finale copy, and contact card retain their alignment without stretching into the outer media space. The project grid and mobile-only position cue switch appropriately at the desktop threshold.
+
+### 1440px desktop
+
+The wide composition preserves intentional negative space without creating empty copy bands. Display headings keep their left edges and line breaks, supporting paragraphs remain bounded, and the footer items remain stable as three separate text/action groups. The visual review showed no new clipping, horizontal overflow, or text collision.
+
+Next validation targets are keyboard focus order, mobile menu, project carousel interaction, dossier modal, Evidence and Stack disclosure behavior, scroll reveal lifecycle, reduced-motion fallback, and media fallback behavior.
+
+## Final cross-device polish review
+
+The 320px capture remains contained after the touch-target and anchor-offset changes. The menu, hero actions, carousel cards, stacked chapter copy, evidence labels, contact card, and footer remain within the viewport without visible clipping or horizontal drift.
+
+The 1440px capture preserves the cinematic desktop hierarchy. The larger touch targets do not disturb the visual grid, section spacing remains balanced, and the Work, Stack, Evidence, Finale, and Contact text stays aligned to its intended content columns.
+
+The implementation keeps authored content intact and limits the final adjustments to responsive geometry, interaction affordances, and safe navigation offsets. Interaction and release gates remain outstanding before checkpointing.

@@ -1432,3 +1432,27 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
   .rebuild-site.has-text-reveal [data-text-reveal],
   .rebuild-site.has-text-reveal [data-text-reveal].is-visible { opacity: 1; transform: none; transition: none; will-change: auto; }
 }
+
+/* Final cross-device pass: reserve the sticky header, protect touch targets, and keep dense copy stable. */
+.rebuild-site main > section[id] { scroll-margin-top: 5rem; }
+.rebuild-menu, .rebuild-socials > a, .rebuild-modal-close { min-width: 44px; min-height: 44px; }
+.rebuild-share-button { min-height: 2.75rem; }
+.rebuild-project-card, .rebuild-stack-row, .rebuild-record, .rebuild-dossier { min-width: 0; }
+.rebuild-contact-card > a { line-height: 1.2; }
+@media (max-width: 700px) {
+  .rebuild-site main > section[id] { scroll-margin-top: 4.25rem; }
+  .rebuild-header { padding-inline: 1rem; }
+  .rebuild-brand { min-height: 44px; }
+  .rebuild-nav button { min-height: 44px; }
+  .rebuild-hero-copy { padding-inline: 1rem; }
+  .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact, .rebuild-story, .rebuild-finale { padding-inline: 1rem; }
+  .rebuild-project-grid { margin-inline: -0.2rem; padding-inline: 0.2rem; }
+  .rebuild-project-card, .rebuild-project-card.is-featured { flex-basis: min(calc(100vw - 2rem), 350px); width: min(calc(100vw - 2rem), 350px); }
+  .rebuild-contact-card { padding: 1rem; }
+  .rebuild-socials > a { width: 44px; height: 44px; }
+  .rebuild-footer { padding-inline: 1rem; }
+}
+@media (min-width: 701px) and (max-width: 1100px) {
+  .rebuild-header { padding-inline: clamp(1.25rem, 4vw, 3rem); }
+  .rebuild-intro, .rebuild-work, .rebuild-stack, .rebuild-evidence, .rebuild-contact, .rebuild-story, .rebuild-finale { padding-inline: clamp(1.25rem, 5vw, 4rem); }
+}
