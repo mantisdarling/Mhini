@@ -1687,3 +1687,68 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child { border
     transition: none;
   }
 }
+
+.rebuild-skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 1rem;
+  z-index: 60;
+  padding: 0.7rem 0.9rem;
+  background: var(--red);
+  color: var(--paper);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: translate3d(0, -180%, 0);
+  transition: transform 180ms ease;
+}
+
+.rebuild-skip-link:focus-visible {
+  transform: translate3d(0, 0, 0);
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-skip-link {
+    transition: none;
+  }
+}
+
+/* Keep image-led storytelling legible while making keyboard entry feel intentional. */
+.cinematic-story-scene > span {
+  display: inline-block;
+  max-width: 28ch;
+  text-shadow: 0 0.1rem 0.75rem rgba(10, 10, 10, 0.38);
+}
+
+.cinematic-story-scene h3 {
+  text-wrap: balance;
+  text-shadow: 0 0.18rem 1rem rgba(10, 10, 10, 0.42);
+}
+
+.rebuild-project-card:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 0.35rem;
+}
+
+.rebuild-project-card:focus-visible .rebuild-project-visual::after {
+  opacity: 1;
+}
+
+@media (max-width: 800px) {
+  .cinematic-story-scene h3 {
+    max-width: 18ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-project-card:focus-visible .rebuild-project-visual::after {
+    opacity: 0;
+  }
+}

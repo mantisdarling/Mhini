@@ -441,6 +441,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (selectedProject) setSelectedProject(null);
+      if (menuOpen) setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen, selectedProject]);
+
+  useEffect(() => {
     document.body.style.overflow = selectedProject ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [selectedProject]);
@@ -452,6 +462,7 @@ export default function Home() {
 
   return (
     <div ref={siteRef} className="rebuild-site">
+      <a className="rebuild-skip-link" href="#main-content">Skip to content</a>
       <header className="rebuild-header">
         <button className="rebuild-brand" type="button" onClick={() => scrollTo("top")} aria-label="Return to the top of Mantis">
           <img src={ASSETS.mark} alt="" />
@@ -463,7 +474,7 @@ export default function Home() {
         <button className="rebuild-menu" type="button" onClick={() => setMenuOpen(open => !open)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
       </header>
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="rebuild-hero cinematic-hero" id="top">
           <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} mobileFallbackSrc={ASSETS.story.mobile.motion} poster={ASSETS.story.heroPoster} />
           <div className="rebuild-hero-grid" aria-hidden="true" />

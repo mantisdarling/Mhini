@@ -57,6 +57,19 @@ describe("rebuilt Mantis Home page", () => {
     expect(navigation?.querySelectorAll("button")).toHaveLength(5);
   });
 
+  it("provides a skip link and dismisses the mobile menu with Escape", () => {
+    renderHome();
+    const skipLink = container?.querySelector<HTMLAnchorElement>(".rebuild-skip-link");
+    const main = container?.querySelector<HTMLElement>("#main-content");
+    const menu = container?.querySelector<HTMLButtonElement>(".rebuild-menu");
+    expect(skipLink?.getAttribute("href")).toBe("#main-content");
+    expect(main?.getAttribute("tabindex")).toBe("-1");
+    act(() => menu?.click());
+    expect(menu?.getAttribute("aria-expanded")).toBe("true");
+    act(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" })));
+    expect(menu?.getAttribute("aria-expanded")).toBe("false");
+  });
+
   it("shows accessible project skeletons while public records are loading", () => {
     publicProjectsQuery.mockReturnValue({ data: [], isLoading: true });
     renderHome();

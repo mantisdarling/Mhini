@@ -59,3 +59,11 @@ The Stack display heading now receives a desktop-only typography treatment: heav
 ## Best-polish visual review
 
 The 390px preview preserves the compact header, full-bleed chapter media, readable text overlays, touch-safe controls, project carousel geometry, and contact card spacing. The 1440px preview preserves the asymmetric editorial composition, stable section rhythm, readable background layering, project grid proportions, Stack background field, and footer alignment. The active navigation cue is limited to a thin Mantis Red rule and does not add layout shift or visual clutter. No horizontal clipping was observed in either composition.
+
+## Second polish audit
+
+The wide desktop composition has strong media hierarchy and stable chapter handoffs, but the compact navigation benefits from a clear active cue and the project chapter benefits from richer context at the point of interaction. The phone composition preserves the intended cinematic stack and touch flow; additional changes should remain restrained so the dense story does not become taller or noisier. The selected work is orientation and interaction clarity rather than another decorative layer.
+
+## Second polish verification
+
+The 390px composition remains compact and unclipped after the added keyboard affordances and story-caption emphasis. The 1440px composition retains its project hierarchy, image-led story captions gain separation without becoming noisy, and focus styling does not alter the grid geometry. The second pass remains limited to orientation, clarity, and accessibility rather than extra decorative layers.
