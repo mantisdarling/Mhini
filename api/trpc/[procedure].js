@@ -266,6 +266,13 @@ var scalePolicy = {
   storageRedirectCacheControl: "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
 };
 
+// server/requestPolicy.ts
+var upstreamRequestTimeoutMs = 8e3;
+function withRequestTimeout(init = {}, timeoutMs = upstreamRequestTimeoutMs) {
+  if (init.signal) return init;
+  return { ...init, signal: AbortSignal.timeout(timeoutMs) };
+}
+
 // server/supabaseDb.ts
 function resolveSupabaseUserRole(user, ownerOpenId = ENV.ownerOpenId) {
   return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
@@ -282,7 +289,7 @@ async function rest(path, init = {}) {
   headers.set("apikey", secret);
   headers.set("Authorization", `Bearer ${secret}`);
   headers.set("Content-Type", "application/json");
-  return fetch(`${baseUrl}/rest/v1/${path}`, { ...init, headers });
+  return fetch(`${baseUrl}/rest/v1/${path}`, withRequestTimeout({ ...init, headers }));
 }
 async function responseJson(response) {
   if (!response.ok) {
@@ -998,7 +1005,7 @@ var runVercelRecoverySnapshot = createVercelRecoverySnapshotHandler();
 
 // server/projectSchemas.ts
 import { z as z2 } from "zod";
-var webUrl = z2.string().trim().url().or(z2.literal(""));
+var webUrl = z2.string().trim().refine((value) => value === "" || /^https?:\/\//i.test(value), "URL must use HTTP or HTTPS.");
 var projectInputSchema = z2.object({
   title: z2.string().trim().min(2, "Title must be at least 2 characters.").max(140),
   category: z2.string().trim().min(2, "Category must be at least 2 characters.").max(80),
@@ -1227,12 +1234,15 @@ async function authenticateIndependentRequest(req) {
   if (!independentAuthEnabled()) throw new Error("Independent authentication is not enabled.");
   const token = bearerToken(req);
   if (!token || !ENV.supabaseUrl || !ENV.supabasePublishableKey) throw new Error("Independent session is unavailable.");
-  const response = await fetch(`${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`, {
-    headers: {
-      apikey: ENV.supabasePublishableKey,
-      Authorization: `Bearer ${token}`
-    }
-  });
+  const response = await fetch(
+    `${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`,
+    withRequestTimeout({
+      headers: {
+        apikey: ENV.supabasePublishableKey,
+        Authorization: `Bearer ${token}`
+      }
+    })
+  );
   if (!response.ok) throw new Error("Independent session is invalid.");
   const values = mapSupabaseIdentity(await response.json());
   await upsertUser2(values);

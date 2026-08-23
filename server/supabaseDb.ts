@@ -1,5 +1,6 @@
 import type { InsertProject, InsertUser, Project, RecoverySnapshot, User } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { withRequestTimeout } from "./requestPolicy";
 
 export function resolveSupabaseUserRole(user: Pick<InsertUser, "openId" | "role">, ownerOpenId = ENV.ownerOpenId): "user" | "admin" {
   return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
@@ -52,7 +53,7 @@ async function rest(path: string, init: RequestInit = {}) {
   headers.set("apikey", secret);
   headers.set("Authorization", `Bearer ${secret}`);
   headers.set("Content-Type", "application/json");
-  return fetch(`${baseUrl}/rest/v1/${path}`, { ...init, headers });
+  return fetch(`${baseUrl}/rest/v1/${path}`, withRequestTimeout({ ...init, headers }));
 }
 
 export async function responseJson<T>(response: Response): Promise<T> {

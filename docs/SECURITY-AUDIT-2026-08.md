@@ -28,3 +28,15 @@ SEC-01 was fixed by adding `resolveSupabaseUserRole`, which preserves explicit r
 ## Validation evidence
 
 The focused security suite passed 20 tests. The complete suite passed 62 tests across 17 files. TypeScript, production build, Vercel build, high-severity production dependency audit, secret scan, diff checks, and recent browser/network error scans passed. The source scan found no dynamic execution or unsafe HTML use in application code beyond the existing static chart-style generator, which is constrained to generated CSS from typed chart configuration.
+
+## Fresh zero-trust review update
+
+The remaining upstream trust boundaries were rechecked for provider stalls and unbounded failure paths. The Supabase REST adapter and independent Supabase bearer validation now use a shared eight-second deadline. A caller-provided `AbortSignal` remains authoritative, so request cancellation semantics are preserved.
+
+| ID | Boundary | Severity | Observation | Remediation | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| RES-01 | Supabase REST and independent authentication fetches | Medium resilience | Provider requests had no application deadline, so a stalled upstream could hold a request open and consume a serverless or Express worker longer than intended. | Added `withRequestTimeout` in `server/requestPolicy.ts` and applied it to both upstream paths. | Two deterministic request-policy tests; full suite, TypeScript, production build, and dependency audit passed. |
+
+A bounded local smoke test sent 200 requests to the local health endpoint with 25 concurrent workers. All 200 returned HTTP 200; measured p50 was 1 ms and maximum latency was 5 ms in this sandbox. This confirms local endpoint behavior under a small burst only. It does not establish a 50,000-user production capacity claim, provider-level DDoS protection, immutable backups, uptime monitoring, or secret rotation.
+
+The source safety scan found only the existing static chart style generator and scanner imports for `child_process`; no application dynamic execution or unsafe HTML sink was introduced. The known high-severity production dependency audit and repository secret scan passed. Existing uncommitted project URL validation changes were retained because they enforce HTTP(S)-only links and include focused regression tests.

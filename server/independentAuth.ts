@@ -2,6 +2,7 @@ import type { Request } from "express";
 import type { InsertUser, User } from "../drizzle/schema";
 import * as db from "./db";
 import { ENV } from "./_core/env";
+import { withRequestTimeout } from "./requestPolicy";
 
 type SupabaseIdentityResponse = {
   id?: string;
@@ -37,12 +38,15 @@ export async function authenticateIndependentRequest(req: Request): Promise<User
   const token = bearerToken(req);
   if (!token || !ENV.supabaseUrl || !ENV.supabasePublishableKey) throw new Error("Independent session is unavailable.");
 
-  const response = await fetch(`${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`, {
-    headers: {
-      apikey: ENV.supabasePublishableKey,
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`,
+    withRequestTimeout({
+      headers: {
+        apikey: ENV.supabasePublishableKey,
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+  );
   if (!response.ok) throw new Error("Independent session is invalid.");
 
   const values = mapSupabaseIdentity(await response.json() as SupabaseIdentityResponse);
