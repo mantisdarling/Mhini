@@ -60,8 +60,13 @@ function getForgeConfig() {
   return { forgeUrl: forgeUrl.replace(/\/+$/, ""), forgeKey };
 }
 
-function normalizeKey(relKey: string): string {
-  return relKey.replace(/^\/+/, "");
+export function normalizeStorageKey(relKey: string): string {
+  const key = relKey.replace(/^\/+/, "");
+  const hasUnsafeSegment = key.split("/").some(segment => segment === "." || segment === "..");
+  if (!key || hasUnsafeSegment || key.includes("\\") || /[\u0000-\u001F\u007F]/.test(key)) {
+    throw new Error("Invalid storage key.");
+  }
+  return key;
 }
 
 function appendHashSuffix(relKey: string): string {
@@ -76,7 +81,7 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream",
 ): Promise<{ key: string; url: string }> {
-  const key = appendHashSuffix(normalizeKey(relKey));
+  const key = appendHashSuffix(normalizeStorageKey(relKey));
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
@@ -135,7 +140,7 @@ export async function storagePut(
 }
 
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
-  const key = normalizeKey(relKey);
+  const key = normalizeStorageKey(relKey);
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     return { key, url: await storageGetSignedUrl(key) };
@@ -147,10 +152,10 @@ export async function storageGetSignedUrl(relKey: string): Promise<string> {
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
-    return getSignedUrl(client, new GetObjectCommand({ Bucket: externalConfig.bucket, Key: normalizeKey(relKey) }), { expiresIn: 900 });
+    return getSignedUrl(client, new GetObjectCommand({ Bucket: externalConfig.bucket, Key: normalizeStorageKey(relKey) }), { expiresIn: 900 });
   }
   const { forgeUrl, forgeKey } = getForgeConfig();
-  const key = normalizeKey(relKey);
+  const key = normalizeStorageKey(relKey);
 
   const getUrl = new URL("v1/storage/presign/get", forgeUrl + "/");
   getUrl.searchParams.set("path", key);

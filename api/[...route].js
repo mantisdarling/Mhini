@@ -267,6 +267,9 @@ var scalePolicy = {
 };
 
 // server/supabaseDb.ts
+function resolveSupabaseUserRole(user, ownerOpenId = ENV.ownerOpenId) {
+  return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
+}
 function requireConfig() {
   if (!ENV.supabaseUrl || !ENV.supabaseSecretKey) {
     throw new Error("Supabase database is not configured. Set SUPABASE_URL and SUPABASE_SECRET_KEY.");
@@ -350,7 +353,7 @@ async function upsertUser(user) {
       name: user.name ?? null,
       email: user.email ?? null,
       login_method: user.loginMethod ?? null,
-      role: user.role ?? "user",
+      role: resolveSupabaseUserRole(user),
       last_signed_in: (user.lastSignedIn ?? /* @__PURE__ */ new Date()).toISOString()
     })
   });
@@ -613,8 +616,13 @@ function getForgeConfig() {
   }
   return { forgeUrl: forgeUrl.replace(/\/+$/, ""), forgeKey };
 }
-function normalizeKey(relKey) {
-  return relKey.replace(/^\/+/, "");
+function normalizeStorageKey(relKey) {
+  const key = relKey.replace(/^\/+/, "");
+  const hasUnsafeSegment = key.split("/").some((segment) => segment === "." || segment === "..");
+  if (!key || hasUnsafeSegment || key.includes("\\") || /[\u0000-\u001F\u007F]/.test(key)) {
+    throw new Error("Invalid storage key.");
+  }
+  return key;
 }
 function appendHashSuffix(relKey) {
   const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
@@ -623,7 +631,7 @@ function appendHashSuffix(relKey) {
   return `${relKey.slice(0, lastDot)}-${hash}${relKey.slice(lastDot)}`;
 }
 async function storagePut(relKey, data, contentType = "application/octet-stream") {
-  const key = appendHashSuffix(normalizeKey(relKey));
+  const key = appendHashSuffix(normalizeStorageKey(relKey));
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
@@ -964,7 +972,7 @@ async function runScheduledRecoverySnapshot(req, res) {
     const snapshot = await createRecoverySnapshot();
     res.status(200).json({ ok: true, snapshot });
   } catch (error) {
-    console.error("[Recovery] Scheduled snapshot failed", error);
+    console.error("[Recovery] Scheduled snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
     res.status(500).json({ error: "recovery snapshot failed" });
   }
 }
@@ -981,7 +989,7 @@ function createVercelRecoverySnapshotHandler(snapshotCreator = createRecoverySna
       const snapshot = await snapshotCreator();
       res.status(200).json({ ok: true, snapshot });
     } catch (error) {
-      console.error("[Recovery] Vercel snapshot failed", error);
+      console.error("[Recovery] Vercel snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
       res.status(500).json({ error: "recovery snapshot failed" });
     }
   };
@@ -1176,8 +1184,7 @@ function registerStorageProxy(app2) {
         headers: { Authorization: `Bearer ${ENV.forgeApiKey}` }
       });
       if (!forgeResp.ok) {
-        const body = await forgeResp.text().catch(() => "");
-        console.error(`[StorageProxy] forge error: ${forgeResp.status} ${body}`);
+        console.error("[StorageProxy] Forge presign failed", { status: forgeResp.status });
         res.status(502).send("Storage backend error");
         return;
       }
@@ -1189,8 +1196,8 @@ function registerStorageProxy(app2) {
       cacheUrl(key, url);
       res.set("Cache-Control", scalePolicy.storageRedirectCacheControl);
       res.redirect(307, url);
-    } catch (err) {
-      console.error("[StorageProxy] failed:", err);
+    } catch {
+      console.error("[StorageProxy] Request failed");
       res.status(502).send("Storage proxy error");
     }
   });

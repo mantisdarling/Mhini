@@ -65,7 +65,7 @@ export async function runScheduledRecoverySnapshot(req: Request, res: Response) 
     const snapshot = await createRecoverySnapshot();
     res.status(200).json({ ok: true, snapshot });
   } catch (error) {
-    console.error("[Recovery] Scheduled snapshot failed", error);
+    console.error("[Recovery] Scheduled snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
     res.status(500).json({ error: "recovery snapshot failed" });
   }
 }
@@ -84,7 +84,7 @@ export function createVercelRecoverySnapshotHandler(snapshotCreator = createReco
       const snapshot = await snapshotCreator();
       res.status(200).json({ ok: true, snapshot });
     } catch (error) {
-      console.error("[Recovery] Vercel snapshot failed", error);
+      console.error("[Recovery] Vercel snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
       res.status(500).json({ error: "recovery snapshot failed" });
     }
   };

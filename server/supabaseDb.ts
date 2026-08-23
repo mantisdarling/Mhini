@@ -1,6 +1,10 @@
 import type { InsertProject, InsertUser, Project, RecoverySnapshot, User } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
+export function resolveSupabaseUserRole(user: Pick<InsertUser, "openId" | "role">, ownerOpenId = ENV.ownerOpenId): "user" | "admin" {
+  return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
+}
+
 type SupabaseUserRow = {
   id: number;
   open_id: string;
@@ -126,7 +130,7 @@ export async function upsertUser(user: InsertUser) {
       name: user.name ?? null,
       email: user.email ?? null,
       login_method: user.loginMethod ?? null,
-      role: user.role ?? "user",
+      role: resolveSupabaseUserRole(user),
       last_signed_in: (user.lastSignedIn ?? new Date()).toISOString(),
     }),
   });
