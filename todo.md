@@ -332,3 +332,8 @@
 - [x] Preserve the arrow rotation, closed-by-default state, accessible hidden state, and reduced-motion fallback. Existing panel height and arrow motion remain intact, hidden panels stay inert, and reduced motion removes the content transition.
 - [x] Validate the combined accordion motion on phone and desktop, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
 - [x] Commit, push, and checkpoint the accordion content fade-in as mantisdarling. Commit 5b1a260 was authored by mantisdarling and pushed to mantisdarling/Mhini main; checkpoint follows.
+
+- [x] Optimize Evidence accordion animations for physical iPhone and Android performance without changing behavior or content. Stable content nodes now use compositor-safe opacity and translate3d motion, while phone timing is shorter and less demanding.
+- [x] Reduce unnecessary layout reads, observer updates, and paint work while preserving accessible disclosure and reduced-motion behavior. ResizeObserver reads contentRect, updates are batched through requestAnimationFrame, unchanged heights are ignored, paint is contained, and cleanup cancels pending frames.
+- [x] Validate the optimized motion at phone and desktop breakpoints, then rerun tests, types, build, audit, and runtime checks. Verified 390px and 1440px captures; 42 tests, TypeScript, production build, dependency audit, secret scan, diff checks, and current runtime logs passed.
+- [ ] Commit, push, and checkpoint the mobile accordion performance optimization as mantisdarling.

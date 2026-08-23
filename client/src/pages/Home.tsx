@@ -193,16 +193,41 @@ function EvidenceDossier({ id, title, children }: { id: string; title: string; c
   const [open, setOpen] = useState(false);
   const [panelHeight, setPanelHeight] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
+  const panelInnerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const panel = panelRef.current;
-    if (!panel) return;
-    const measure = () => setPanelHeight(panel.scrollHeight);
-    measure();
+    const panelInner = panelInnerRef.current;
+    if (!panelInner) return;
+    let measuredHeight = 0;
+    let frame = 0;
+    const applyHeight = (height: number) => {
+      const nextHeight = Math.ceil(height);
+      if (nextHeight === measuredHeight) return;
+      measuredHeight = nextHeight;
+      setPanelHeight(nextHeight);
+    };
+    const measureNow = () => applyHeight(panelInner.getBoundingClientRect().height);
+    let pendingHeight: number | undefined;
+    const queueMeasure = (entries: ResizeObserverEntry[]) => {
+      pendingHeight = entries[0]?.contentRect.height;
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const nextHeight = pendingHeight;
+        pendingHeight = undefined;
+        if (typeof nextHeight === "number") applyHeight(nextHeight);
+        else measureNow();
+      });
+    };
+
+    measureNow();
     if (typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(measure);
-    observer.observe(panel);
-    return () => observer.disconnect();
+    const observer = new ResizeObserver(queueMeasure);
+    observer.observe(panelInner);
+    return () => {
+      observer.disconnect();
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -214,7 +239,7 @@ function EvidenceDossier({ id, title, children }: { id: string; title: string; c
         </button>
       </h3>
         <div ref={panelRef} id={`${id}-panel`} className="rebuild-dossier-panel" role="region" aria-labelledby={`${id}-summary`} aria-hidden={!open} inert={!open ? true : undefined} style={{ maxHeight: open ? panelHeight : 0 }}>
-        <div className="rebuild-dossier-panel-inner">{children}</div>
+        <div ref={panelInnerRef} className="rebuild-dossier-panel-inner">{children}</div>
       </div>
     </section>
   );
