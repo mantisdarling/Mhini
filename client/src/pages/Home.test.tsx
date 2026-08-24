@@ -6,7 +6,7 @@ import React, { act } from "react";
 
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Home, { safeExternalUrl } from "./Home";
+import Home, { safeExternalUrl, shouldUseDesktopTouchLayout } from "./Home";
 import { profile, projects, technologyGroups } from "@/data/profileData";
 
 const publicProjectsQuery = vi.hoisted(() =>
@@ -75,7 +75,94 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).toContain(
       ".rebuild-project-meta > span:last-child {\n    max-width: 48%;"
     );
+    expect(styles).toContain("body.rebuild-desktop-touch-mode .rebuild-work");
+    expect(styles).toContain("scroll-snap-type: x mandatory");
     expect(styles).not.toContain("body.rebuild-touch-layout");
+  });
+
+  it("detects desktop mode on a physical touch phone without classifying normal phone mode", () => {
+    const originalWidth = Object.getOwnPropertyDescriptor(window, "innerWidth");
+    const originalUserAgent = Object.getOwnPropertyDescriptor(
+      navigator,
+      "userAgent"
+    );
+    const originalTouchPoints = Object.getOwnPropertyDescriptor(
+      navigator,
+      "maxTouchPoints"
+    );
+
+    try {
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        value: 980,
+      });
+      Object.defineProperty(navigator, "userAgent", {
+        configurable: true,
+        value: "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Mobile",
+      });
+      Object.defineProperty(navigator, "maxTouchPoints", {
+        configurable: true,
+        value: 5,
+      });
+
+      expect(shouldUseDesktopTouchLayout()).toBe(true);
+
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        value: 390,
+      });
+      expect(shouldUseDesktopTouchLayout()).toBe(false);
+    } finally {
+      if (originalWidth)
+        Object.defineProperty(window, "innerWidth", originalWidth);
+      if (originalUserAgent) {
+        Object.defineProperty(navigator, "userAgent", originalUserAgent);
+      }
+      if (originalTouchPoints) {
+        Object.defineProperty(navigator, "maxTouchPoints", originalTouchPoints);
+      }
+    }
+  });
+
+  it("applies the desktop-touch marker only to the wide phone composition", () => {
+    const originalWidth = Object.getOwnPropertyDescriptor(window, "innerWidth");
+    const originalUserAgent = Object.getOwnPropertyDescriptor(
+      navigator,
+      "userAgent"
+    );
+    const originalTouchPoints = Object.getOwnPropertyDescriptor(
+      navigator,
+      "maxTouchPoints"
+    );
+
+    try {
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        value: 980,
+      });
+      Object.defineProperty(navigator, "userAgent", {
+        configurable: true,
+        value: "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Mobile",
+      });
+      Object.defineProperty(navigator, "maxTouchPoints", {
+        configurable: true,
+        value: 5,
+      });
+      renderHome();
+
+      expect(
+        document.body.classList.contains("rebuild-desktop-touch-mode")
+      ).toBe(true);
+    } finally {
+      if (originalWidth)
+        Object.defineProperty(window, "innerWidth", originalWidth);
+      if (originalUserAgent) {
+        Object.defineProperty(navigator, "userAgent", originalUserAgent);
+      }
+      if (originalTouchPoints) {
+        Object.defineProperty(navigator, "maxTouchPoints", originalTouchPoints);
+      }
+    }
   });
 
   it("keeps the compact navigation connected to its menu control", () => {
