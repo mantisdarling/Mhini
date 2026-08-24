@@ -82,6 +82,14 @@ describe("rebuilt Mantis Home page", () => {
     expect(["checking", "fallback", "active"]).toContain(
       field?.getAttribute("data-visual-state")
     );
+    const readout = container?.querySelector<HTMLOutputElement>(
+      ".hero-telemetry-readout"
+    );
+    if (import.meta.env.DEV) {
+      expect(readout?.textContent).toContain("WEBGL");
+    } else {
+      expect(readout).toBeNull();
+    }
   });
 
   it("renders a semantic chapter rail with direct navigation", () => {

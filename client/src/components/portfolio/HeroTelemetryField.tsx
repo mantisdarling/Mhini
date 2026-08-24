@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type ConnectionHints = Navigator & {
   connection?: {
@@ -6,6 +6,8 @@ type ConnectionHints = Navigator & {
     effectiveType?: string;
   };
 };
+
+type VisualState = "checking" | "active" | "fallback";
 
 const vertexSource = `
   attribute vec2 a_position;
@@ -27,24 +29,30 @@ const fragmentSource = `
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution.xy;
     vec2 pointer = u_pointer / u_resolution.xy;
-    float sweep = fract(u_time * 0.035);
-    float diagonal = line(uv.y - (0.78 - uv.x * 0.32), 0.0025);
-    float telemetry = line(uv.x - sweep, 0.0015) * 0.5;
-    float pulse = exp(-18.0 * distance(uv, pointer)) * 0.34;
-    float ink = smoothstep(0.52, 0.0, distance(uv, vec2(0.72, 0.42))) * 0.08;
-    float signal = min(1.0, diagonal + telemetry + pulse + ink);
+    float sweep = fract(u_time * 0.018);
+    float diagonal = line(uv.y - (0.78 - uv.x * 0.32), 0.0020) * 0.34;
+    float telemetry = line(uv.x - sweep, 0.0012) * 0.16;
+    float wake = exp(-42.0 * distance(uv, pointer)) * 0.18;
+    float ink = smoothstep(0.58, 0.0, distance(uv, vec2(0.72, 0.42))) * 0.035;
+    float signal = min(1.0, diagonal + telemetry + wake + ink);
     vec3 red = vec3(0.78, 0.04, 0.09);
     vec3 paper = vec3(0.91, 0.9, 0.84);
     vec3 color = mix(red, paper, clamp(uv.y * 0.4, 0.0, 1.0));
-    gl_FragColor = vec4(color, signal * 0.22);
+    gl_FragColor = vec4(color, signal * 0.16);
   }
 `;
 
-function shouldUseFallback() {
+function reducedMotionPreference() {
+  return typeof window !== "undefined" &&
+    typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+}
+
+function shouldUseFallback(reducedMotion: boolean) {
   if (typeof window === "undefined" || typeof navigator === "undefined")
     return true;
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
-    return true;
+  if (reducedMotion) return true;
   const connection = (navigator as ConnectionHints).connection;
   if (
     connection?.saveData ||
@@ -54,8 +62,7 @@ function shouldUseFallback() {
     return true;
   if (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 2)
     return true;
-  if (window.matchMedia?.("(pointer: coarse)").matches) return true;
-  return false;
+  return window.matchMedia?.("(pointer: coarse)").matches ?? false;
 }
 
 function compileShader(
@@ -76,16 +83,31 @@ function compileShader(
 
 export default function HeroTelemetryField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fpsReadoutRef = useRef<HTMLOutputElement>(null);
+  const [reducedMotion, setReducedMotion] = useState(reducedMotionPreference);
+  const [visualState, setVisualState] = useState<VisualState>("checking");
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    )
+      return;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setReducedMotion(query.matches);
+    query.addEventListener?.("change", updatePreference);
+    return () => query.removeEventListener?.("change", updatePreference);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || shouldUseFallback()) {
-      canvas?.setAttribute("data-visual-state", "fallback");
+    if (!canvas || shouldUseFallback(reducedMotion)) {
+      setVisualState("fallback");
       return;
     }
 
     if (typeof ResizeObserver === "undefined") {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
 
@@ -98,11 +120,11 @@ export default function HeroTelemetryField() {
         premultipliedAlpha: true,
       });
     } catch {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
     if (!gl) {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
 
@@ -113,20 +135,20 @@ export default function HeroTelemetryField() {
       fragmentSource
     );
     if (!vertexShader || !fragmentShader) {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
 
     const program = gl.createProgram();
     if (!program) {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
 
@@ -136,7 +158,7 @@ export default function HeroTelemetryField() {
     const pointer = gl.getUniformLocation(program, "u_pointer");
     const time = gl.getUniformLocation(program, "u_time");
     if (!buffer || position < 0 || !resolution || !pointer || !time) {
-      canvas.setAttribute("data-visual-state", "fallback");
+      setVisualState("fallback");
       return;
     }
 
@@ -151,14 +173,19 @@ export default function HeroTelemetryField() {
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    canvas.setAttribute("data-visual-state", "active");
+    setVisualState("active");
 
     let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
     let width = 1;
     let height = 1;
-    const startedAt = performance.now();
+    let pointerX = 0;
+    let pointerY = 0;
+    let targetPointerX = 0;
+    let targetPointerY = 0;
+    let lastFrameAt = performance.now();
+    let frameCount = 0;
+    let fpsWindowStartedAt = lastFrameAt;
+    const startedAt = lastFrameAt;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -167,16 +194,29 @@ export default function HeroTelemetryField() {
       height = Math.max(1, Math.round(rect.height * pixelRatio));
       canvas.width = width;
       canvas.height = height;
+      pointerX = width * 0.66;
+      pointerY = height * 0.46;
+      targetPointerX = pointerX;
+      targetPointerY = pointerY;
       gl.viewport(0, 0, width, height);
     };
 
     const onPointerMove = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
-      pointerX = event.clientX - rect.left;
-      pointerY = rect.height - (event.clientY - rect.top);
+      if (!rect.width || !rect.height) return;
+      targetPointerX = ((event.clientX - rect.left) / rect.width) * width;
+      targetPointerY = ((rect.bottom - event.clientY) / rect.height) * height;
+    };
+
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      setVisualState("fallback");
+      cancelAnimationFrame(frame);
     };
 
     const render = (now: number) => {
+      pointerX += (targetPointerX - pointerX) * 0.055;
+      pointerY += (targetPointerY - pointerY) * 0.055;
       gl.useProgram(program);
       gl.uniform2f(resolution, width, height);
       gl.uniform2f(pointer, pointerX, pointerY);
@@ -184,12 +224,24 @@ export default function HeroTelemetryField() {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      frameCount += 1;
+      if (now - fpsWindowStartedAt >= 1000 && fpsReadoutRef.current) {
+        const fps = Math.round(
+          (frameCount * 1000) / (now - fpsWindowStartedAt)
+        );
+        fpsReadoutRef.current.textContent = `WEBGL · ${fps} FPS`;
+        frameCount = 0;
+        fpsWindowStartedAt = now;
+      }
+      lastFrameAt = now;
       frame = requestAnimationFrame(render);
     };
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
     canvas.addEventListener("pointermove", onPointerMove, { passive: true });
+    canvas.addEventListener("webglcontextlost", onContextLost);
     resize();
     frame = requestAnimationFrame(render);
 
@@ -197,19 +249,32 @@ export default function HeroTelemetryField() {
       cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
     };
-  }, []);
+  }, [reducedMotion]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="hero-telemetry-field"
-      aria-hidden="true"
-      data-visual-state="checking"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="hero-telemetry-field"
+        aria-hidden="true"
+        data-visual-state={visualState}
+      />
+      {import.meta.env.DEV && (
+        <output
+          ref={fpsReadoutRef}
+          className="hero-telemetry-readout"
+          aria-label="WebGL frame rate"
+          aria-live="off"
+        >
+          WEBGL · -- FPS
+        </output>
+      )}
+    </>
   );
 }
