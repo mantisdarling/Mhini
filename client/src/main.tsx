@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import { COOKIE_NAME, UNAUTHED_ERR_MSG } from '@shared/const';
+import { COOKIE_NAME, UNAUTHED_ERR_MSG } from "@shared/const";
 import { scalePolicy } from "@shared/scalePolicy";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
@@ -7,7 +7,12 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
-import { captureIndependentSessionFromUrl, getIndependentAccessToken, independentAuthEnabled } from "./lib/independentAuth";
+import {
+  captureIndependentSessionFromUrl,
+  getIndependentAccessToken,
+  independentAuthEnabled,
+} from "./lib/independentAuth";
+import { registerServiceWorker } from "./lib/registerServiceWorker";
 import "./index.css";
 
 captureIndependentSessionFromUrl();
@@ -18,10 +23,16 @@ const queryClient = new QueryClient({
       gcTime: 300000,
       refetchOnWindowFocus: false,
       retry: (failureCount, error) => {
-        if (error instanceof TRPCClientError && (error.data?.code === "UNAUTHORIZED" || error.data?.code === "FORBIDDEN")) return false;
+        if (
+          error instanceof TRPCClientError &&
+          (error.data?.code === "UNAUTHORIZED" ||
+            error.data?.code === "FORBIDDEN")
+        )
+          return false;
         return failureCount < 2;
       },
-      retryDelay: attempt => Math.min(1000 * (2 ** attempt) + Math.floor(Math.random() * 250), 8000),
+      retryDelay: attempt =>
+        Math.min(1000 * 2 ** attempt + Math.floor(Math.random() * 250), 8000),
       staleTime: scalePolicy.publicProjectCacheTtlMs,
     },
   },
@@ -63,7 +74,8 @@ const trpcClient = trpc.createClient({
       transformer: superjson,
       headers() {
         const independentToken = getIndependentAccessToken();
-        if (independentToken) return { Authorization: `Bearer ${independentToken}` };
+        if (independentToken)
+          return { Authorization: `Bearer ${independentToken}` };
         // Preview auto-login fallback: when the browser blocks iframe cookies
         // (Safari ITP / private browsing / WebView), the runtime mirrors the
         // session into sessionStorage so we can forward it as a Bearer token.
@@ -92,6 +104,8 @@ const trpcClient = trpc.createClient({
     }),
   ],
 });
+
+registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>

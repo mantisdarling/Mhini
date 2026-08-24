@@ -10,6 +10,7 @@
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "check:unused-exports": "node scripts/check-unused-exports.mjs",
+    "check:service-worker": "node scripts/check-service-worker.mjs",
     "format": "prettier --write .",
     "test": "vitest run",
     "security:secrets": "node scripts/check-secrets.mjs"

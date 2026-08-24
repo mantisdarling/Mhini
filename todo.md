@@ -434,3 +434,8 @@
 - [x] Fix every verified regression and rerun the complete automated and device verification suite. The 768px Studio overlap was already corrected; the current regression pass found no new application defect. 70 tests and all automated gates passed.
 - [x] Save the verified regression and security audit checkpoint under mantisdarling and document evidence and limitations. Correct health probes, clean runtime logs, full automated gates, and cross-device previews are recorded.
 - [x] Restore and verify the repository-local Git author identity as mantisdarling after the regression audit found Manus in the active local config. Verified name mantisdarling and noreply email locally.
+- [x] Inspect the app shell, asset paths, deployment routing, and existing tests for service-worker compatibility. Confirmed production Vite output, Vercel rewrites, API boundaries, and client bootstrap behavior.
+- [x] Implement a versioned service worker with offline fallback, safe static caching, network-first navigation, and no caching of auth or dynamic API responses. API, auth, non-GET, and cross-origin requests bypass the worker.
+- [x] Register the service worker safely in the client and add deterministic cache-policy and offline regressions. Added production-only registration, a CI policy checker, and a no-cache deployment rule for sw.js.
+- [x] Run complete tests, types, unused-export, security, dependency, build, runtime, and responsive checks. 70 tests passed; all configured gates and service-worker runtime and packaging probes passed.
+- [x] Save the verified offline-support checkpoint under mantisdarling and document browser and provider limitations. Physical browser offline behavior and provider availability remain outside sandbox verification.

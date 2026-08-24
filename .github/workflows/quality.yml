@@ -27,6 +27,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Detect unused exports
         run: pnpm run check:unused-exports
+      - name: Check service-worker policy
+        run: pnpm run check:service-worker
       - name: Type check
         run: pnpm run check
       - name: Run tests
