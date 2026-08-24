@@ -8360,3 +8360,179 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     transform: none;
   }
 }
+
+/* Text containment audit: every rendered copy block owns its width before it wraps. */
+.rebuild-site
+  :where(
+    .rebuild-hero-copy,
+    .rebuild-section-lead,
+    .rebuild-section-heading,
+    .rebuild-intro-body,
+    .rebuild-finale-copy,
+    .rebuild-contact-card,
+    .rebuild-project-copy,
+    .rebuild-record,
+    .rebuild-dossier,
+    .rebuild-footer
+  ) {
+  min-width: 0;
+}
+.rebuild-site :where(h1, h2, h3, p, a, button, strong, small, span) {
+  max-inline-size: 100%;
+}
+.rebuild-site :where(h1, h2, h3, p, a, button, strong, small) {
+  overflow-wrap: anywhere;
+}
+.rebuild-contact-address {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .rebuild-contact-card > a {
+    align-items: flex-start;
+    min-width: 0;
+  }
+  .rebuild-contact-card > a .rebuild-contact-address {
+    flex: 1 1 auto;
+  }
+  .rebuild-contact-card > a svg:last-child {
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+  .rebuild-project-meta,
+  .rebuild-record,
+  .rebuild-socials {
+    min-width: 0;
+  }
+}
+
+/* Coarse-pointer phones may expose a wide CSS viewport in desktop mode. Keep the reading flow mobile-first there. */
+@media (pointer: coarse) and (max-width: 1100px) {
+  .rebuild-intro,
+  .rebuild-contact,
+  .rebuild-story,
+  .rebuild-finale {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rebuild-intro,
+  .rebuild-work,
+  .rebuild-stack,
+  .rebuild-evidence,
+  .rebuild-contact,
+  .rebuild-story {
+    padding-inline: clamp(1rem, 4vw, 1.25rem);
+  }
+
+  .rebuild-section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .rebuild-section-heading > p {
+    max-width: 36rem;
+  }
+
+  .rebuild-project-card,
+  .rebuild-project-card.is-featured,
+  .rebuild-story-motion,
+  .rebuild-story-blade,
+  .rebuild-story-descent,
+  .rebuild-story-stillness {
+    grid-column: 1 / -1;
+  }
+
+  .rebuild-story {
+    gap: 2.8rem;
+  }
+
+  .rebuild-story-intro {
+    position: static;
+  }
+
+  .rebuild-story-descent,
+  .rebuild-story-stillness {
+    margin-top: 0.7rem;
+  }
+
+  .rebuild-evidence-grid,
+  .rebuild-dossier-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .rebuild-record {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .rebuild-contact-card {
+    width: 100%;
+  }
+
+  .rebuild-finale {
+    min-height: auto;
+  }
+}
+
+/* A compact dock preserves navigation without masking copy while the user scrolls. */
+@media (pointer: coarse) {
+  .rebuild-chapter-rail {
+    top: auto;
+    right: auto;
+    bottom: max(0.7rem, calc(env(safe-area-inset-bottom) + 0.45rem));
+    left: 50%;
+    width: min(calc(100vw - 1.4rem), 28rem);
+    padding: 0.35rem 0.45rem;
+    border: 1px solid rgba(233, 231, 225, 0.24);
+    background: rgba(21, 21, 21, 0.88);
+    box-shadow: 0 0.7rem 1.6rem rgba(0, 0, 0, 0.22);
+    transform: translate3d(-50%, 0, 0);
+    backdrop-filter: blur(12px);
+  }
+
+  .rebuild-chapter-rail-title {
+    display: none;
+  }
+
+  .rebuild-chapter-rail ol {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.15rem;
+    overflow: visible;
+  }
+
+  .rebuild-chapter-rail li {
+    min-width: 0;
+  }
+
+  .rebuild-chapter-rail button {
+    grid-template-columns: 0.38rem minmax(0, 1fr);
+    min-height: 1.65rem;
+    gap: 0.3rem;
+    padding: 0.15rem 0.2rem;
+    font-size: 0.48rem;
+    letter-spacing: 0.05em;
+  }
+
+  .rebuild-chapter-rail-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rebuild-footer {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Touch phones already have the accessible header menu; do not place a second fixed layer over the story. */
+@media (pointer: coarse) and (max-width: 1100px) {
+  .rebuild-chapter-rail {
+    display: none;
+  }
+}
