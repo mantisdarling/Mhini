@@ -8360,3 +8360,48 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     transform: none;
   }
 }
+
+/* Text containment audit: every rendered copy block owns its width before it wraps. */
+.rebuild-site
+  :where(
+    .rebuild-hero-copy,
+    .rebuild-section-lead,
+    .rebuild-section-heading,
+    .rebuild-intro-body,
+    .rebuild-finale-copy,
+    .rebuild-contact-card,
+    .rebuild-project-copy,
+    .rebuild-record,
+    .rebuild-dossier,
+    .rebuild-footer
+  ) {
+  min-width: 0;
+}
+.rebuild-site :where(h1, h2, h3, p, a, button, strong, small, span) {
+  max-inline-size: 100%;
+}
+.rebuild-site :where(h1, h2, h3, p, a, button, strong, small) {
+  overflow-wrap: anywhere;
+}
+.rebuild-contact-address {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .rebuild-contact-card > a {
+    align-items: flex-start;
+    min-width: 0;
+  }
+  .rebuild-contact-card > a .rebuild-contact-address {
+    flex: 1 1 auto;
+  }
+  .rebuild-contact-card > a svg:last-child {
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+  .rebuild-project-meta,
+  .rebuild-record,
+  .rebuild-socials {
+    min-width: 0;
+  }
+}

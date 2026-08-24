@@ -709,11 +709,15 @@ export default function Home() {
             <span>THE GARAGE IS OPEN</span>
             <a href={`mailto:${profile.primaryEmail}`}>
               <Mail size={19} aria-hidden="true" />
-              {profile.primaryEmail}
+              <span className="rebuild-contact-address">
+                {profile.primaryEmail}
+              </span>
               <ArrowUpRight size={17} aria-hidden="true" />
             </a>
             <a href={`mailto:${profile.secondaryEmail}`}>
-              {profile.secondaryEmail}
+              <span className="rebuild-contact-address">
+                {profile.secondaryEmail}
+              </span>
               <ArrowUpRight size={15} aria-hidden="true" />
             </a>
             <div className="rebuild-socials">
