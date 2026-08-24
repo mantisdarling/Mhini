@@ -297,6 +297,9 @@ describe("rebuilt Mantis Home page", () => {
       container?.querySelectorAll("#stack > .cinematic-scene-backdrop")
     ).toHaveLength(1);
     expect(
+      container?.querySelector("#stack.cinematic-stack-field")
+    ).toBeTruthy();
+    expect(
       container?.querySelector("#stack .rebuild-section-atmosphere-stack")
     ).toBeNull();
     expect(
@@ -307,6 +310,29 @@ describe("rebuilt Mantis Home page", () => {
     expect(
       container?.querySelector("#evidence .rebuild-section-atmosphere")
     ).toBeNull();
+  });
+
+  it("shows a loading skeleton inside each project image frame before the image resolves", () => {
+    renderHome();
+    const imageShells = container?.querySelectorAll(
+      ".rebuild-project-card .rebuild-project-visual > .portfolio-image-shell"
+    );
+    expect(imageShells).toHaveLength(projects.length);
+    imageShells?.forEach(shell => {
+      expect(shell.classList.contains("is-loading")).toBe(true);
+      expect(shell.getAttribute("aria-busy")).toBe("true");
+    });
+
+    const styles = readFileSync(
+      resolve(process.cwd(), "client/src/index.css"),
+      "utf8"
+    );
+    expect(styles).toContain(
+      ".rebuild-project-visual > .portfolio-image-shell.is-loading::before"
+    );
+    expect(styles).toContain(
+      ".rebuild-project-visual > .portfolio-image-shell.is-loading img"
+    );
   });
 
   it("keeps the Stack artwork in its background layer behind the foreground content", () => {
