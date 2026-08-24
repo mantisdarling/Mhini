@@ -203,7 +203,10 @@ export function ResponsiveImage({
   }, [src, mobileSrc]);
 
   return (
-    <picture>
+    <picture
+      className={`portfolio-image-shell ${loaded ? "is-loaded" : "is-loading"}`}
+      aria-busy={!loaded}
+    >
       {mobileSrc && !mobileFailed && (
         <source media="(max-width: 800px)" srcSet={mobileSrc} />
       )}

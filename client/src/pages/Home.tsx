@@ -49,6 +49,7 @@ import {
   StoryScene,
   VideoBackdrop,
 } from "@/components/portfolio/PortfolioPrimitives";
+import PortfolioBoundary from "@/components/portfolio/PortfolioBoundary";
 
 export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
@@ -226,12 +227,14 @@ export default function Home() {
 
       <main id="main-content" tabIndex={-1}>
         <section className="rebuild-hero cinematic-hero" id="top">
-          <VideoBackdrop
-            src={ASSETS.story.heroVideo}
-            fallbackSrc={ASSETS.story.motion}
-            mobileFallbackSrc={ASSETS.story.mobile.motion}
-            poster={ASSETS.story.heroPoster}
-          />
+          <PortfolioBoundary label="Hero media">
+            <VideoBackdrop
+              src={ASSETS.story.heroVideo}
+              fallbackSrc={ASSETS.story.motion}
+              mobileFallbackSrc={ASSETS.story.mobile.motion}
+              poster={ASSETS.story.heroPoster}
+            />
+          </PortfolioBoundary>
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy" data-text-reveal>
             <SectionMarker
@@ -329,32 +332,34 @@ export default function Home() {
               is a chapter in the same field, not a separate card.
             </p>
           </div>
-          <div className="cinematic-story-scenes">
-            <StoryScene
-              src={ASSETS.story.motion}
-              mobileSrc={ASSETS.story.mobile.motion}
-              label="01 / ARRIVAL"
-              title="Read the atmosphere before the system."
-            />
-            <StoryScene
-              src={ASSETS.story.blade}
-              mobileSrc={ASSETS.story.mobile.blade}
-              label="02 / EDGE"
-              title="A precise line is enough."
-            />
-            <StoryScene
-              src={ASSETS.story.descent}
-              mobileSrc={ASSETS.story.mobile.descent}
-              label="03 / DEPTH"
-              title="Go lower than the obvious layer."
-            />
-            <StoryScene
-              src={ASSETS.story.stillness}
-              mobileSrc={ASSETS.story.mobile.stillness}
-              label="04 / SYSTEM"
-              title="Let the environment carry the weight."
-            />
-          </div>
+          <PortfolioBoundary label="Visual story">
+            <div className="cinematic-story-scenes">
+              <StoryScene
+                src={ASSETS.story.motion}
+                mobileSrc={ASSETS.story.mobile.motion}
+                label="01 / ARRIVAL"
+                title="Read the atmosphere before the system."
+              />
+              <StoryScene
+                src={ASSETS.story.blade}
+                mobileSrc={ASSETS.story.mobile.blade}
+                label="02 / EDGE"
+                title="A precise line is enough."
+              />
+              <StoryScene
+                src={ASSETS.story.descent}
+                mobileSrc={ASSETS.story.mobile.descent}
+                label="03 / DEPTH"
+                title="Go lower than the obvious layer."
+              />
+              <StoryScene
+                src={ASSETS.story.stillness}
+                mobileSrc={ASSETS.story.mobile.stillness}
+                label="04 / SYSTEM"
+                title="Let the environment carry the weight."
+              />
+            </div>
+          </PortfolioBoundary>
         </section>
 
         <section className="rebuild-work cinematic-section" id="work">
@@ -417,12 +422,13 @@ export default function Home() {
             tabIndex={0}
           >
             {displayedProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-                onOpen={setSelectedProject}
-              />
+              <PortfolioBoundary label="Project record" key={project.id}>
+                <ProjectCard
+                  project={project}
+                  index={index}
+                  onOpen={setSelectedProject}
+                />
+              </PortfolioBoundary>
             ))}
             {publicProjectsQuery.isLoading && (
               <>
@@ -536,120 +542,132 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="rebuild-dossier-grid" data-text-reveal="delayed">
-            <EvidenceDossier id="evidence-courses" title="Courses and learning">
-              <div>
-                {courses.map(item => (
-                  <article key={item.name}>
-                    <span>{item.status}</span>
-                    <b>{item.name}</b>
-                    <small>
-                      {item.provider} / {item.subject}
-                    </small>
-                    <p>{item.description}</p>
-                    <ExternalLink href={"url" in item ? item.url : undefined}>
-                      Open course
-                    </ExternalLink>
-                  </article>
-                ))}
-              </div>
-            </EvidenceDossier>
-            <EvidenceDossier
-              id="evidence-community"
-              title="Open source and community"
-            >
-              <div>
-                {[
-                  ...openSource.map(item => ({
-                    title: item.name,
-                    meta: item.role,
-                    body: item.description,
-                    url: "url" in item ? item.url : undefined,
-                  })),
-                  ...memberships.map(item => ({
-                    title: item.organization,
-                    meta: item.role,
-                    body:
-                      "description" in item ? item.description : item.location,
-                    url: "url" in item ? item.url : undefined,
-                  })),
-                ].map(item => (
-                  <article key={item.title}>
-                    <span>{item.meta}</span>
-                    <b>{item.title}</b>
-                    <p>{item.body}</p>
-                    <ExternalLink href={item.url}>Visit record</ExternalLink>
-                  </article>
-                ))}
-              </div>
-            </EvidenceDossier>
-            <EvidenceDossier
-              id="evidence-research"
-              title="Research and competition"
-            >
-              <div>
-                <article>
-                  <span>{writing.platform}</span>
-                  <b>{writing.title}</b>
-                  <p>{writing.description}</p>
-                  <ExternalLink href={writing.url}>Read article</ExternalLink>
-                </article>
-                {hackathons.map(item => (
-                  <article key={item.name}>
-                    <span>
-                      {item.status}
-                      {"organizer" in item && item.organizer
-                        ? ` / ${item.organizer}`
-                        : ""}
-                    </span>
-                    <b>{item.name}</b>
-                    <p>{item.description}</p>
-                  </article>
-                ))}
-              </div>
-            </EvidenceDossier>
-            <EvidenceDossier id="evidence-life" title="Life outside the stack">
-              <div>
-                <article>
-                  <span>Languages</span>
-                  <p>{languages.join(" / ")}</p>
-                </article>
-                <article>
-                  <span>Interests and hobbies</span>
-                  <p>{interests.join(" / ")}</p>
-                </article>
-                <article>
-                  <span>Core positioning</span>
-                  <b>{vision.core}</b>
-                  <p>{vision.landingMessage}</p>
-                </article>
-                <article>
-                  <span>Short term goals</span>
-                  {vision.shortTerm.map(item => (
-                    <p key={item}>{item}</p>
+          <PortfolioBoundary label="Evidence archive">
+            <div className="rebuild-dossier-grid" data-text-reveal="delayed">
+              <EvidenceDossier
+                id="evidence-courses"
+                title="Courses and learning"
+              >
+                <div>
+                  {courses.map(item => (
+                    <article key={item.name}>
+                      <span>{item.status}</span>
+                      <b>{item.name}</b>
+                      <small>
+                        {item.provider} / {item.subject}
+                      </small>
+                      <p>{item.description}</p>
+                      <ExternalLink href={"url" in item ? item.url : undefined}>
+                        Open course
+                      </ExternalLink>
+                    </article>
                   ))}
-                </article>
-                <article>
-                  <span>Long term vision</span>
-                  {vision.longTerm.map(item => (
-                    <p key={item}>{item}</p>
+                </div>
+              </EvidenceDossier>
+              <EvidenceDossier
+                id="evidence-community"
+                title="Open source and community"
+              >
+                <div>
+                  {[
+                    ...openSource.map(item => ({
+                      title: item.name,
+                      meta: item.role,
+                      body: item.description,
+                      url: "url" in item ? item.url : undefined,
+                    })),
+                    ...memberships.map(item => ({
+                      title: item.organization,
+                      meta: item.role,
+                      body:
+                        "description" in item
+                          ? item.description
+                          : item.location,
+                      url: "url" in item ? item.url : undefined,
+                    })),
+                  ].map(item => (
+                    <article key={item.title}>
+                      <span>{item.meta}</span>
+                      <b>{item.title}</b>
+                      <p>{item.body}</p>
+                      <ExternalLink href={item.url}>Visit record</ExternalLink>
+                    </article>
                   ))}
-                </article>
-              </div>
-            </EvidenceDossier>
-          </div>
+                </div>
+              </EvidenceDossier>
+              <EvidenceDossier
+                id="evidence-research"
+                title="Research and competition"
+              >
+                <div>
+                  <article>
+                    <span>{writing.platform}</span>
+                    <b>{writing.title}</b>
+                    <p>{writing.description}</p>
+                    <ExternalLink href={writing.url}>Read article</ExternalLink>
+                  </article>
+                  {hackathons.map(item => (
+                    <article key={item.name}>
+                      <span>
+                        {item.status}
+                        {"organizer" in item && item.organizer
+                          ? ` / ${item.organizer}`
+                          : ""}
+                      </span>
+                      <b>{item.name}</b>
+                      <p>{item.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </EvidenceDossier>
+              <EvidenceDossier
+                id="evidence-life"
+                title="Life outside the stack"
+              >
+                <div>
+                  <article>
+                    <span>Languages</span>
+                    <p>{languages.join(" / ")}</p>
+                  </article>
+                  <article>
+                    <span>Interests and hobbies</span>
+                    <p>{interests.join(" / ")}</p>
+                  </article>
+                  <article>
+                    <span>Core positioning</span>
+                    <b>{vision.core}</b>
+                    <p>{vision.landingMessage}</p>
+                  </article>
+                  <article>
+                    <span>Short term goals</span>
+                    {vision.shortTerm.map(item => (
+                      <p key={item}>{item}</p>
+                    ))}
+                  </article>
+                  <article>
+                    <span>Long term vision</span>
+                    {vision.longTerm.map(item => (
+                      <p key={item}>{item}</p>
+                    ))}
+                  </article>
+                </div>
+              </EvidenceDossier>
+            </div>
+          </PortfolioBoundary>
         </section>
 
         <section
           className="rebuild-finale cinematic-finale"
           aria-label="Closing motion and image chapter"
         >
-          <VideoBackdrop
-            src={ASSETS.story.closingVideo}
-            poster={ASSETS.story.finalFrame}
-            mobilePoster={ASSETS.story.mobile.finalFrame}
-            preload="metadata"
-          />
+          <PortfolioBoundary label="Closing media">
+            <VideoBackdrop
+              src={ASSETS.story.closingVideo}
+              poster={ASSETS.story.finalFrame}
+              mobilePoster={ASSETS.story.mobile.finalFrame}
+              preload="metadata"
+            />
+          </PortfolioBoundary>
           <div className="rebuild-finale-copy" data-text-reveal>
             <SectionMarker number="05A" label="CLOSING MOTION" />
             <h2>
