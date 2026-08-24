@@ -8305,3 +8305,62 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     transform: none;
   }
 }
+
+/* Phone-only type guardrails: desktop keeps the approved baseline unchanged. */
+@media screen and (max-width: 700px) {
+  .rebuild-intro,
+  .rebuild-section-heading,
+  .rebuild-evidence-grid,
+  .rebuild-dossier-grid,
+  .rebuild-contact,
+  .rebuild-finale {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rebuild-intro > *,
+  .rebuild-section-heading > *,
+  .rebuild-evidence-column,
+  .rebuild-dossier,
+  .rebuild-contact > *,
+  .rebuild-finale > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .rebuild-section-heading {
+    align-items: start;
+  }
+
+  .rebuild-section-heading > p,
+  .rebuild-intro-body,
+  .rebuild-contact > div:first-child,
+  .rebuild-contact-card {
+    max-width: none;
+  }
+
+  .rebuild-record {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rebuild-record > p {
+    text-align: left;
+  }
+
+  .rebuild-project-meta > span,
+  .rebuild-project-copy h3,
+  .rebuild-project-copy p,
+  .rebuild-record b,
+  .rebuild-record small,
+  .rebuild-dossier article b,
+  .rebuild-dossier article p,
+  .rebuild-contact-card > a,
+  .rebuild-footer > * {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .rebuild-project-meta > span:last-child {
+    max-width: 48%;
+  }
+}
