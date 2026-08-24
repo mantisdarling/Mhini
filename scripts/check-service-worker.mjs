@@ -5,9 +5,10 @@ const source = await readFile(
   "utf8"
 );
 const requiredMarkers = [
-  'const CACHE_VERSION = "mantis-shell-v1"',
+  'const CACHE_VERSION = "mantis-shell-v2"',
   'request.mode === "navigate"',
   'url.pathname.startsWith("/api/")',
+  'url.pathname.startsWith("/manus-storage/")',
   'request.method !== "GET"',
   "OFFLINE_RESPONSE",
   "self.skipWaiting()",
