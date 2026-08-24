@@ -71,6 +71,19 @@ describe("rebuilt Mantis Home page", () => {
     expect(navigation?.querySelectorAll("button")).toHaveLength(5);
   });
 
+  it("keeps the hero telemetry field optional over the static media fallback", () => {
+    renderHome();
+    const field = container?.querySelector<HTMLCanvasElement>(
+      ".hero-telemetry-field"
+    );
+    expect(field).toBeTruthy();
+    expect(field?.getAttribute("aria-hidden")).toBe("true");
+    expect(container?.querySelector(".cinematic-video-backdrop")).toBeTruthy();
+    expect(["checking", "fallback", "active"]).toContain(
+      field?.getAttribute("data-visual-state")
+    );
+  });
+
   it("renders a semantic chapter rail with direct navigation", () => {
     const scrollIntoView = vi.fn();
     HTMLElement.prototype.scrollIntoView = scrollIntoView;

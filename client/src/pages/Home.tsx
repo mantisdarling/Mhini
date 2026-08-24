@@ -51,6 +51,7 @@ import {
   VideoBackdrop,
 } from "@/components/portfolio/PortfolioPrimitives";
 import ChapterRail from "@/components/portfolio/ChapterRail";
+import HeroTelemetryField from "@/components/portfolio/HeroTelemetryField";
 import PortfolioBoundary from "@/components/portfolio/PortfolioBoundary";
 
 export default function Home() {
@@ -243,6 +244,7 @@ export default function Home() {
               poster={ASSETS.story.heroPoster}
             />
           </PortfolioBoundary>
+          <HeroTelemetryField />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy" data-text-reveal>
             <SectionMarker
