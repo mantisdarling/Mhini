@@ -30,6 +30,7 @@ import { useStoryParallax } from "@/hooks/useStoryParallax";
 import { useTextReveal } from "@/hooks/useTextReveal";
 import {
   ASSETS,
+  chapterItems,
   navItems,
   resumeProjects,
   safeExternalUrl,
@@ -49,6 +50,7 @@ import {
   StoryScene,
   VideoBackdrop,
 } from "@/components/portfolio/PortfolioPrimitives";
+import ChapterRail from "@/components/portfolio/ChapterRail";
 import PortfolioBoundary from "@/components/portfolio/PortfolioBoundary";
 
 export default function Home() {
@@ -224,6 +226,12 @@ export default function Home() {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </header>
+
+      <ChapterRail
+        items={chapterItems}
+        activeId={activeSection ?? chapterItems[0].id}
+        onNavigate={scrollTo}
+      />
 
       <main id="main-content" tabIndex={-1}>
         <section className="rebuild-hero cinematic-hero" id="top">

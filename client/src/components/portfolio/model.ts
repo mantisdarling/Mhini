@@ -79,13 +79,23 @@ export const resumeProjects: DisplayProject[] = profileProjects.map(
   })
 );
 
-export const navItems = [
-  ["Work", "work"],
-  ["Profile", "profile"],
-  ["Stack", "stack"],
-  ["Evidence", "evidence"],
-  ["Contact", "contact"],
-] as const;
+export type ChapterItem = {
+  number: string;
+  label: string;
+  id: string;
+};
+
+export const chapterItems: readonly ChapterItem[] = [
+  { number: "01", label: "Profile", id: "profile" },
+  { number: "02", label: "Work", id: "work" },
+  { number: "03", label: "Stack", id: "stack" },
+  { number: "04", label: "Evidence", id: "evidence" },
+  { number: "05", label: "Contact", id: "contact" },
+];
+
+export const navItems = chapterItems.map(
+  ({ label, id }) => [label, id] as const
+);
 
 export function safeExternalUrl(href?: string | null) {
   if (!href) return null;

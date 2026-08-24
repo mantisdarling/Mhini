@@ -461,3 +461,4 @@
 - [x] Add focused regression tests for both boundary fixes and rerun the complete urgent audit gates. 71 tests and all final gates passed.
 - [x] Fix the verified 768px Studio console readability regression by switching the main Studio form and action layout to a single-column flow until enough width remains beside the sidebar.
 - [x] Prevent the development debug collector from recording same-origin API response bodies or authentication payloads in local network logs; preserve timing, status, and failure metadata only. Added Fetch and XHR redaction plus a CI policy gate.
+- [x] Add a semantic, keyboard-accessible chapter-progress rail that tracks the active cinematic section, supports direct navigation, and remains restrained across responsive breakpoints. Added a portaled desktop spine, mobile dock above consent controls, shared chapter metadata, active-location semantics, direct smooth navigation, and responsive visual verification.

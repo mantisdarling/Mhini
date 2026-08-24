@@ -7793,3 +7793,167 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     will-change: auto;
   }
 }
+
+/* Semantic chapter rail: a navigation spine, not another competing panel. */
+.rebuild-chapter-rail {
+  position: fixed;
+  top: 50%;
+  right: clamp(1rem, 2.5vw, 2.75rem);
+  z-index: 30;
+  display: block;
+  width: 8.5rem;
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transform: translate3d(0, -50%, 0);
+  color: rgba(233, 231, 225, 0.72);
+}
+.rebuild-chapter-rail-title {
+  margin: 0 0 0.8rem;
+  color: var(--red);
+  font:
+    600 0.5rem/1.2 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.rebuild-chapter-rail ol {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rebuild-chapter-rail li {
+  position: relative;
+}
+.rebuild-chapter-rail li::before {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.18rem;
+  width: 1px;
+  height: 1.7rem;
+  background: rgba(233, 231, 225, 0.18);
+  content: "";
+}
+.rebuild-chapter-rail li:last-child::before {
+  display: none;
+}
+.rebuild-chapter-rail button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.35rem 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font:
+    500 0.58rem/1.2 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+.rebuild-chapter-rail-number {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 0.38rem;
+  height: 0.38rem;
+  border: 1px solid rgba(233, 231, 225, 0.48);
+  border-radius: 50%;
+  color: transparent;
+  font-size: 0;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.rebuild-chapter-rail-label {
+  opacity: 0.62;
+  transition:
+    opacity 180ms ease,
+    color 180ms ease;
+}
+.rebuild-chapter-rail button:hover,
+.rebuild-chapter-rail button.is-active {
+  color: var(--paper);
+}
+.rebuild-chapter-rail button:hover .rebuild-chapter-rail-label,
+.rebuild-chapter-rail button.is-active .rebuild-chapter-rail-label {
+  opacity: 1;
+}
+.rebuild-chapter-rail button.is-active .rebuild-chapter-rail-number {
+  border-color: var(--red);
+  background: var(--red);
+  box-shadow: 0 0 0 4px rgba(201, 32, 40, 0.14);
+}
+.rebuild-chapter-rail button:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 4px;
+}
+@media (max-width: 1100px) {
+  .rebuild-chapter-rail {
+    right: 1rem;
+    width: 6.8rem;
+  }
+}
+@media (max-width: 800px) {
+  .rebuild-chapter-rail {
+    top: auto;
+    right: 0.8rem;
+    bottom: 10.6rem;
+    left: 0.8rem;
+    width: auto;
+    padding: 0.65rem 0.75rem 0.55rem;
+    border: 1px solid rgba(233, 231, 225, 0.18);
+    background: rgba(21, 21, 21, 0.9);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    transform: none;
+    backdrop-filter: blur(14px);
+  }
+  .rebuild-chapter-rail-title {
+    margin-bottom: 0.45rem;
+  }
+  .rebuild-chapter-rail ol {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .rebuild-chapter-rail ol::-webkit-scrollbar {
+    display: none;
+  }
+  .rebuild-chapter-rail li {
+    flex: 1 0 auto;
+  }
+  .rebuild-chapter-rail li::before {
+    display: none;
+  }
+  .rebuild-chapter-rail button {
+    grid-template-columns: 0.45rem max-content;
+    min-height: 2rem;
+    gap: 0.45rem;
+    padding: 0.25rem 0.35rem;
+    font-size: 0.52rem;
+  }
+  .rebuild-chapter-rail-label {
+    opacity: 0.72;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-chapter-rail button,
+  .rebuild-chapter-rail-label,
+  .rebuild-chapter-rail-number {
+    transition: none;
+  }
+}
