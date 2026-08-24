@@ -83,6 +83,10 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).toContain("aspect-ratio: 3.2;");
     expect(styles).toContain("min-height: 7.25rem;");
     expect(styles).toContain(".rebuild-chapter-rail {\n    display: none;");
+    expect(styles).toContain(
+      "gap: 0;\n    border: 0;\n    background: transparent;"
+    );
+    expect(styles).toContain(".rebuild-work .rebuild-project-card,");
     expect(styles).toContain("scroll-snap-type: x mandatory");
     expect(styles).not.toContain("body.rebuild-touch-layout");
   });
