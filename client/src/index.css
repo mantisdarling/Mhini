@@ -8540,3 +8540,56 @@ body.rebuild-desktop-touch-mode
     transition: none;
   }
 }
+
+/* CSS fallback for desktop-site phone emulation: do not wait for the user-agent detector to finish. */
+@media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px) {
+  .rebuild-work .rebuild-project-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    overflow: visible;
+  }
+
+  .rebuild-work .rebuild-project-card,
+  .rebuild-work .rebuild-project-card.is-featured {
+    display: grid;
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+  }
+
+  .rebuild-work .rebuild-project-visual,
+  .rebuild-work .rebuild-project-card.is-featured .rebuild-project-visual {
+    min-height: 0;
+    aspect-ratio: 1.28;
+  }
+
+  .rebuild-work .rebuild-project-copy {
+    min-height: 8.5rem;
+    padding: 1rem 1.1rem 1.2rem;
+  }
+
+  .rebuild-work .rebuild-project-copy h3 {
+    max-width: 24ch;
+    margin-top: 1rem;
+    font-size: clamp(1.45rem, 3.5vw, 2.2rem);
+    line-height: 0.96;
+  }
+
+  .rebuild-work .rebuild-project-copy p {
+    max-width: 56ch;
+    min-height: 0;
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .rebuild-chapter-rail {
+    display: none;
+  }
+
+  .cinematic-stack-field > .cinematic-scene-backdrop {
+    opacity: 0.68;
+  }
+}
