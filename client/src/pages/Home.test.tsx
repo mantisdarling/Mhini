@@ -1,6 +1,4 @@
 // @vitest-environment jsdom
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import React, { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -103,51 +101,6 @@ describe("rebuilt Mantis Home page", () => {
     act(() => buttons[2]?.click());
     expect(scrollIntoView).toHaveBeenCalled();
     scrollIntoView.mockRestore();
-  });
-
-  it("keeps coarse-pointer phone layouts readable and unobstructed", () => {
-    const styles = readFileSync(
-      resolve(process.cwd(), "client/src/index.css"),
-      "utf8"
-    );
-    expect(styles).toContain(
-      "@media (pointer: coarse) and (max-width: 1100px)"
-    );
-    expect(styles).toMatch(
-      /\.rebuild-evidence-grid,\s*\.rebuild-dossier-grid\s*\{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/
-    );
-    expect(styles).toMatch(
-      /@media \(pointer: coarse\) and \(max-width: 1100px\)\s*\{[\s\S]*?\.rebuild-chapter-rail\s*\{[\s\S]*?display: none/
-    );
-  });
-
-  it("marks narrow touch surfaces for desktop-mode safeguards", () => {
-    const originalMaxTouchPoints = navigator.maxTouchPoints;
-    const originalInnerWidth = window.innerWidth;
-    Object.defineProperty(navigator, "maxTouchPoints", {
-      configurable: true,
-      value: 5,
-    });
-    Object.defineProperty(window, "innerWidth", {
-      configurable: true,
-      value: 980,
-    });
-
-    try {
-      renderHome();
-      expect(document.body.classList.contains("rebuild-touch-layout")).toBe(
-        true
-      );
-    } finally {
-      Object.defineProperty(navigator, "maxTouchPoints", {
-        configurable: true,
-        value: originalMaxTouchPoints,
-      });
-      Object.defineProperty(window, "innerWidth", {
-        configurable: true,
-        value: originalInnerWidth,
-      });
-    }
   });
 
   it("provides a skip link and dismisses the mobile menu with Escape", () => {

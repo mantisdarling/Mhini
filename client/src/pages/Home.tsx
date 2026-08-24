@@ -156,31 +156,8 @@ export default function Home() {
   }, [displayedProjects]);
 
   useEffect(() => {
-    const body = document.body;
-    const pointerQuery =
-      typeof window.matchMedia === "function"
-        ? window.matchMedia("(pointer: coarse)")
-        : null;
-
-    const updateTouchLayout = () => {
-      const hasTouchInput =
-        Number.isFinite(navigator.maxTouchPoints) &&
-        navigator.maxTouchPoints > 0;
-      const isNarrowViewport = window.innerWidth <= 1100;
-      body.classList.toggle(
-        "rebuild-touch-layout",
-        isNarrowViewport && (hasTouchInput || Boolean(pointerQuery?.matches))
-      );
-    };
-
-    body.classList.add("rebuild-body");
-    updateTouchLayout();
-    window.addEventListener("resize", updateTouchLayout, { passive: true });
-
-    return () => {
-      window.removeEventListener("resize", updateTouchLayout);
-      body.classList.remove("rebuild-body", "rebuild-touch-layout");
-    };
+    document.body.classList.add("rebuild-body");
+    return () => document.body.classList.remove("rebuild-body");
   }, []);
 
   useEffect(() => {
@@ -732,15 +709,11 @@ export default function Home() {
             <span>THE GARAGE IS OPEN</span>
             <a href={`mailto:${profile.primaryEmail}`}>
               <Mail size={19} aria-hidden="true" />
-              <span className="rebuild-contact-address">
-                {profile.primaryEmail}
-              </span>
+              {profile.primaryEmail}
               <ArrowUpRight size={17} aria-hidden="true" />
             </a>
             <a href={`mailto:${profile.secondaryEmail}`}>
-              <span className="rebuild-contact-address">
-                {profile.secondaryEmail}
-              </span>
+              {profile.secondaryEmail}
               <ArrowUpRight size={15} aria-hidden="true" />
             </a>
             <div className="rebuild-socials">
