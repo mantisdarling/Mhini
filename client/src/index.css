@@ -3413,10 +3413,14 @@ html.motion-off .hero-field {
 
 /* Mantis studio alignment */
 .studio-shell {
+  display: flex;
+  width: 100%;
+  min-width: 0;
   min-height: 100svh;
   background: var(--ink);
   color: var(--ivory);
 }
+
 .studio-sidebar {
   background: #0b0b0b !important;
   border-right: 1px solid rgba(242, 239, 233, 0.12) !important;
