@@ -234,11 +234,12 @@ export function FooterCopyLink() {
       </button>
       {feedback && (
         <span
-          className={`rebuild-footer-copy-toast${feedbackVisible ? " is-visible" : ""}`}
+          className={`rebuild-footer-copy-toast ${feedback === "Link copied" ? "is-success" : "is-error"}${feedbackVisible ? " is-visible" : ""}`}
           role="status"
           aria-live="polite"
           aria-atomic="true"
         >
+          <i className="rebuild-footer-copy-toast-mark" aria-hidden="true" />
           {feedback}
         </span>
       )}
