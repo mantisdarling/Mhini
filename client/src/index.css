@@ -8165,3 +8165,198 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     width: fit-content;
   }
 }
+
+/* Cinematic route recovery: a quiet field note instead of a generic error card. */
+.not-found-page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: clamp(6.5rem, 12vw, 10rem) clamp(1.25rem, 8vw, 8rem) 2rem;
+  background:
+    radial-gradient(
+      circle at 78% 22%,
+      rgba(201, 32, 40, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #111 0%, #191919 58%, #0a0a0a 100%);
+  color: #e9e7e1;
+}
+.not-found-page::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 12%,
+      rgba(233, 231, 225, 0.06) 12.05%,
+      transparent 12.1%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 0 76%,
+      rgba(233, 231, 225, 0.06) 76.05%,
+      transparent 76.1%
+    );
+  content: "";
+  pointer-events: none;
+}
+.not-found-field {
+  position: absolute;
+  inset: clamp(5rem, 10vw, 8rem) clamp(1.25rem, 8vw, 8rem) 4rem;
+  z-index: -1;
+  color: rgba(233, 231, 225, 0.36);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.not-found-field-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.not-found-field-line {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  width: min(38vw, 34rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 32, 40, 0.82));
+  transform: rotate(-7deg);
+  transform-origin: right center;
+}
+.not-found-field-coordinate {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: rgba(233, 231, 225, 0.25);
+}
+.not-found-content {
+  align-self: center;
+  width: min(100%, 45rem);
+}
+.not-found-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  color: rgba(233, 231, 225, 0.64);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.not-found-kicker span:first-child {
+  color: #c92028;
+}
+.not-found-kicker-rule {
+  width: 3.5rem;
+  height: 1px;
+  background: rgba(233, 231, 225, 0.52);
+}
+.not-found-content h1 {
+  max-width: 10ch;
+  margin: clamp(2rem, 5vw, 4.5rem) 0 0;
+  color: #e9e7e1;
+  font-family: "Cabinet Grotesk", sans-serif;
+  font-size: clamp(4.4rem, 12vw, 10.5rem);
+  font-weight: 600;
+  letter-spacing: -0.1em;
+  line-height: 0.8;
+  text-wrap: balance;
+}
+.not-found-content h1 em {
+  color: #c92028;
+  font-style: normal;
+}
+.not-found-copy {
+  max-width: 28rem;
+  margin: clamp(2rem, 4vw, 3.2rem) 0 0;
+  color: rgba(233, 231, 225, 0.68);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.65;
+}
+.not-found-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding: 0.95rem 1rem 0.95rem 1.15rem;
+  border: 1px solid rgba(233, 231, 225, 0.38);
+  background: #c92028;
+  color: #fff;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 180ms ease;
+}
+.not-found-home:hover {
+  background: #a91920;
+  transform: translate3d(0, -2px, 0);
+}
+.not-found-home:active {
+  transform: translate3d(0, 1px, 0) scale(0.98);
+}
+.not-found-home:focus-visible {
+  outline: 2px solid #e9e7e1;
+  outline-offset: 4px;
+}
+.not-found-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  align-self: end;
+  color: rgba(233, 231, 225, 0.42);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.not-found-footer-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(233, 231, 225, 0.62);
+}
+@media (max-width: 560px) {
+  .not-found-page {
+    padding: 6.5rem 1.25rem 1.5rem;
+  }
+  .not-found-field {
+    inset: 5.5rem 1.25rem 3rem;
+  }
+  .not-found-field-line {
+    width: 12rem;
+  }
+  .not-found-content h1 {
+    max-width: 100%;
+    font-size: clamp(3.5rem, 15.6vw, 5.4rem);
+    line-height: 0.86;
+    letter-spacing: -0.085em;
+  }
+  .not-found-copy {
+    max-width: 20rem;
+    font-size: 0.98rem;
+  }
+  .not-found-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .not-found-home {
+    transition: none;
+  }
+  .not-found-home:hover,
+  .not-found-home:active {
+    transform: none;
+  }
+}
