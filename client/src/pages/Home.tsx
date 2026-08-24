@@ -486,7 +486,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="rebuild-stack cinematic-section" id="stack">
+        <section
+          className="rebuild-stack cinematic-section cinematic-stack-field"
+          id="stack"
+        >
           <SceneBackdrop
             src={ASSETS.stackBackdrop}
             mobileSrc={ASSETS.story.mobile.blade}

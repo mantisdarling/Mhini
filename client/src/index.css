@@ -8465,3 +8465,78 @@ body.rebuild-desktop-touch-mode
   .rebuild-project-visual {
   aspect-ratio: 1.28;
 }
+
+/* Scoped Stack field restoration: the artwork stays behind the complete chapter and remains legible on deployed builds. */
+.cinematic-stack-field > .cinematic-scene-backdrop {
+  opacity: 0.62;
+}
+
+.cinematic-stack-field > .cinematic-scene-backdrop img {
+  filter: grayscale(0.42) saturate(0.7) contrast(1.08);
+}
+
+.cinematic-stack-field > .cinematic-scene-backdrop span {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.82) 0%,
+      rgba(17, 17, 17, 0.52) 45%,
+      rgba(17, 17, 17, 0.2) 100%
+    ),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.38), rgba(17, 17, 17, 0.64));
+}
+
+/* Taller project-image skeleton: allocate the final frame and reveal the art after load. */
+.rebuild-project-visual > .portfolio-image-shell {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rebuild-project-visual > .portfolio-image-shell.is-loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(245, 244, 240, 0.04) 0%,
+      rgba(245, 244, 240, 0.14) 42%,
+      rgba(245, 244, 240, 0.04) 76%
+    ),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.88), rgba(17, 17, 17, 0.58));
+  background-size: 220% 100%;
+  animation: portfolio-media-shimmer 1.25s linear infinite;
+}
+
+.rebuild-project-visual > .portfolio-image-shell.is-loading img {
+  opacity: 0 !important;
+}
+
+.rebuild-project-visual > .portfolio-image-shell.is-loaded::before {
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+@media (max-width: 700px) {
+  .cinematic-stack-field > .cinematic-scene-backdrop {
+    opacity: 0.68;
+  }
+
+  .cinematic-stack-field > .cinematic-scene-backdrop img {
+    object-position: 68% 22%;
+    filter: grayscale(0.5) saturate(0.65) contrast(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-project-visual > .portfolio-image-shell.is-loading::before {
+    animation: none;
+  }
+
+  .rebuild-project-visual > .portfolio-image-shell.is-loaded::before {
+    transition: none;
+  }
+}
