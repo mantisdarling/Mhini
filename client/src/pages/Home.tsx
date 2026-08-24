@@ -156,8 +156,31 @@ export default function Home() {
   }, [displayedProjects]);
 
   useEffect(() => {
-    document.body.classList.add("rebuild-body");
-    return () => document.body.classList.remove("rebuild-body");
+    const body = document.body;
+    const pointerQuery =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(pointer: coarse)")
+        : null;
+
+    const updateTouchLayout = () => {
+      const hasTouchInput =
+        Number.isFinite(navigator.maxTouchPoints) &&
+        navigator.maxTouchPoints > 0;
+      const isNarrowViewport = window.innerWidth <= 1100;
+      body.classList.toggle(
+        "rebuild-touch-layout",
+        isNarrowViewport && (hasTouchInput || Boolean(pointerQuery?.matches))
+      );
+    };
+
+    body.classList.add("rebuild-body");
+    updateTouchLayout();
+    window.addEventListener("resize", updateTouchLayout, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", updateTouchLayout);
+      body.classList.remove("rebuild-body", "rebuild-touch-layout");
+    };
   }, []);
 
   useEffect(() => {

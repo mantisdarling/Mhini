@@ -121,6 +121,35 @@ describe("rebuilt Mantis Home page", () => {
     );
   });
 
+  it("marks narrow touch surfaces for desktop-mode safeguards", () => {
+    const originalMaxTouchPoints = navigator.maxTouchPoints;
+    const originalInnerWidth = window.innerWidth;
+    Object.defineProperty(navigator, "maxTouchPoints", {
+      configurable: true,
+      value: 5,
+    });
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 980,
+    });
+
+    try {
+      renderHome();
+      expect(document.body.classList.contains("rebuild-touch-layout")).toBe(
+        true
+      );
+    } finally {
+      Object.defineProperty(navigator, "maxTouchPoints", {
+        configurable: true,
+        value: originalMaxTouchPoints,
+      });
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        value: originalInnerWidth,
+      });
+    }
+  });
+
   it("provides a skip link and dismisses the mobile menu with Escape", () => {
     renderHome();
     const skipLink =

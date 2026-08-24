@@ -8536,3 +8536,78 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     display: none;
   }
 }
+
+/* JS-backed fallback for desktop-mode phones whose CSS viewport exceeds the media-query breakpoint. */
+body.rebuild-touch-layout .rebuild-intro,
+body.rebuild-touch-layout .rebuild-contact,
+body.rebuild-touch-layout .rebuild-story,
+body.rebuild-touch-layout .rebuild-finale {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.rebuild-touch-layout .rebuild-intro,
+body.rebuild-touch-layout .rebuild-work,
+body.rebuild-touch-layout .rebuild-stack,
+body.rebuild-touch-layout .rebuild-evidence,
+body.rebuild-touch-layout .rebuild-contact,
+body.rebuild-touch-layout .rebuild-story {
+  padding-inline: clamp(1rem, 4vw, 1.25rem);
+}
+
+body.rebuild-touch-layout .rebuild-section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+
+body.rebuild-touch-layout .rebuild-section-heading > p {
+  max-width: 36rem;
+}
+
+body.rebuild-touch-layout .rebuild-project-card,
+body.rebuild-touch-layout .rebuild-project-card.is-featured,
+body.rebuild-touch-layout .rebuild-story-motion,
+body.rebuild-touch-layout .rebuild-story-blade,
+body.rebuild-touch-layout .rebuild-story-descent,
+body.rebuild-touch-layout .rebuild-story-stillness {
+  grid-column: 1 / -1;
+}
+
+body.rebuild-touch-layout .rebuild-story {
+  gap: 2.8rem;
+}
+
+body.rebuild-touch-layout .rebuild-story-intro {
+  position: static;
+}
+
+body.rebuild-touch-layout .rebuild-story-descent,
+body.rebuild-touch-layout .rebuild-story-stillness {
+  margin-top: 0.7rem;
+}
+
+body.rebuild-touch-layout .rebuild-evidence-grid,
+body.rebuild-touch-layout .rebuild-dossier-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+body.rebuild-touch-layout .rebuild-record {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.8rem;
+}
+
+body.rebuild-touch-layout .rebuild-contact-card,
+body.rebuild-touch-layout .rebuild-footer > * {
+  width: 100%;
+}
+
+body.rebuild-touch-layout .rebuild-finale {
+  min-height: auto;
+}
+
+body.rebuild-touch-layout .rebuild-chapter-rail {
+  display: none;
+}
