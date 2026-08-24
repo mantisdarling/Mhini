@@ -8110,3 +8110,58 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
+
+/* Final responsive type guardrails: preserve hierarchy without allowing text to escape its owner. */
+.rebuild-site
+  :where(
+    .rebuild-intro,
+    .rebuild-story,
+    .rebuild-finale,
+    .rebuild-contact,
+    .rebuild-footer
+  )
+  > * {
+  min-width: 0;
+}
+.rebuild-site :where(h1, h2, h3, p, a, span) {
+  max-width: 100%;
+}
+.rebuild-site :where(p, a, span) {
+  overflow-wrap: break-word;
+}
+.rebuild-contact-card > a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.rebuild-contact-card > a svg {
+  flex: 0 0 auto;
+}
+.rebuild-footer > * {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 800px) {
+  .rebuild-finale-copy h2,
+  .rebuild-contact h2 {
+    max-width: 100%;
+    line-height: 0.88;
+    letter-spacing: -0.075em;
+    text-wrap: balance;
+  }
+  .rebuild-finale-copy > p,
+  .rebuild-contact > div:first-child > p:last-child {
+    max-width: 34rem;
+  }
+  .rebuild-footer {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .rebuild-footer > * {
+    grid-column: 1;
+    justify-self: start;
+    width: 100%;
+  }
+  .rebuild-footer .rebuild-footer-copy {
+    width: fit-content;
+  }
+}
