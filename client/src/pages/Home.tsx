@@ -246,7 +246,6 @@ export default function Home() {
             />
           </PortfolioBoundary>
           <HeroTelemetryField />
-          <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy" data-text-reveal>
             <SectionMarker
               number="00"
