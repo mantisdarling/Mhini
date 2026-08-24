@@ -45,6 +45,30 @@ describe("Vercel Express application", () => {
     expect(missingApi.status).toBe(404);
   });
 
+  it("coalesces concurrent readiness probes", async () => {
+    let releaseProbe!: () => void;
+    const probeStarted = new Promise<void>(resolve => {
+      releaseProbe = resolve;
+    });
+    const readiness = vi
+      .spyOn(db, "isDatabaseReady")
+      .mockImplementation(async () => {
+        await probeStarted;
+        return true;
+      });
+
+    const requests = Array.from({ length: 20 }, () =>
+      fetch(`${baseUrl}/readyz`)
+    );
+    await new Promise(resolve => setTimeout(resolve, 20));
+    releaseProbe();
+    const responses = await Promise.all(requests);
+
+    expect(responses.every(response => response.status === 200)).toBe(true);
+    expect(readiness).toHaveBeenCalledTimes(1);
+    readiness.mockRestore();
+  });
+
   it("sets browser security headers and rejects untrusted preflight origins", async () => {
     const response = await fetch(`${baseUrl}/healthz`, {
       headers: { Origin: "https://mhini.vercel.app" },

@@ -259,6 +259,7 @@ var recoverySnapshots = mysqlTable(
 var scalePolicy = {
   jsonPayloadLimit: "1mb",
   publicProjectCacheTtlMs: 6e4,
+  readinessCacheTtlMs: 5e3,
   storageRedirectCacheTtlMs: 6e4,
   staticAssetMaxAgeMs: 31536e6,
   staticFileMaxAgeMs: 36e5,
@@ -426,6 +427,7 @@ async function listRecoverySnapshots(limit) {
 // server/db.ts
 var mysqlDb = null;
 var publishedProjectCache = null;
+var publishedProjectRequest = null;
 function useSupabase() {
   return ENV.databaseProvider === "supabase";
 }
@@ -496,13 +498,20 @@ async function getUserByOpenId2(openId) {
   return result[0];
 }
 async function getPublishedProjects() {
-  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) return publishedProjectCache.values;
-  const values = useSupabase() ? await getProjects("published") : await withDatabase(await getDb()).select().from(projects).where(eq(projects.status, "published")).orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
-  publishedProjectCache = {
-    values,
-    expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs
-  };
-  return values;
+  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now())
+    return publishedProjectCache.values;
+  if (!publishedProjectRequest) {
+    publishedProjectRequest = (useSupabase() ? getProjects("published") : withDatabase(await getDb()).select().from(projects).where(eq(projects.status, "published")).orderBy(asc(projects.sortOrder), desc(projects.updatedAt))).then((values) => {
+      publishedProjectCache = {
+        values,
+        expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs
+      };
+      return values;
+    }).finally(() => {
+      publishedProjectRequest = null;
+    });
+  }
+  return publishedProjectRequest;
 }
 async function getAllProjects() {
   if (useSupabase()) return getProjects();
@@ -1284,15 +1293,35 @@ async function createContext(opts) {
 function createApplication(options = {}) {
   const app2 = express();
   let acceptingTraffic = true;
+  let readinessCache = null;
+  let readinessProbe = null;
+  const checkReadiness = async () => {
+    if (readinessCache && readinessCache.expiresAt > Date.now())
+      return readinessCache.ok;
+    if (!readinessProbe) {
+      readinessProbe = isDatabaseReady().catch(() => false).then((ok) => {
+        readinessCache = {
+          ok,
+          expiresAt: Date.now() + scalePolicy.readinessCacheTtlMs
+        };
+        return ok;
+      }).finally(() => {
+        readinessProbe = null;
+      });
+    }
+    return readinessProbe;
+  };
   app2.disable("x-powered-by");
   app2.set("trust proxy", 1);
-  const allowedOrigins = new Set([
-    "https://mhini.vercel.app",
-    process.env.PUBLIC_APP_ORIGIN,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : void 0,
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
-  ].filter((origin) => Boolean(origin)));
+  const allowedOrigins = new Set(
+    [
+      "https://mhini.vercel.app",
+      process.env.PUBLIC_APP_ORIGIN,
+      process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : void 0,
+      "http://localhost:3000",
+      "http://127.0.0.1:3000"
+    ].filter((origin) => Boolean(origin))
+  );
   const isDevelopment = process.env.NODE_ENV === "development";
   const contentSecurityPolicy = [
     "default-src 'self'",
@@ -1311,12 +1340,18 @@ function createApplication(options = {}) {
     "upgrade-insecure-requests"
   ].join("; ");
   app2.use((req, res, next) => {
-    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.setHeader(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains"
+    );
     res.setHeader("Content-Security-Policy", contentSecurityPolicy);
     res.setHeader("X-Frame-Options", "DENY");
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+    res.setHeader(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=(), payment=()"
+    );
     res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     const origin = req.headers.origin;
@@ -1324,7 +1359,10 @@ function createApplication(options = {}) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Vary", "Origin");
       res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, X-Requested-With"
+      );
       res.setHeader("Access-Control-Max-Age", "600");
     }
     if (req.method === "OPTIONS") {
@@ -1338,7 +1376,9 @@ function createApplication(options = {}) {
     next();
   });
   app2.use(express.json({ limit: scalePolicy.jsonPayloadLimit }));
-  app2.use(express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true }));
+  app2.use(
+    express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true })
+  );
   app2.get(["/healthz", "/api/healthz"], (_req, res) => {
     res.status(acceptingTraffic ? 200 : 503).json({ ok: acceptingTraffic });
   });
@@ -1348,14 +1388,17 @@ function createApplication(options = {}) {
       return;
     }
     try {
-      if (!await isDatabaseReady()) throw new Error("database unavailable");
+      if (!await checkReadiness()) throw new Error("database unavailable");
       res.status(200).json({ ok: true });
     } catch {
       res.status(503).json({ ok: false, reason: "database unavailable" });
     }
   });
   app2.post("/api/scheduled/recoverySnapshot", runScheduledRecoverySnapshot);
-  app2.get("/api/cron/recoverySnapshot", options.vercelRecoveryHandler ?? runVercelRecoverySnapshot);
+  app2.get(
+    "/api/cron/recoverySnapshot",
+    options.vercelRecoveryHandler ?? runVercelRecoverySnapshot
+  );
   registerStorageProxy(app2);
   registerOAuthRoutes(app2);
   app2.use(
@@ -1365,11 +1408,13 @@ function createApplication(options = {}) {
       createContext
     })
   );
-  app2.use((error, _req, res, next) => {
-    console.error("[Application] Unhandled request error", error);
-    if (res.headersSent) return next(error);
-    res.status(500).json({ error: "internal server error" });
-  });
+  app2.use(
+    (error, _req, res, next) => {
+      console.error("[Application] Unhandled request error", error);
+      if (res.headersSent) return next(error);
+      res.status(500).json({ error: "internal server error" });
+    }
+  );
   return {
     app: app2,
     stopAcceptingTraffic: () => {

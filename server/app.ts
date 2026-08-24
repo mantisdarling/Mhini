@@ -2,7 +2,10 @@ import express, { type RequestHandler } from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./routers";
 import { isDatabaseReady } from "./db";
-import { runScheduledRecoverySnapshot, runVercelRecoverySnapshot } from "./recoverySnapshot";
+import {
+  runScheduledRecoverySnapshot,
+  runVercelRecoverySnapshot,
+} from "./recoverySnapshot";
 import { registerOAuthRoutes } from "./_core/oauth";
 import { registerStorageProxy } from "./_core/storageProxy";
 import { createContext } from "./_core/context";
@@ -15,16 +18,42 @@ type ApplicationOptions = {
 export function createApplication(options: ApplicationOptions = {}) {
   const app = express();
   let acceptingTraffic = true;
+  let readinessCache: { ok: boolean; expiresAt: number } | null = null;
+  let readinessProbe: Promise<boolean> | null = null;
+
+  const checkReadiness = async () => {
+    if (readinessCache && readinessCache.expiresAt > Date.now())
+      return readinessCache.ok;
+    if (!readinessProbe) {
+      readinessProbe = isDatabaseReady()
+        .catch(() => false)
+        .then(ok => {
+          readinessCache = {
+            ok,
+            expiresAt: Date.now() + scalePolicy.readinessCacheTtlMs,
+          };
+          return ok;
+        })
+        .finally(() => {
+          readinessProbe = null;
+        });
+    }
+    return readinessProbe;
+  };
 
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
-  const allowedOrigins = new Set([
-    "https://mhini.vercel.app",
-    process.env.PUBLIC_APP_ORIGIN,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined,
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-  ].filter((origin): origin is string => Boolean(origin)));
+  const allowedOrigins = new Set(
+    [
+      "https://mhini.vercel.app",
+      process.env.PUBLIC_APP_ORIGIN,
+      process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : undefined,
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+    ].filter((origin): origin is string => Boolean(origin))
+  );
   const isDevelopment = process.env.NODE_ENV === "development";
   const contentSecurityPolicy = [
     "default-src 'self'",
@@ -43,12 +72,18 @@ export function createApplication(options: ApplicationOptions = {}) {
     "upgrade-insecure-requests",
   ].join("; ");
   app.use((req, res, next) => {
-    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.setHeader(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains"
+    );
     res.setHeader("Content-Security-Policy", contentSecurityPolicy);
     res.setHeader("X-Frame-Options", "DENY");
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+    res.setHeader(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=(), payment=()"
+    );
     res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
     // Public hero assets live on a separate CDN origin and must remain readable.
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
@@ -57,7 +92,10 @@ export function createApplication(options: ApplicationOptions = {}) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Vary", "Origin");
       res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, X-Requested-With"
+      );
       res.setHeader("Access-Control-Max-Age", "600");
     }
     if (req.method === "OPTIONS") {
@@ -71,7 +109,9 @@ export function createApplication(options: ApplicationOptions = {}) {
     next();
   });
   app.use(express.json({ limit: scalePolicy.jsonPayloadLimit }));
-  app.use(express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true }));
+  app.use(
+    express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true })
+  );
   app.get(["/healthz", "/api/healthz"], (_req, res) => {
     res.status(acceptingTraffic ? 200 : 503).json({ ok: acceptingTraffic });
   });
@@ -81,14 +121,17 @@ export function createApplication(options: ApplicationOptions = {}) {
       return;
     }
     try {
-      if (!(await isDatabaseReady())) throw new Error("database unavailable");
+      if (!(await checkReadiness())) throw new Error("database unavailable");
       res.status(200).json({ ok: true });
     } catch {
       res.status(503).json({ ok: false, reason: "database unavailable" });
     }
   });
   app.post("/api/scheduled/recoverySnapshot", runScheduledRecoverySnapshot);
-  app.get("/api/cron/recoverySnapshot", options.vercelRecoveryHandler ?? runVercelRecoverySnapshot);
+  app.get(
+    "/api/cron/recoverySnapshot",
+    options.vercelRecoveryHandler ?? runVercelRecoverySnapshot
+  );
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   app.use(
@@ -96,13 +139,20 @@ export function createApplication(options: ApplicationOptions = {}) {
     createExpressMiddleware({
       router: appRouter,
       createContext,
-    }),
+    })
   );
-  app.use((error: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error("[Application] Unhandled request error", error);
-    if (res.headersSent) return next(error);
-    res.status(500).json({ error: "internal server error" });
-  });
+  app.use(
+    (
+      error: unknown,
+      _req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      console.error("[Application] Unhandled request error", error);
+      if (res.headersSent) return next(error);
+      res.status(500).json({ error: "internal server error" });
+    }
+  );
 
   return {
     app,
