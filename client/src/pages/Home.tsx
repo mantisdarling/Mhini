@@ -10,357 +10,51 @@ import {
   memberships,
   openSource,
   profile,
-  projects as profileProjects,
   technologyGroups,
   vision,
   writing,
 } from "@/data/profileData";
-import { ArrowUpRight, Check, ChevronDown, Github, Instagram, Link2, Linkedin, Mail, Menu, Share2, X } from "lucide-react";
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  Check,
+  ChevronDown,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  Menu,
+  X,
+} from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useStoryParallax } from "@/hooks/useStoryParallax";
 import { useTextReveal } from "@/hooks/useTextReveal";
-
-type DisplayProject = {
-  id: string | number;
-  title?: string;
-  name?: string;
-  category?: string;
-  status?: string;
-  role?: string;
-  description: string;
-  imageUrl?: string | null;
-  mobileImageUrl?: string | null;
-  projectUrl?: string | null;
-  tags: string[];
-  tagline?: string;
-  problem?: string;
-  solution?: string;
-  highlights?: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-};
-
-const ASSETS = {
-  hero: import.meta.env.VITE_HERO_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/LzfUFsJmwAEdqRuc.jpg",
-  mark: import.meta.env.VITE_MARK_ASSET_URL || "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/SzCbbuLdJOszlBMq.webp",
-  caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/USqfDrBUsSRPObfw.webp",
-  stackBackdrop: "/manus-storage/mantis-stack-mountain-waterfall_e3d55c7e.jpg",
-  story: {
-    motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dXOMgdKzODAwcXzG.webp",
-    blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/mLkdLUoOCQEUGqpn.webp",
-    descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/CVLSXMjGiZyuLzmm.webp",
-    stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/QhtLfdSjMUvuXRLv.webp",
-    finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/DDtXMipemsimcRFJ.webp",
-    heroVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dQgTwaCcLKHSusnt.mp4",
-    closingVideo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/qPIGKaMzyrRrveJB.mp4",
-    heroPoster: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/DqFlWdeJBdeaAsZf.webp",
-    mobile: {
-      finalFrame: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/TWsZPXtLopGlIkYr.webp",
-      motion: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/sTadKupcVFDwguav.webp",
-      blade: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/FTbPLbavzYQOssdo.webp",
-      descent: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/nUUmQGGwbuDjMqAD.webp",
-      stillness: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/prTZlVLRoZCIcWHZ.webp",
-      caseStudy: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/yobFGNuwyHwrFsAO.webp",
-    },
-  },
-};
-
-const resumeProjects: DisplayProject[] = profileProjects.map((project, index) => ({
-  ...project,
-  id: project.id,
-  title: project.name,
-  category: project.role ? `${project.status} / ${project.role}` : project.status,
-  imageUrl: index === 0 ? ASSETS.caseStudy : null,
-  mobileImageUrl: index === 0 ? ASSETS.story.mobile.caseStudy : null,
-  projectUrl: project.liveUrl ?? project.githubUrl ?? null,
-  tags: [...project.technologies],
-}));
-
-const navItems = [
-  ["Work", "work"],
-  ["Profile", "profile"],
-  ["Stack", "stack"],
-  ["Evidence", "evidence"],
-  ["Contact", "contact"],
-] as const;
-
-export function safeExternalUrl(href?: string | null) {
-  if (!href) return null;
-  try {
-    const url = new URL(href);
-    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
-  } catch {
-    return null;
-  }
-}
-
-function ExternalLink({ href, children }: { href?: string | null; children: React.ReactNode }) {
-  const safeHref = safeExternalUrl(href);
-  if (!safeHref) return null;
-  return <a className="rebuild-link" href={safeHref} target="_blank" rel="noopener noreferrer">{children}<ArrowUpRight size={14} aria-hidden="true" /></a>;
-}
-
-function SectionMarker({ number, label }: { number: string; label: string }) {
-  return <p className="rebuild-marker"><span>{number}</span><i aria-hidden="true" />{label}</p>;
-}
-
-function projectShareUrl(project: DisplayProject) {
-  if (typeof window === "undefined") return "https://mhini.vercel.app/#work";
-  const url = new URL(window.location.href);
-  url.hash = "work";
-  return safeExternalUrl(project.liveUrl ?? project.projectUrl) ?? url.toString();
-}
-
-function ProjectShareActions({ project }: { project: DisplayProject }) {
-  const [feedback, setFeedback] = useState("");
-  const [feedbackVisible, setFeedbackVisible] = useState(false);
-  const feedbackTimer = useRef<number | null>(null);
-  const feedbackRemoveTimer = useRef<number | null>(null);
-  const title = project.title ?? project.name ?? "Mantis project";
-  const shareUrl = projectShareUrl(project);
-  const shareText = project.tagline ?? project.description;
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedText = encodeURIComponent(`${title} by Mantis`);
-
-  const clearFeedbackTimers = () => {
-    if (feedbackTimer.current !== null) window.clearTimeout(feedbackTimer.current);
-    if (feedbackRemoveTimer.current !== null) window.clearTimeout(feedbackRemoveTimer.current);
-    feedbackTimer.current = null;
-    feedbackRemoveTimer.current = null;
-  };
-
-  const showFeedback = (message: string) => {
-    clearFeedbackTimers();
-    setFeedback(message);
-    setFeedbackVisible(true);
-    feedbackTimer.current = window.setTimeout(() => {
-      setFeedbackVisible(false);
-      feedbackTimer.current = null;
-      feedbackRemoveTimer.current = window.setTimeout(() => {
-        setFeedback("");
-        feedbackRemoveTimer.current = null;
-      }, 240);
-    }, 2200);
-  };
-
-  useEffect(() => () => clearFeedbackTimers(), []);
-
-  const copyLink = async () => {
-    if (!navigator.clipboard?.writeText) {
-      showFeedback("Copy unavailable");
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      showFeedback("Link copied");
-    } catch {
-      showFeedback("Copy unavailable");
-    }
-  };
-
-  const nativeShare = async () => {
-    if (!navigator.share) {
-      await copyLink();
-      return;
-    }
-    try {
-      await navigator.share({ title, text: shareText, url: shareUrl });
-      showFeedback("Shared");
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      showFeedback("Share unavailable");
-    }
-  };
-
-  return <div className="rebuild-share" aria-label={`Share ${title}`}>
-    <span className="rebuild-share-label">SHARE THIS RECORD</span>
-    <div className="rebuild-share-actions">
-      <button className="rebuild-share-button" type="button" onClick={nativeShare} aria-label={`Share ${title}`}><Share2 size={14} aria-hidden="true" />Share</button>
-      <span className="rebuild-share-tooltip-wrap">
-        <button className="rebuild-share-button rebuild-copy-link-button" type="button" onClick={copyLink} aria-label={`Copy link to ${title}`} aria-describedby={`copy-link-tooltip-${project.id}`}><Link2 size={14} aria-hidden="true" />Copy link</button>
-        <span className="rebuild-share-tooltip" id={`copy-link-tooltip-${project.id}`} role="tooltip">Copy this project link</span>
-      </span>
-      <a className="rebuild-share-button" href={`https://x.com/intent/post?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">X</a>
-      <a className="rebuild-share-button" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    </div>
-    {feedback && <div className={`rebuild-share-toast${feedbackVisible ? " is-visible" : ""}`} role="status" aria-live="polite" aria-atomic="true"><i aria-hidden="true" />{feedback}</div>}
-  </div>;
-}
-
-function ResponsiveImage({ src, mobileSrc, alt = "", className = "", loading = "lazy", fetchPriority = "auto" }: { src: string; mobileSrc?: string; alt?: string; className?: string; loading?: "eager" | "lazy"; fetchPriority?: "high" | "low" | "auto" }) {
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [loaded, setLoaded] = useState(false);
-  const [mobileFailed, setMobileFailed] = useState(false);
-
-  useEffect(() => {
-    setLoaded(false);
-    setMobileFailed(false);
-    const image = imageRef.current;
-    if (image?.complete && image.naturalWidth > 0) setLoaded(true);
-  }, [src, mobileSrc]);
-
-  return <picture>
-    {mobileSrc && !mobileFailed && <source media="(max-width: 800px)" srcSet={mobileSrc} />}
-    <img
-      ref={imageRef}
-      className={`mobile-image-reveal ${className} ${loaded ? "is-loaded" : ""}`.trim()}
-      src={src}
-      alt={alt}
-      loading={loading}
-      fetchPriority={fetchPriority}
-      decoding="async"
-      onLoad={() => setLoaded(true)}
-      onError={() => {
-        if (mobileSrc && !mobileFailed) {
-          setMobileFailed(true);
-          setLoaded(false);
-        } else {
-          setLoaded(true);
-        }
-      }}
-    />
-  </picture>;
-}
-
-function ProjectCardSkeleton() {
-  return (
-    <article className="rebuild-project-card rebuild-project-card-skeleton" aria-hidden="true">
-      <div className="rebuild-project-visual rebuild-skeleton-surface">
-        <span className="rebuild-skeleton-index" />
-        <span className="rebuild-skeleton-corner" />
-      </div>
-      <div className="rebuild-project-copy">
-        <div className="rebuild-project-meta"><span className="rebuild-skeleton-line rebuild-skeleton-meta" /><span className="rebuild-skeleton-line rebuild-skeleton-meta rebuild-skeleton-meta-short" /></div>
-        <span className="rebuild-skeleton-line rebuild-skeleton-title" />
-        <span className="rebuild-skeleton-line rebuild-skeleton-copy" />
-      </div>
-    </article>
-  );
-}
-
-function ProjectCard({ project, index, onOpen }: { project: DisplayProject; index: number; onOpen: (project: DisplayProject) => void }) {
-  const title = project.title ?? project.name ?? "Untitled project";
-  const projectMeta = project.role ? `${project.status ?? "Project"} / ${project.role}` : project.status ?? "Project";
-  return (
-    <article
-      className={`rebuild-project-card ${index === 0 ? "is-featured" : ""}`}
-      tabIndex={0}
-      role="button"
-      aria-label={`Open project dossier for ${title}`}
-      onClick={() => onOpen(project)}
-      onKeyDown={event => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onOpen(project);
-        }
-      }}
-    >
-      <div className="rebuild-project-visual">
-        <ResponsiveImage src={project.imageUrl ?? ASSETS.caseStudy} mobileSrc={project.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} className="rebuild-project-image" />
-        <div className="rebuild-project-overlay" aria-hidden="true" />
-        <span className="rebuild-project-index">{String(index + 1).padStart(2, "0")}</span>
-        <span className="rebuild-project-open">Open dossier <ArrowUpRight size={15} aria-hidden="true" /></span>
-      </div>
-      <div className="rebuild-project-copy" data-text-reveal>
-        <div className="rebuild-project-meta"><span>{projectMeta}</span><span>{project.tags.slice(0, 3).join(" / ")}</span></div>
-        <h3>{title}</h3>
-        {project.tagline && <p>{project.tagline}</p>}
-      </div>
-    </article>
-  );
-}
-
-function DetailBlock({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div className="rebuild-detail-block"><p>{label}</p><div>{children}</div></div>;
-}
-
-function SceneBackdrop({ src, mobileSrc, alt = "" }: { src: string; mobileSrc?: string; alt?: string }) {
-  return <div className="cinematic-scene-backdrop" aria-hidden="true"><ResponsiveImage src={src} mobileSrc={mobileSrc} alt={alt} /></div>;
-}
-
-function useCompactViewport() {
-  const [isCompact, setIsCompact] = useState(() => typeof window !== "undefined" && window.matchMedia?.("(max-width: 800px)").matches === true);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const media = window.matchMedia("(max-width: 800px)");
-    const update = () => setIsCompact(media.matches);
-    update();
-    media.addEventListener?.("change", update);
-    return () => media.removeEventListener?.("change", update);
-  }, []);
-
-  return isCompact;
-}
-
-function VideoBackdrop({ src, fallbackSrc, mobileFallbackSrc, poster, mobilePoster, preload = "auto" }: { src: string; fallbackSrc?: string; mobileFallbackSrc?: string; poster?: string; mobilePoster?: string; preload?: "auto" | "metadata" | "none" }) {
-  const isCompact = useCompactViewport();
-  const activePoster = isCompact ? mobilePoster ?? poster : poster;
-  return <div className="cinematic-video-backdrop" aria-hidden="true">{fallbackSrc && <ResponsiveImage src={fallbackSrc} mobileSrc={mobileFallbackSrc} loading="eager" fetchPriority={preload === "auto" ? "high" : "auto"} />}<video src={src} {...(activePoster ? { poster: activePoster } : {})} autoPlay muted loop playsInline preload={preload} /><span /></div>;
-}
-
-function StoryScene({ src, mobileSrc, label, title }: { src: string; mobileSrc: string; label: string; title: string }) {
-  return <article className="cinematic-story-scene"><ResponsiveImage src={src} mobileSrc={mobileSrc} className="cinematic-story-image" /><span data-text-reveal>{label}</span><h3 data-text-reveal="delayed">{title}</h3></article>;
-}
-
-function EvidenceDossier({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const [panelHeight, setPanelHeight] = useState(0);
-  const panelInnerRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const panelInner = panelInnerRef.current;
-    if (!panelInner) return;
-    let measuredHeight = 0;
-    let frame = 0;
-    const applyHeight = (height: number) => {
-      const nextHeight = Math.ceil(height);
-      if (nextHeight === measuredHeight) return;
-      measuredHeight = nextHeight;
-      setPanelHeight(nextHeight);
-    };
-    const measureNow = () => applyHeight(panelInner.getBoundingClientRect().height);
-    let pendingHeight: number | undefined;
-    const queueMeasure = (entries: ResizeObserverEntry[]) => {
-      pendingHeight = entries[0]?.contentRect.height;
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        const nextHeight = pendingHeight;
-        pendingHeight = undefined;
-        if (typeof nextHeight === "number") applyHeight(nextHeight);
-        else measureNow();
-      });
-    };
-
-    measureNow();
-    if (typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(queueMeasure);
-    observer.observe(panelInner);
-    return () => {
-      observer.disconnect();
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  return (
-    <section className={`rebuild-dossier ${open ? "is-open" : ""}`}>
-      <h3 className="rebuild-dossier-heading">
-        <button id={`${id}-summary`} className="rebuild-dossier-summary" type="button" aria-expanded={open} aria-controls={`${id}-panel`} onClick={() => setOpen(value => !value)}>
-          <span>{title}</span>
-          <ChevronDown size={17} aria-hidden="true" />
-        </button>
-      </h3>
-        <div id={`${id}-panel`} className="rebuild-dossier-panel" role="region" aria-labelledby={`${id}-summary`} aria-hidden={!open} inert={!open ? true : undefined} style={{ maxHeight: open ? panelHeight : 0 }}>
-        <div ref={panelInnerRef} className="rebuild-dossier-panel-inner">{children}</div>
-      </div>
-    </section>
-  );
-}
+import {
+  ASSETS,
+  navItems,
+  resumeProjects,
+  safeExternalUrl,
+  type DisplayProject,
+} from "@/components/portfolio/model";
+export { safeExternalUrl } from "@/components/portfolio/model";
+import {
+  DetailBlock,
+  EvidenceDossier,
+  ExternalLink,
+  ProjectCard,
+  ProjectCardSkeleton,
+  ProjectShareActions,
+  ResponsiveImage,
+  SceneBackdrop,
+  SectionMarker,
+  StoryScene,
+  VideoBackdrop,
+} from "@/components/portfolio/PortfolioPrimitives";
 
 export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
-  const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
+  const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(
+    null
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
@@ -370,20 +64,31 @@ export default function Home() {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   useStoryParallax(storyRef);
   useTextReveal(siteRef);
-  const displayedProjects = useMemo<DisplayProject[]>(() => [...resumeProjects, ...(publicProjectsQuery.data ?? [])], [publicProjectsQuery.data]);
+  const displayedProjects = useMemo<DisplayProject[]>(
+    () => [...resumeProjects, ...(publicProjectsQuery.data ?? [])],
+    [publicProjectsQuery.data]
+  );
 
   useEffect(() => {
     const sections = navItems
       .map(([, id]) => document.getElementById(id))
-      .filter((section): section is HTMLElement => section instanceof HTMLElement);
+      .filter(
+        (section): section is HTMLElement => section instanceof HTMLElement
+      );
     if (!sections.length || typeof IntersectionObserver === "undefined") return;
 
-    const observer = new IntersectionObserver(entries => {
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)[0];
-      if (visible) setActiveSection((visible.target as HTMLElement).id);
-    }, { rootMargin: "-18% 0px -62% 0px", threshold: [0, 0.2, 0.5] });
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort(
+            (first, second) =>
+              first.boundingClientRect.top - second.boundingClientRect.top
+          )[0];
+        if (visible) setActiveSection((visible.target as HTMLElement).id);
+      },
+      { rootMargin: "-18% 0px -62% 0px", threshold: [0, 0.2, 0.5] }
+    );
 
     sections.forEach(section => observer.observe(section));
     return () => observer.disconnect();
@@ -392,28 +97,38 @@ export default function Home() {
   useEffect(() => {
     const grid = projectGridRef.current;
     if (!grid) return;
-    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".rebuild-project-card"));
+    const cards = Array.from(
+      grid.querySelectorAll<HTMLElement>(".rebuild-project-card")
+    );
     setActiveProjectIndex(0);
     if (cards.length === 0) return;
 
     const updateFromScroll = () => {
       const nextIndex = cards.reduce((closestIndex, card, index) => {
         const cardDistance = Math.abs(card.offsetLeft - grid.scrollLeft);
-        const closestDistance = Math.abs(cards[closestIndex].offsetLeft - grid.scrollLeft);
+        const closestDistance = Math.abs(
+          cards[closestIndex].offsetLeft - grid.scrollLeft
+        );
         return cardDistance < closestDistance ? index : closestIndex;
       }, 0);
       setActiveProjectIndex(nextIndex);
     };
 
     if (typeof IntersectionObserver !== "undefined") {
-      const observer = new IntersectionObserver(entries => {
-        const visibleEntry = entries
-          .filter(entry => entry.isIntersecting)
-          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
-        if (!visibleEntry) return;
-        const nextIndex = cards.indexOf(visibleEntry.target as HTMLElement);
-        if (nextIndex >= 0) setActiveProjectIndex(nextIndex);
-      }, { root: grid, threshold: [0.55, 0.8] });
+      const observer = new IntersectionObserver(
+        entries => {
+          const visibleEntry = entries
+            .filter(entry => entry.isIntersecting)
+            .sort(
+              (first, second) =>
+                second.intersectionRatio - first.intersectionRatio
+            )[0];
+          if (!visibleEntry) return;
+          const nextIndex = cards.indexOf(visibleEntry.target as HTMLElement);
+          if (nextIndex >= 0) setActiveProjectIndex(nextIndex);
+        },
+        { root: grid, threshold: [0.55, 0.8] }
+      );
       cards.forEach(card => observer.observe(card));
       updateFromScroll();
       return () => observer.disconnect();
@@ -452,107 +167,664 @@ export default function Home() {
 
   useEffect(() => {
     document.body.style.overflow = selectedProject ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [selectedProject]);
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
     setMenuOpen(false);
   };
 
   return (
     <div ref={siteRef} className="rebuild-site">
-      <a className="rebuild-skip-link" href="#main-content">Skip to content</a>
+      <a className="rebuild-skip-link" href="#main-content">
+        Skip to content
+      </a>
       <header className="rebuild-header">
-        <button className="rebuild-brand" type="button" onClick={() => scrollTo("top")} aria-label="Return to the top of Mantis">
+        <button
+          className="rebuild-brand"
+          type="button"
+          onClick={() => scrollTo("top")}
+          aria-label="Return to the top of Mantis"
+        >
           <img src={ASSETS.mark} alt="" />
           <span>MANTIS</span>
         </button>
-        <nav id="primary-navigation" className={`rebuild-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
-          {navItems.map(([label, id], index) => <button className={activeSection === id ? "is-active" : undefined} type="button" key={id} onClick={() => scrollTo(id)} aria-current={activeSection === id ? "location" : undefined}><span>0{index + 1}</span>{label}</button>)}
+        <nav
+          id="primary-navigation"
+          className={`rebuild-nav ${menuOpen ? "is-open" : ""}`}
+          aria-label="Primary navigation"
+        >
+          {navItems.map(([label, id], index) => (
+            <button
+              className={activeSection === id ? "is-active" : undefined}
+              type="button"
+              key={id}
+              onClick={() => scrollTo(id)}
+              aria-current={activeSection === id ? "location" : undefined}
+            >
+              <span>0{index + 1}</span>
+              {label}
+            </button>
+          ))}
         </nav>
-        <button className="rebuild-menu" type="button" onClick={() => setMenuOpen(open => !open)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
+        <button
+          className="rebuild-menu"
+          type="button"
+          onClick={() => setMenuOpen(open => !open)}
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </header>
 
       <main id="main-content" tabIndex={-1}>
         <section className="rebuild-hero cinematic-hero" id="top">
-          <VideoBackdrop src={ASSETS.story.heroVideo} fallbackSrc={ASSETS.story.motion} mobileFallbackSrc={ASSETS.story.mobile.motion} poster={ASSETS.story.heroPoster} />
+          <VideoBackdrop
+            src={ASSETS.story.heroVideo}
+            fallbackSrc={ASSETS.story.motion}
+            mobileFallbackSrc={ASSETS.story.mobile.motion}
+            poster={ASSETS.story.heroPoster}
+          />
           <div className="rebuild-hero-grid" aria-hidden="true" />
           <div className="rebuild-hero-copy" data-text-reveal>
-            <SectionMarker number="00" label="AI SYSTEMS BUILDER / IIT MADRAS" />
+            <SectionMarker
+              number="00"
+              label="AI SYSTEMS BUILDER / IIT MADRAS"
+            />
             <p className="rebuild-kicker">I GO DEEP. THEN I BUILD.</p>
             <h1 className="rebuild-wordmark">Mantis</h1>
             <p className="rebuild-lede">{profile.oneLineBio}</p>
-            <div className="rebuild-hero-actions"><button className="rebuild-primary" type="button" onClick={() => scrollTo("work")}>See the work <ArrowUpRight size={17} aria-hidden="true" /></button><a className="rebuild-secondary" href={`mailto:${profile.secondaryEmail}`}>Start a conversation</a></div>
-            <div className="rebuild-hero-proof" data-text-reveal="delayed"><span><b>01</b> MANTIS / FOUNDER</span><span><b>02</b> IIT MADRAS / CS</span><span><b>03</b> AI / SYSTEMS</span></div>
+            <div className="rebuild-hero-actions">
+              <button
+                className="rebuild-primary"
+                type="button"
+                onClick={() => scrollTo("work")}
+              >
+                See the work <ArrowUpRight size={17} aria-hidden="true" />
+              </button>
+              <a
+                className="rebuild-secondary"
+                href={`mailto:${profile.secondaryEmail}`}
+              >
+                Start a conversation
+              </a>
+            </div>
+            <div className="rebuild-hero-proof" data-text-reveal="delayed">
+              <span>
+                <b>01</b> MANTIS / FOUNDER
+              </span>
+              <span>
+                <b>02</b> IIT MADRAS / CS
+              </span>
+              <span>
+                <b>03</b> AI / SYSTEMS
+              </span>
+            </div>
           </div>
-          <div className="rebuild-hero-foot"><span>SCROLL TO READ</span><i aria-hidden="true" /></div>
+          <div className="rebuild-hero-foot">
+            <span>SCROLL TO READ</span>
+            <i aria-hidden="true" />
+          </div>
         </section>
 
         <section className="rebuild-intro cinematic-section" id="profile">
-          <SceneBackdrop src={ASSETS.story.stillness} mobileSrc={ASSETS.story.mobile.stillness} />
-          <div className="rebuild-section-lead" data-text-reveal><SectionMarker number="01" label="PROFILE" /><p className="rebuild-profile-name">Harshit Kumar</p><h2>Not a portfolio.<br /><em>A working record.</em></h2></div>
-          <div className="rebuild-intro-body" data-text-reveal="delayed"><p className="rebuild-statement">{profile.positioning}</p><p>{profile.shortBio}</p><details className="rebuild-disclosure"><summary>Read the full profile <ChevronDown size={16} aria-hidden="true" /></summary><div>{profile.fullBio.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></details><div className="rebuild-links">{profile.links.map(link => <ExternalLink href={link.url} key={link.label}>{link.label}</ExternalLink>)}</div></div>
+          <SceneBackdrop
+            src={ASSETS.story.stillness}
+            mobileSrc={ASSETS.story.mobile.stillness}
+          />
+          <div className="rebuild-section-lead" data-text-reveal>
+            <SectionMarker number="01" label="PROFILE" />
+            <p className="rebuild-profile-name">Harshit Kumar</p>
+            <h2>
+              Not a portfolio.
+              <br />
+              <em>A working record.</em>
+            </h2>
+          </div>
+          <div className="rebuild-intro-body" data-text-reveal="delayed">
+            <p className="rebuild-statement">{profile.positioning}</p>
+            <p>{profile.shortBio}</p>
+            <details className="rebuild-disclosure">
+              <summary>
+                Read the full profile{" "}
+                <ChevronDown size={16} aria-hidden="true" />
+              </summary>
+              <div>
+                {profile.fullBio.map(paragraph => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </details>
+            <div className="rebuild-links">
+              {profile.links.map(link => (
+                <ExternalLink href={link.url} key={link.label}>
+                  {link.label}
+                </ExternalLink>
+              ))}
+            </div>
+          </div>
         </section>
 
-        <section className="rebuild-story cinematic-story" ref={storyRef} aria-label="Mantis visual story">
-          <div className="rebuild-story-intro" data-text-reveal><SectionMarker number="01A" label="THE FIELD NOTE" /><h2>Enter through<br /><em>the image.</em></h2><p>A visual interlude for the discipline behind the work. Each frame is a chapter in the same field, not a separate card.</p></div>
+        <section
+          className="rebuild-story cinematic-story"
+          ref={storyRef}
+          aria-label="Mantis visual story"
+        >
+          <div className="rebuild-story-intro" data-text-reveal>
+            <SectionMarker number="01A" label="THE FIELD NOTE" />
+            <h2>
+              Enter through
+              <br />
+              <em>the image.</em>
+            </h2>
+            <p>
+              A visual interlude for the discipline behind the work. Each frame
+              is a chapter in the same field, not a separate card.
+            </p>
+          </div>
           <div className="cinematic-story-scenes">
-            <StoryScene src={ASSETS.story.motion} mobileSrc={ASSETS.story.mobile.motion} label="01 / ARRIVAL" title="Read the atmosphere before the system." />
-            <StoryScene src={ASSETS.story.blade} mobileSrc={ASSETS.story.mobile.blade} label="02 / EDGE" title="A precise line is enough." />
-            <StoryScene src={ASSETS.story.descent} mobileSrc={ASSETS.story.mobile.descent} label="03 / DEPTH" title="Go lower than the obvious layer." />
-            <StoryScene src={ASSETS.story.stillness} mobileSrc={ASSETS.story.mobile.stillness} label="04 / SYSTEM" title="Let the environment carry the weight." />
+            <StoryScene
+              src={ASSETS.story.motion}
+              mobileSrc={ASSETS.story.mobile.motion}
+              label="01 / ARRIVAL"
+              title="Read the atmosphere before the system."
+            />
+            <StoryScene
+              src={ASSETS.story.blade}
+              mobileSrc={ASSETS.story.mobile.blade}
+              label="02 / EDGE"
+              title="A precise line is enough."
+            />
+            <StoryScene
+              src={ASSETS.story.descent}
+              mobileSrc={ASSETS.story.mobile.descent}
+              label="03 / DEPTH"
+              title="Go lower than the obvious layer."
+            />
+            <StoryScene
+              src={ASSETS.story.stillness}
+              mobileSrc={ASSETS.story.mobile.stillness}
+              label="04 / SYSTEM"
+              title="Let the environment carry the weight."
+            />
           </div>
         </section>
 
         <section className="rebuild-work cinematic-section" id="work">
-          <SceneBackdrop src={ASSETS.caseStudy} mobileSrc={ASSETS.story.mobile.caseStudy} />
-          <div className="rebuild-section-heading"><div data-text-reveal><SectionMarker number="02" label="SELECTED WORK" /><h2>Proof,<br /><em>not promises.</em></h2></div><p data-text-reveal="delayed">{displayedProjects.length} project records. Real links, real constraints, real systems.</p></div>
-          <div className="rebuild-project-carousel-hint" data-text-reveal aria-hidden="true"><span>SWIPE TO BROWSE</span><i /></div>
-          <div className="rebuild-project-position" data-text-reveal="delayed" aria-label="Project carousel position">
-            <span aria-live="polite">{String(activeProjectIndex + 1).padStart(2, "0")} / {String(displayedProjects.length).padStart(2, "0")}</span>
-            <span className="rebuild-project-position-dots" aria-hidden="true">{displayedProjects.map((project, index) => <i className={index === activeProjectIndex ? "is-active" : ""} key={project.id} />)}</span>
+          <SceneBackdrop
+            src={ASSETS.caseStudy}
+            mobileSrc={ASSETS.story.mobile.caseStudy}
+          />
+          <div className="rebuild-section-heading">
+            <div data-text-reveal>
+              <SectionMarker number="02" label="SELECTED WORK" />
+              <h2>
+                Proof,
+                <br />
+                <em>not promises.</em>
+              </h2>
+            </div>
+            <p data-text-reveal="delayed">
+              {displayedProjects.length} project records. Real links, real
+              constraints, real systems.
+            </p>
           </div>
-          {publicProjectsQuery.isLoading && <span className="sr-only" role="status">Loading additional project records</span>}
-          <div ref={projectGridRef} className={`rebuild-project-grid ${publicProjectsQuery.isLoading ? "is-loading" : ""}`} role="region" aria-roledescription="carousel" aria-label="Project archive" aria-busy={publicProjectsQuery.isLoading} tabIndex={0}>{displayedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />)}{publicProjectsQuery.isLoading && <><ProjectCardSkeleton /><ProjectCardSkeleton /></>}</div>
+          <div
+            className="rebuild-project-carousel-hint"
+            data-text-reveal
+            aria-hidden="true"
+          >
+            <span>SWIPE TO BROWSE</span>
+            <i />
+          </div>
+          <div
+            className="rebuild-project-position"
+            data-text-reveal="delayed"
+            aria-label="Project carousel position"
+          >
+            <span aria-live="polite">
+              {String(activeProjectIndex + 1).padStart(2, "0")} /{" "}
+              {String(displayedProjects.length).padStart(2, "0")}
+            </span>
+            <span className="rebuild-project-position-dots" aria-hidden="true">
+              {displayedProjects.map((project, index) => (
+                <i
+                  className={index === activeProjectIndex ? "is-active" : ""}
+                  key={project.id}
+                />
+              ))}
+            </span>
+          </div>
+          {publicProjectsQuery.isLoading && (
+            <span className="sr-only" role="status">
+              Loading additional project records
+            </span>
+          )}
+          <div
+            ref={projectGridRef}
+            className={`rebuild-project-grid ${publicProjectsQuery.isLoading ? "is-loading" : ""}`}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Project archive"
+            aria-busy={publicProjectsQuery.isLoading}
+            tabIndex={0}
+          >
+            {displayedProjects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                onOpen={setSelectedProject}
+              />
+            ))}
+            {publicProjectsQuery.isLoading && (
+              <>
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </>
+            )}
+          </div>
         </section>
 
         <section className="rebuild-stack cinematic-section" id="stack">
-          <SceneBackdrop src={ASSETS.stackBackdrop} mobileSrc={ASSETS.story.mobile.blade} />
-          <div className="rebuild-section-heading"><div data-text-reveal><SectionMarker number="03" label="THE STACK" /><h2>Tools are<br /><em>judgment.</em></h2></div><p data-text-reveal="delayed">Every technology below is retained from the working record. Open a category to scan the full field.</p></div>
-          <div className="rebuild-stack-list">{technologyGroups.map((group, index) => <div className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`} key={group.category}><button data-text-reveal type="button" onClick={() => setExpandedGroup(expandedGroup === group.category ? null : group.category)} aria-expanded={expandedGroup === group.category}><span>0{index + 1}</span><strong>{group.category}</strong><ChevronDown size={19} aria-hidden="true" /></button><div className="rebuild-chip-list">{group.items.map(item => <span key={item}>{item}</span>)}</div></div>)}</div>
+          <SceneBackdrop
+            src={ASSETS.stackBackdrop}
+            mobileSrc={ASSETS.story.mobile.blade}
+          />
+          <div className="rebuild-section-heading">
+            <div data-text-reveal>
+              <SectionMarker number="03" label="THE STACK" />
+              <h2>
+                Tools are
+                <br />
+                <em>judgment.</em>
+              </h2>
+            </div>
+            <p data-text-reveal="delayed">
+              Every technology below is retained from the working record. Open a
+              category to scan the full field.
+            </p>
+          </div>
+          <div className="rebuild-stack-list">
+            {technologyGroups.map((group, index) => (
+              <div
+                className={`rebuild-stack-row ${expandedGroup === group.category ? "is-open" : ""}`}
+                key={group.category}
+              >
+                <button
+                  data-text-reveal
+                  type="button"
+                  onClick={() =>
+                    setExpandedGroup(
+                      expandedGroup === group.category ? null : group.category
+                    )
+                  }
+                  aria-expanded={expandedGroup === group.category}
+                >
+                  <span>0{index + 1}</span>
+                  <strong>{group.category}</strong>
+                  <ChevronDown size={19} aria-hidden="true" />
+                </button>
+                <div className="rebuild-chip-list">
+                  {group.items.map(item => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="rebuild-evidence cinematic-section" id="evidence">
-          <SceneBackdrop src={ASSETS.story.descent} mobileSrc={ASSETS.story.mobile.descent} />
-          <div className="rebuild-section-heading"><div data-text-reveal><SectionMarker number="04" label="EVIDENCE" /><h2>Depth<br /><em>over noise.</em></h2></div><p data-text-reveal="delayed">Education, credentials, courses, communities, research, and the long view. Nothing omitted, just organized.</p></div>
+          <SceneBackdrop
+            src={ASSETS.story.descent}
+            mobileSrc={ASSETS.story.mobile.descent}
+          />
+          <div className="rebuild-section-heading">
+            <div data-text-reveal>
+              <SectionMarker number="04" label="EVIDENCE" />
+              <h2>
+                Depth
+                <br />
+                <em>over noise.</em>
+              </h2>
+            </div>
+            <p data-text-reveal="delayed">
+              Education, credentials, courses, communities, research, and the
+              long view. Nothing omitted, just organized.
+            </p>
+          </div>
           <div className="rebuild-evidence-grid" data-text-reveal="delayed">
-            <div className="rebuild-evidence-column"><h3>Education</h3>{education.map(item => <article className="rebuild-record" key={item.degree}><div><span>{item.status}</span><b>{item.degree}</b><small>{item.institution}</small></div><p>{item.dates}<br />{item.note}</p></article>)}</div>
-            <div className="rebuild-evidence-column"><h3>Credentials</h3>{credentials.map(item => <article className="rebuild-record" key={item.name}><div><span>{item.status}</span><b>{item.name}</b><small>{item.issuer}{"date" in item && item.date ? ` / ${item.date}` : ""}</small></div><ExternalLink href={item.url}>View</ExternalLink></article>)}</div>
+            <div className="rebuild-evidence-column">
+              <h3>Education</h3>
+              {education.map(item => (
+                <article className="rebuild-record" key={item.degree}>
+                  <div>
+                    <span>{item.status}</span>
+                    <b>{item.degree}</b>
+                    <small>{item.institution}</small>
+                  </div>
+                  <p>
+                    {item.dates}
+                    <br />
+                    {item.note}
+                  </p>
+                </article>
+              ))}
+            </div>
+            <div className="rebuild-evidence-column">
+              <h3>Credentials</h3>
+              {credentials.map(item => (
+                <article className="rebuild-record" key={item.name}>
+                  <div>
+                    <span>{item.status}</span>
+                    <b>{item.name}</b>
+                    <small>
+                      {item.issuer}
+                      {"date" in item && item.date ? ` / ${item.date}` : ""}
+                    </small>
+                  </div>
+                  <ExternalLink href={item.url}>View</ExternalLink>
+                </article>
+              ))}
+            </div>
           </div>
           <div className="rebuild-dossier-grid" data-text-reveal="delayed">
-            <EvidenceDossier id="evidence-courses" title="Courses and learning"><div>{courses.map(item => <article key={item.name}><span>{item.status}</span><b>{item.name}</b><small>{item.provider} / {item.subject}</small><p>{item.description}</p><ExternalLink href={"url" in item ? item.url : undefined}>Open course</ExternalLink></article>)}</div></EvidenceDossier>
-            <EvidenceDossier id="evidence-community" title="Open source and community"><div>{[...openSource.map(item => ({ title: item.name, meta: item.role, body: item.description, url: "url" in item ? item.url : undefined })), ...memberships.map(item => ({ title: item.organization, meta: item.role, body: "description" in item ? item.description : item.location, url: "url" in item ? item.url : undefined }))].map(item => <article key={item.title}><span>{item.meta}</span><b>{item.title}</b><p>{item.body}</p><ExternalLink href={item.url}>Visit record</ExternalLink></article>)}</div></EvidenceDossier>
-            <EvidenceDossier id="evidence-research" title="Research and competition"><div><article><span>{writing.platform}</span><b>{writing.title}</b><p>{writing.description}</p><ExternalLink href={writing.url}>Read article</ExternalLink></article>{hackathons.map(item => <article key={item.name}><span>{item.status}{"organizer" in item && item.organizer ? ` / ${item.organizer}` : ""}</span><b>{item.name}</b><p>{item.description}</p></article>)}</div></EvidenceDossier>
-            <EvidenceDossier id="evidence-life" title="Life outside the stack"><div><article><span>Languages</span><p>{languages.join(" / ")}</p></article><article><span>Interests and hobbies</span><p>{interests.join(" / ")}</p></article><article><span>Core positioning</span><b>{vision.core}</b><p>{vision.landingMessage}</p></article><article><span>Short term goals</span>{vision.shortTerm.map(item => <p key={item}>{item}</p>)}</article><article><span>Long term vision</span>{vision.longTerm.map(item => <p key={item}>{item}</p>)}</article></div></EvidenceDossier>
+            <EvidenceDossier id="evidence-courses" title="Courses and learning">
+              <div>
+                {courses.map(item => (
+                  <article key={item.name}>
+                    <span>{item.status}</span>
+                    <b>{item.name}</b>
+                    <small>
+                      {item.provider} / {item.subject}
+                    </small>
+                    <p>{item.description}</p>
+                    <ExternalLink href={"url" in item ? item.url : undefined}>
+                      Open course
+                    </ExternalLink>
+                  </article>
+                ))}
+              </div>
+            </EvidenceDossier>
+            <EvidenceDossier
+              id="evidence-community"
+              title="Open source and community"
+            >
+              <div>
+                {[
+                  ...openSource.map(item => ({
+                    title: item.name,
+                    meta: item.role,
+                    body: item.description,
+                    url: "url" in item ? item.url : undefined,
+                  })),
+                  ...memberships.map(item => ({
+                    title: item.organization,
+                    meta: item.role,
+                    body:
+                      "description" in item ? item.description : item.location,
+                    url: "url" in item ? item.url : undefined,
+                  })),
+                ].map(item => (
+                  <article key={item.title}>
+                    <span>{item.meta}</span>
+                    <b>{item.title}</b>
+                    <p>{item.body}</p>
+                    <ExternalLink href={item.url}>Visit record</ExternalLink>
+                  </article>
+                ))}
+              </div>
+            </EvidenceDossier>
+            <EvidenceDossier
+              id="evidence-research"
+              title="Research and competition"
+            >
+              <div>
+                <article>
+                  <span>{writing.platform}</span>
+                  <b>{writing.title}</b>
+                  <p>{writing.description}</p>
+                  <ExternalLink href={writing.url}>Read article</ExternalLink>
+                </article>
+                {hackathons.map(item => (
+                  <article key={item.name}>
+                    <span>
+                      {item.status}
+                      {"organizer" in item && item.organizer
+                        ? ` / ${item.organizer}`
+                        : ""}
+                    </span>
+                    <b>{item.name}</b>
+                    <p>{item.description}</p>
+                  </article>
+                ))}
+              </div>
+            </EvidenceDossier>
+            <EvidenceDossier id="evidence-life" title="Life outside the stack">
+              <div>
+                <article>
+                  <span>Languages</span>
+                  <p>{languages.join(" / ")}</p>
+                </article>
+                <article>
+                  <span>Interests and hobbies</span>
+                  <p>{interests.join(" / ")}</p>
+                </article>
+                <article>
+                  <span>Core positioning</span>
+                  <b>{vision.core}</b>
+                  <p>{vision.landingMessage}</p>
+                </article>
+                <article>
+                  <span>Short term goals</span>
+                  {vision.shortTerm.map(item => (
+                    <p key={item}>{item}</p>
+                  ))}
+                </article>
+                <article>
+                  <span>Long term vision</span>
+                  {vision.longTerm.map(item => (
+                    <p key={item}>{item}</p>
+                  ))}
+                </article>
+              </div>
+            </EvidenceDossier>
           </div>
         </section>
 
-        <section className="rebuild-finale cinematic-finale" aria-label="Closing motion and image chapter">
-          <VideoBackdrop src={ASSETS.story.closingVideo} poster={ASSETS.story.finalFrame} mobilePoster={ASSETS.story.mobile.finalFrame} preload="metadata" />
-          <div className="rebuild-finale-copy" data-text-reveal><SectionMarker number="05A" label="CLOSING MOTION" /><h2>Let the<br /><em>frame breathe.</em></h2><p>The story ends in motion. The closing reference plays inside the page so the final scene stays part of the experience.</p></div>
+        <section
+          className="rebuild-finale cinematic-finale"
+          aria-label="Closing motion and image chapter"
+        >
+          <VideoBackdrop
+            src={ASSETS.story.closingVideo}
+            poster={ASSETS.story.finalFrame}
+            mobilePoster={ASSETS.story.mobile.finalFrame}
+            preload="metadata"
+          />
+          <div className="rebuild-finale-copy" data-text-reveal>
+            <SectionMarker number="05A" label="CLOSING MOTION" />
+            <h2>
+              Let the
+              <br />
+              <em>frame breathe.</em>
+            </h2>
+            <p>
+              The story ends in motion. The closing reference plays inside the
+              page so the final scene stays part of the experience.
+            </p>
+          </div>
         </section>
 
         <section className="rebuild-contact" id="contact">
-          <div data-text-reveal><SectionMarker number="05" label="CONTACT" /><h2>Bring the hard<br /><em>problem closer.</em></h2><p>{profile.fullName} is open to collaborations, internships, and interesting conversations from {profile.location}.</p></div>
-          <div className="rebuild-contact-card" data-text-reveal="delayed"><span>THE GARAGE IS OPEN</span><a href={`mailto:${profile.primaryEmail}`}><Mail size={19} aria-hidden="true" />{profile.primaryEmail}<ArrowUpRight size={17} aria-hidden="true" /></a><a href={`mailto:${profile.secondaryEmail}`}>{profile.secondaryEmail}<ArrowUpRight size={15} aria-hidden="true" /></a><div className="rebuild-socials"><a href="https://github.com/mantisdarling" aria-label="GitHub"><Github size={18} /></a><a href="https://x.com/mantisxdarling" aria-label="X">X</a><a href="https://www.linkedin.com/in/mantisdarling/" aria-label="LinkedIn"><Linkedin size={18} /></a><a href="https://www.instagram.com/mantisdarling/" aria-label="Instagram"><Instagram size={18} /></a><span><Check size={15} aria-hidden="true" /> AVAILABLE FOR SELECTED WORK</span></div></div>
+          <div data-text-reveal>
+            <SectionMarker number="05" label="CONTACT" />
+            <h2>
+              Bring the hard
+              <br />
+              <em>problem closer.</em>
+            </h2>
+            <p>
+              {profile.fullName} is open to collaborations, internships, and
+              interesting conversations from {profile.location}.
+            </p>
+          </div>
+          <div className="rebuild-contact-card" data-text-reveal="delayed">
+            <span>THE GARAGE IS OPEN</span>
+            <a href={`mailto:${profile.primaryEmail}`}>
+              <Mail size={19} aria-hidden="true" />
+              {profile.primaryEmail}
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </a>
+            <a href={`mailto:${profile.secondaryEmail}`}>
+              {profile.secondaryEmail}
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+            <div className="rebuild-socials">
+              <a href="https://github.com/mantisdarling" aria-label="GitHub">
+                <Github size={18} />
+              </a>
+              <a href="https://x.com/mantisxdarling" aria-label="X">
+                X
+              </a>
+              <a
+                href="https://www.linkedin.com/in/mantisdarling/"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a
+                href="https://www.instagram.com/mantisdarling/"
+                aria-label="Instagram"
+              >
+                <Instagram size={18} />
+              </a>
+              <span>
+                <Check size={15} aria-hidden="true" /> AVAILABLE FOR SELECTED
+                WORK
+              </span>
+            </div>
+          </div>
         </section>
       </main>
 
-      <footer className="rebuild-footer"><span data-text-reveal>© 2026 MANTIS / BUILT WITH DISCIPLINE</span><span data-text-reveal="delayed">HARSHIT KUMAR / EAST INDIA</span><a data-text-reveal="delayed" href="#top">RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" /></a></footer>
+      <footer className="rebuild-footer">
+        <span data-text-reveal>© 2026 MANTIS / BUILT WITH DISCIPLINE</span>
+        <span data-text-reveal="delayed">HARSHIT KUMAR / EAST INDIA</span>
+        <a data-text-reveal="delayed" href="#top">
+          RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" />
+        </a>
+      </footer>
 
       <AnimatePresence>
-        {selectedProject && <motion.div className="rebuild-modal-backdrop" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="rebuild-modal" role="dialog" aria-modal="true" aria-labelledby="project-dossier-title" aria-describedby="project-dossier-description" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 18 }} onClick={event => event.stopPropagation()}><button className="rebuild-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project dossier"><X size={20} /></button><div className="rebuild-modal-visual"><ResponsiveImage key={selectedProject.id} src={selectedProject.imageUrl ?? ASSETS.caseStudy} mobileSrc={selectedProject.mobileImageUrl ?? ASSETS.story.mobile.caseStudy} loading="eager" /></div><div className="rebuild-modal-content"><SectionMarker number="DOSSIER" label={selectedProject.status ?? "PROJECT"} /><h2 id="project-dossier-title">{selectedProject.title ?? selectedProject.name}</h2>{selectedProject.tagline && <p className="rebuild-modal-tagline">{selectedProject.tagline}</p>}{selectedProject.role && <DetailBlock label="Role">{selectedProject.role}</DetailBlock>}<p id="project-dossier-description" className="rebuild-modal-description">{selectedProject.description}</p>{selectedProject.problem && <DetailBlock label="Problem">{selectedProject.problem}</DetailBlock>}{selectedProject.solution && <DetailBlock label="Solution">{selectedProject.solution}</DetailBlock>}{selectedProject.highlights?.length ? <DetailBlock label="Highlights"><ul>{selectedProject.highlights.map(item => <li key={item}>{item}</li>)}</ul></DetailBlock> : null}<div className="rebuild-modal-tags">{selectedProject.tags.map(tag => <span key={tag}>{tag}</span>)}</div><ProjectShareActions project={selectedProject} /><div className="rebuild-modal-actions"><ExternalLink href={selectedProject.liveUrl ?? selectedProject.projectUrl}>Open live project</ExternalLink><ExternalLink href={selectedProject.githubUrl}>View source</ExternalLink></div></div></motion.article></motion.div>}
+        {selectedProject && (
+          <motion.div
+            className="rebuild-modal-backdrop"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.article
+              className="rebuild-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="project-dossier-title"
+              aria-describedby="project-dossier-description"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 18 }}
+              onClick={event => event.stopPropagation()}
+            >
+              <button
+                className="rebuild-modal-close"
+                type="button"
+                onClick={() => setSelectedProject(null)}
+                aria-label="Close project dossier"
+              >
+                <X size={20} />
+              </button>
+              <div className="rebuild-modal-visual">
+                <ResponsiveImage
+                  key={selectedProject.id}
+                  src={selectedProject.imageUrl ?? ASSETS.caseStudy}
+                  mobileSrc={
+                    selectedProject.mobileImageUrl ??
+                    ASSETS.story.mobile.caseStudy
+                  }
+                  loading="eager"
+                />
+              </div>
+              <div className="rebuild-modal-content">
+                <SectionMarker
+                  number="DOSSIER"
+                  label={selectedProject.status ?? "PROJECT"}
+                />
+                <h2 id="project-dossier-title">
+                  {selectedProject.title ?? selectedProject.name}
+                </h2>
+                {selectedProject.tagline && (
+                  <p className="rebuild-modal-tagline">
+                    {selectedProject.tagline}
+                  </p>
+                )}
+                {selectedProject.role && (
+                  <DetailBlock label="Role">{selectedProject.role}</DetailBlock>
+                )}
+                <p
+                  id="project-dossier-description"
+                  className="rebuild-modal-description"
+                >
+                  {selectedProject.description}
+                </p>
+                {selectedProject.problem && (
+                  <DetailBlock label="Problem">
+                    {selectedProject.problem}
+                  </DetailBlock>
+                )}
+                {selectedProject.solution && (
+                  <DetailBlock label="Solution">
+                    {selectedProject.solution}
+                  </DetailBlock>
+                )}
+                {selectedProject.highlights?.length ? (
+                  <DetailBlock label="Highlights">
+                    <ul>
+                      {selectedProject.highlights.map(item => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </DetailBlock>
+                ) : null}
+                <div className="rebuild-modal-tags">
+                  {selectedProject.tags.map(tag => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+                <ProjectShareActions project={selectedProject} />
+                <div className="rebuild-modal-actions">
+                  <ExternalLink
+                    href={selectedProject.liveUrl ?? selectedProject.projectUrl}
+                  >
+                    Open live project
+                  </ExternalLink>
+                  <ExternalLink href={selectedProject.githubUrl}>
+                    View source
+                  </ExternalLink>
+                </div>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

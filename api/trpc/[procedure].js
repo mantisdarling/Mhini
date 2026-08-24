@@ -582,7 +582,11 @@ async function listRecoverySnapshotRecords(limit) {
 import { createHash } from "crypto";
 
 // server/storage.ts
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 var externalStorageClient = null;
 function getExternalStorageConfig() {
@@ -642,12 +646,14 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
-    await client.send(new PutObjectCommand({
-      Bucket: externalConfig.bucket,
-      Key: key,
-      Body: data,
-      ContentType: contentType
-    }));
+    await client.send(
+      new PutObjectCommand({
+        Bucket: externalConfig.bucket,
+        Key: key,
+        Body: data,
+        ContentType: contentType
+      })
+    );
     return {
       key,
       url: await getSignedUrl(
@@ -664,7 +670,9 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
     headers: { Authorization: `Bearer ${forgeKey}` }
   });
   if (!presignResp.ok) {
-    console.error("[Storage] Forge presign failed", { status: presignResp.status });
+    console.error("[Storage] Forge presign failed", {
+      status: presignResp.status
+    });
     throw new Error("Storage presign failed.");
   }
   const { url: s3Url } = await presignResp.json();
@@ -676,7 +684,9 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
     body: blob
   });
   if (!uploadResp.ok) {
-    console.error("[Storage] Object upload failed", { status: uploadResp.status });
+    console.error("[Storage] Object upload failed", {
+      status: uploadResp.status
+    });
     throw new Error("Storage upload failed.");
   }
   return { key, url: `/manus-storage/${key}` };

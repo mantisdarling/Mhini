@@ -2,7 +2,11 @@
 // Uploads use Vercel-compatible S3 credentials when supplied, otherwise the
 // existing Forge presigned URL integration remains available for Manus hosting.
 
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ENV } from "./_core/env";
 
@@ -53,7 +57,7 @@ function getForgeConfig() {
 
   if (!forgeUrl || !forgeKey) {
     throw new Error(
-      "Storage config missing: set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY",
+      "Storage config missing: set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY"
     );
   }
 
@@ -62,8 +66,15 @@ function getForgeConfig() {
 
 export function normalizeStorageKey(relKey: string): string {
   const key = relKey.replace(/^\/+/, "");
-  const hasUnsafeSegment = key.split("/").some(segment => segment === "." || segment === "..");
-  if (!key || hasUnsafeSegment || key.includes("\\") || /[\u0000-\u001F\u007F]/.test(key)) {
+  const hasUnsafeSegment = key
+    .split("/")
+    .some(segment => segment === "." || segment === "..");
+  if (
+    !key ||
+    hasUnsafeSegment ||
+    key.includes("\\") ||
+    /[\u0000-\u001F\u007F]/.test(key)
+  ) {
     throw new Error("Invalid storage key.");
   }
   return key;
@@ -79,24 +90,26 @@ function appendHashSuffix(relKey: string): string {
 export async function storagePut(
   relKey: string,
   data: Buffer | Uint8Array | string,
-  contentType = "application/octet-stream",
+  contentType = "application/octet-stream"
 ): Promise<{ key: string; url: string }> {
   const key = appendHashSuffix(normalizeStorageKey(relKey));
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
-    await client.send(new PutObjectCommand({
-      Bucket: externalConfig.bucket,
-      Key: key,
-      Body: data,
-      ContentType: contentType,
-    }));
+    await client.send(
+      new PutObjectCommand({
+        Bucket: externalConfig.bucket,
+        Key: key,
+        Body: data,
+        ContentType: contentType,
+      })
+    );
     return {
       key,
       url: await getSignedUrl(
         client,
         new GetObjectCommand({ Bucket: externalConfig.bucket, Key: key }),
-        { expiresIn: 900 },
+        { expiresIn: 900 }
       ),
     };
   }
@@ -112,7 +125,9 @@ export async function storagePut(
   });
 
   if (!presignResp.ok) {
-    console.error("[Storage] Forge presign failed", { status: presignResp.status });
+    console.error("[Storage] Forge presign failed", {
+      status: presignResp.status,
+    });
     throw new Error("Storage presign failed.");
   }
 
@@ -132,43 +147,11 @@ export async function storagePut(
   });
 
   if (!uploadResp.ok) {
-    console.error("[Storage] Object upload failed", { status: uploadResp.status });
+    console.error("[Storage] Object upload failed", {
+      status: uploadResp.status,
+    });
     throw new Error("Storage upload failed.");
   }
 
   return { key, url: `/manus-storage/${key}` };
-}
-
-export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
-  const key = normalizeStorageKey(relKey);
-  const externalConfig = getExternalStorageConfig();
-  if (externalConfig) {
-    return { key, url: await storageGetSignedUrl(key) };
-  }
-  return { key, url: `/manus-storage/${key}` };
-}
-
-export async function storageGetSignedUrl(relKey: string): Promise<string> {
-  const externalConfig = getExternalStorageConfig();
-  if (externalConfig) {
-    const client = getExternalStorageClient(externalConfig);
-    return getSignedUrl(client, new GetObjectCommand({ Bucket: externalConfig.bucket, Key: normalizeStorageKey(relKey) }), { expiresIn: 900 });
-  }
-  const { forgeUrl, forgeKey } = getForgeConfig();
-  const key = normalizeStorageKey(relKey);
-
-  const getUrl = new URL("v1/storage/presign/get", forgeUrl + "/");
-  getUrl.searchParams.set("path", key);
-
-  const resp = await fetch(getUrl, {
-    headers: { Authorization: `Bearer ${forgeKey}` },
-  });
-
-  if (!resp.ok) {
-    console.error("[Storage] Forge signed URL failed", { status: resp.status });
-    throw new Error("Storage signed URL failed.");
-  }
-
-  const { url } = (await resp.json()) as { url: string };
-  return url;
 }
