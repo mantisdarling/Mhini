@@ -80,6 +80,8 @@ describe("rebuilt Mantis Home page", () => {
       "@media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px)"
     );
     expect(styles).toContain(".rebuild-work .rebuild-project-grid");
+    expect(styles).toContain("aspect-ratio: 3.2;");
+    expect(styles).toContain("min-height: 7.25rem;");
     expect(styles).toContain(".rebuild-chapter-rail {\n    display: none;");
     expect(styles).toContain("scroll-snap-type: x mandatory");
     expect(styles).not.toContain("body.rebuild-touch-layout");
