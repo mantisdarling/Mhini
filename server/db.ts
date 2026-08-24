@@ -14,7 +14,9 @@ import { scalePolicy } from "../shared/scalePolicy";
 import * as supabaseDb from "./supabaseDb";
 
 let mysqlDb: ReturnType<typeof drizzle> | null = null;
-let publishedProjectCache: { expiresAt: number; values: Project[] } | null = null;
+let publishedProjectCache: { expiresAt: number; values: Project[] } | null =
+  null;
+let publishedProjectRequest: Promise<Project[]> | null = null;
 
 function useSupabase() {
   return ENV.databaseProvider === "supabase";
@@ -82,36 +84,57 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
   if (!values.lastSignedIn) values.lastSignedIn = new Date();
   if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
-  await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
+  await db
+    .insert(users)
+    .values(values)
+    .onDuplicateKeyUpdate({ set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
   if (useSupabase()) return supabaseDb.getUserByOpenId(openId);
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
   return result[0];
 }
 
 export async function getPublishedProjects() {
-  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) return publishedProjectCache.values;
-  const values = useSupabase()
-    ? await supabaseDb.getProjects("published")
-    : await withDatabase(await getDb())
-      .select()
-      .from(projects)
-      .where(eq(projects.status, "published"))
-      .orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
-  publishedProjectCache = {
-    values,
-    expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs,
-  };
-  return values;
+  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now())
+    return publishedProjectCache.values;
+  if (!publishedProjectRequest) {
+    publishedProjectRequest = (
+      useSupabase()
+        ? supabaseDb.getProjects("published")
+        : withDatabase(await getDb())
+            .select()
+            .from(projects)
+            .where(eq(projects.status, "published"))
+            .orderBy(asc(projects.sortOrder), desc(projects.updatedAt))
+    )
+      .then(values => {
+        publishedProjectCache = {
+          values,
+          expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs,
+        };
+        return values;
+      })
+      .finally(() => {
+        publishedProjectRequest = null;
+      });
+  }
+  return publishedProjectRequest;
 }
 
 export async function getAllProjects() {
   if (useSupabase()) return supabaseDb.getProjects();
-  return withDatabase(await getDb()).select().from(projects).orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
+  return withDatabase(await getDb())
+    .select()
+    .from(projects)
+    .orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
 }
 
 export async function createProject(values: InsertProject) {
@@ -123,12 +146,19 @@ export async function createProject(values: InsertProject) {
   const db = withDatabase(await getDb());
   const result = await db.insert(projects).values(values);
   const id = Number(result[0].insertId);
-  const created = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  const created = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.id, id))
+    .limit(1);
   clearPublishedProjectCache();
   return created[0];
 }
 
-export async function updateProject(id: number, values: Partial<InsertProject>) {
+export async function updateProject(
+  id: number,
+  values: Partial<InsertProject>
+) {
   if (useSupabase()) {
     const updated = await supabaseDb.updateProject(id, values);
     clearPublishedProjectCache();
@@ -136,7 +166,11 @@ export async function updateProject(id: number, values: Partial<InsertProject>) 
   }
   const db = withDatabase(await getDb());
   await db.update(projects).set(values).where(eq(projects.id, id));
-  const updated = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  const updated = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.id, id))
+    .limit(1);
   clearPublishedProjectCache();
   return updated[0];
 }
@@ -153,7 +187,9 @@ export async function deleteProject(id: number) {
   return { id };
 }
 
-export async function reorderProjects(items: Array<{ id: number; sortOrder: number }>) {
+export async function reorderProjects(
+  items: Array<{ id: number; sortOrder: number }>
+) {
   if (useSupabase()) {
     const values = await supabaseDb.reorderProjects(items);
     clearPublishedProjectCache();
@@ -162,14 +198,21 @@ export async function reorderProjects(items: Array<{ id: number; sortOrder: numb
   const db = withDatabase(await getDb());
   await db.transaction(async transaction => {
     for (const item of items) {
-      await transaction.update(projects).set({ sortOrder: item.sortOrder }).where(eq(projects.id, item.id));
+      await transaction
+        .update(projects)
+        .set({ sortOrder: item.sortOrder })
+        .where(eq(projects.id, item.id));
     }
   });
   clearPublishedProjectCache();
   return getAllProjects();
 }
 
-export async function createRecoverySnapshotRecord(values: { storageKey: string; checksum: string; recordCount: number }) {
+export async function createRecoverySnapshotRecord(values: {
+  storageKey: string;
+  checksum: string;
+  recordCount: number;
+}) {
   if (useSupabase()) return supabaseDb.createRecoverySnapshotRecord(values);
   const db = withDatabase(await getDb());
   const result = await db.insert(recoverySnapshots).values({
@@ -178,7 +221,11 @@ export async function createRecoverySnapshotRecord(values: { storageKey: string;
     recordCount: values.recordCount,
   });
   const id = Number(result[0].insertId);
-  const rows = await db.select().from(recoverySnapshots).where(eq(recoverySnapshots.id, id)).limit(1);
+  const rows = await db
+    .select()
+    .from(recoverySnapshots)
+    .where(eq(recoverySnapshots.id, id))
+    .limit(1);
   if (!rows[0]) throw new Error("Recovery snapshot metadata was not created.");
   return rows[0] as RecoverySnapshot;
 }
@@ -186,5 +233,9 @@ export async function createRecoverySnapshotRecord(values: { storageKey: string;
 export async function listRecoverySnapshotRecords(limit: number) {
   if (useSupabase()) return supabaseDb.listRecoverySnapshots(limit);
   const db = withDatabase(await getDb());
-  return db.select().from(recoverySnapshots).orderBy(desc(recoverySnapshots.createdAt)).limit(limit);
+  return db
+    .select()
+    .from(recoverySnapshots)
+    .orderBy(desc(recoverySnapshots.createdAt))
+    .limit(limit);
 }

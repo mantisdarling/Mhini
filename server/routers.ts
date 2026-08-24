@@ -16,7 +16,7 @@ import { projectInputSchema, projectReorderSchema, projectUpdateSchema, type Pro
 function normalizeTags(value: string) {
   try {
     const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string").slice(0, 100) : [];
   } catch {
     return [];
   }
@@ -50,7 +50,10 @@ export const appRouter = router({
     }),
   }),
   projects: router({
-    listPublic: publicProcedure.query(async () => (await getPublishedProjects()).map(presentProject)),
+    listPublic: publicProcedure.query(async ({ ctx }) => {
+      ctx.res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      return (await getPublishedProjects()).map(presentProject);
+    }),
     listPrivate: adminProcedure.query(async () => (await getAllProjects()).map(presentProject)),
     create: adminProcedure.input(projectInputSchema).mutation(async ({ input }) => {
       const created = await createProject(toProjectValues(input));

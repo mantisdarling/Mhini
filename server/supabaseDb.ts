@@ -1,5 +1,10 @@
 import type { InsertProject, InsertUser, Project, RecoverySnapshot, User } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { withRequestTimeout } from "./requestPolicy";
+
+export function resolveSupabaseUserRole(user: Pick<InsertUser, "openId" | "role">, ownerOpenId = ENV.ownerOpenId): "user" | "admin" {
+  return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
+}
 
 type SupabaseUserRow = {
   id: number;
@@ -48,7 +53,7 @@ async function rest(path: string, init: RequestInit = {}) {
   headers.set("apikey", secret);
   headers.set("Authorization", `Bearer ${secret}`);
   headers.set("Content-Type", "application/json");
-  return fetch(`${baseUrl}/rest/v1/${path}`, { ...init, headers });
+  return fetch(`${baseUrl}/rest/v1/${path}`, withRequestTimeout({ ...init, headers }));
 }
 
 export async function responseJson<T>(response: Response): Promise<T> {
@@ -126,7 +131,7 @@ export async function upsertUser(user: InsertUser) {
       name: user.name ?? null,
       email: user.email ?? null,
       login_method: user.loginMethod ?? null,
-      role: user.role ?? "user",
+      role: resolveSupabaseUserRole(user),
       last_signed_in: (user.lastSignedIn ?? new Date()).toISOString(),
     }),
   });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const webUrl = z.string().trim().url().or(z.literal(""));
+const webUrl = z.string().trim().refine(value => value === "" || /^https?:\/\//i.test(value), "URL must use HTTP or HTTPS.");
 
 export const projectInputSchema = z.object({
   title: z.string().trim().min(2, "Title must be at least 2 characters.").max(140),

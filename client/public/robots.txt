@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /project-console
+
+Sitemap: https://mhini.vercel.app/sitemap.xml

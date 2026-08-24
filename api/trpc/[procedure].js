@@ -259,6 +259,7 @@ var recoverySnapshots = mysqlTable(
 var scalePolicy = {
   jsonPayloadLimit: "1mb",
   publicProjectCacheTtlMs: 6e4,
+  readinessCacheTtlMs: 5e3,
   storageRedirectCacheTtlMs: 6e4,
   staticAssetMaxAgeMs: 31536e6,
   staticFileMaxAgeMs: 36e5,
@@ -266,7 +267,17 @@ var scalePolicy = {
   storageRedirectCacheControl: "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
 };
 
+// server/requestPolicy.ts
+var upstreamRequestTimeoutMs = 8e3;
+function withRequestTimeout(init = {}, timeoutMs = upstreamRequestTimeoutMs) {
+  if (init.signal) return init;
+  return { ...init, signal: AbortSignal.timeout(timeoutMs) };
+}
+
 // server/supabaseDb.ts
+function resolveSupabaseUserRole(user, ownerOpenId = ENV.ownerOpenId) {
+  return user.role ?? (user.openId === ownerOpenId ? "admin" : "user");
+}
 function requireConfig() {
   if (!ENV.supabaseUrl || !ENV.supabaseSecretKey) {
     throw new Error("Supabase database is not configured. Set SUPABASE_URL and SUPABASE_SECRET_KEY.");
@@ -279,11 +290,12 @@ async function rest(path, init = {}) {
   headers.set("apikey", secret);
   headers.set("Authorization", `Bearer ${secret}`);
   headers.set("Content-Type", "application/json");
-  return fetch(`${baseUrl}/rest/v1/${path}`, { ...init, headers });
+  return fetch(`${baseUrl}/rest/v1/${path}`, withRequestTimeout({ ...init, headers }));
 }
 async function responseJson(response) {
   if (!response.ok) {
-    throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+    console.error("[Supabase] Database request failed", { status: response.status });
+    throw new Error("Supabase database request failed.");
   }
   return response.json();
 }
@@ -349,7 +361,7 @@ async function upsertUser(user) {
       name: user.name ?? null,
       email: user.email ?? null,
       login_method: user.loginMethod ?? null,
-      role: user.role ?? "user",
+      role: resolveSupabaseUserRole(user),
       last_signed_in: (user.lastSignedIn ?? /* @__PURE__ */ new Date()).toISOString()
     })
   });
@@ -385,7 +397,10 @@ async function updateProject(id, values) {
 }
 async function deleteProject(id) {
   const response = await rest(`projects?id=eq.${id}`, { method: "DELETE" });
-  if (!response.ok) throw new Error(`Supabase database request failed: ${response.status} ${await response.text()}`);
+  if (!response.ok) {
+    console.error("[Supabase] Project deletion failed", { status: response.status });
+    throw new Error("Supabase project deletion failed.");
+  }
   return { id };
 }
 async function reorderProjects(items) {
@@ -412,6 +427,7 @@ async function listRecoverySnapshots(limit) {
 // server/db.ts
 var mysqlDb = null;
 var publishedProjectCache = null;
+var publishedProjectRequest = null;
 function useSupabase() {
   return ENV.databaseProvider === "supabase";
 }
@@ -482,13 +498,20 @@ async function getUserByOpenId2(openId) {
   return result[0];
 }
 async function getPublishedProjects() {
-  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now()) return publishedProjectCache.values;
-  const values = useSupabase() ? await getProjects("published") : await withDatabase(await getDb()).select().from(projects).where(eq(projects.status, "published")).orderBy(asc(projects.sortOrder), desc(projects.updatedAt));
-  publishedProjectCache = {
-    values,
-    expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs
-  };
-  return values;
+  if (publishedProjectCache && publishedProjectCache.expiresAt > Date.now())
+    return publishedProjectCache.values;
+  if (!publishedProjectRequest) {
+    publishedProjectRequest = (useSupabase() ? getProjects("published") : withDatabase(await getDb()).select().from(projects).where(eq(projects.status, "published")).orderBy(asc(projects.sortOrder), desc(projects.updatedAt))).then((values) => {
+      publishedProjectCache = {
+        values,
+        expiresAt: Date.now() + scalePolicy.publicProjectCacheTtlMs
+      };
+      return values;
+    }).finally(() => {
+      publishedProjectRequest = null;
+    });
+  }
+  return publishedProjectRequest;
 }
 async function getAllProjects() {
   if (useSupabase()) return getProjects();
@@ -568,7 +591,11 @@ async function listRecoverySnapshotRecords(limit) {
 import { createHash } from "crypto";
 
 // server/storage.ts
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 var externalStorageClient = null;
 function getExternalStorageConfig() {
@@ -609,26 +636,33 @@ function getForgeConfig() {
   }
   return { forgeUrl: forgeUrl.replace(/\/+$/, ""), forgeKey };
 }
-function normalizeKey(relKey) {
-  return relKey.replace(/^\/+/, "");
+function normalizeStorageKey(relKey) {
+  const key = relKey.replace(/^\/+/, "");
+  const hasUnsafeSegment = key.split("/").some((segment) => segment === "." || segment === "..");
+  if (!key || hasUnsafeSegment || key.includes("\\") || /[\u0000-\u001F\u007F]/.test(key)) {
+    throw new Error("Invalid storage key.");
+  }
+  return key;
 }
 function appendHashSuffix(relKey) {
   const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
   const lastDot = relKey.lastIndexOf(".");
-  if (lastDot === -1) return `${relKey}_${hash}`;
-  return `${relKey.slice(0, lastDot)}_${hash}${relKey.slice(lastDot)}`;
+  if (lastDot === -1) return `${relKey}-${hash}`;
+  return `${relKey.slice(0, lastDot)}-${hash}${relKey.slice(lastDot)}`;
 }
 async function storagePut(relKey, data, contentType = "application/octet-stream") {
-  const key = appendHashSuffix(normalizeKey(relKey));
+  const key = appendHashSuffix(normalizeStorageKey(relKey));
   const externalConfig = getExternalStorageConfig();
   if (externalConfig) {
     const client = getExternalStorageClient(externalConfig);
-    await client.send(new PutObjectCommand({
-      Bucket: externalConfig.bucket,
-      Key: key,
-      Body: data,
-      ContentType: contentType
-    }));
+    await client.send(
+      new PutObjectCommand({
+        Bucket: externalConfig.bucket,
+        Key: key,
+        Body: data,
+        ContentType: contentType
+      })
+    );
     return {
       key,
       url: await getSignedUrl(
@@ -645,19 +679,24 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
     headers: { Authorization: `Bearer ${forgeKey}` }
   });
   if (!presignResp.ok) {
-    const msg = await presignResp.text().catch(() => presignResp.statusText);
-    throw new Error(`Storage presign failed (${presignResp.status}): ${msg}`);
+    console.error("[Storage] Forge presign failed", {
+      status: presignResp.status
+    });
+    throw new Error("Storage presign failed.");
   }
   const { url: s3Url } = await presignResp.json();
   if (!s3Url) throw new Error("Forge returned empty presign URL");
-  const blob = typeof data === "string" ? new Blob([data], { type: contentType }) : new Blob([data], { type: contentType });
+  const blob = typeof data === "string" ? new Blob([data], { type: contentType }) : new Blob([Uint8Array.from(data).buffer], { type: contentType });
   const uploadResp = await fetch(s3Url, {
     method: "PUT",
     headers: { "Content-Type": contentType },
     body: blob
   });
   if (!uploadResp.ok) {
-    throw new Error(`Storage upload to S3 failed (${uploadResp.status})`);
+    console.error("[Storage] Object upload failed", {
+      status: uploadResp.status
+    });
+    throw new Error("Storage upload failed.");
   }
   return { key, url: `/manus-storage/${key}` };
 }
@@ -959,10 +998,8 @@ async function runScheduledRecoverySnapshot(req, res) {
     const snapshot = await createRecoverySnapshot();
     res.status(200).json({ ok: true, snapshot });
   } catch (error) {
-    res.status(500).json({
-      error: error instanceof Error ? error.message : "recovery snapshot failed",
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
+    console.error("[Recovery] Scheduled snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
+    res.status(500).json({ error: "recovery snapshot failed" });
   }
 }
 function isAuthorizedVercelCron(authorization, secret = process.env.CRON_SECRET) {
@@ -978,10 +1015,8 @@ function createVercelRecoverySnapshotHandler(snapshotCreator = createRecoverySna
       const snapshot = await snapshotCreator();
       res.status(200).json({ ok: true, snapshot });
     } catch (error) {
-      res.status(500).json({
-        error: error instanceof Error ? error.message : "recovery snapshot failed",
-        timestamp: (/* @__PURE__ */ new Date()).toISOString()
-      });
+      console.error("[Recovery] Vercel snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
+      res.status(500).json({ error: "recovery snapshot failed" });
     }
   };
 }
@@ -989,7 +1024,7 @@ var runVercelRecoverySnapshot = createVercelRecoverySnapshotHandler();
 
 // server/projectSchemas.ts
 import { z as z2 } from "zod";
-var webUrl = z2.string().trim().url().or(z2.literal(""));
+var webUrl = z2.string().trim().refine((value) => value === "" || /^https?:\/\//i.test(value), "URL must use HTTP or HTTPS.");
 var projectInputSchema = z2.object({
   title: z2.string().trim().min(2, "Title must be at least 2 characters.").max(140),
   category: z2.string().trim().min(2, "Category must be at least 2 characters.").max(80),
@@ -1016,7 +1051,7 @@ var projectReorderSchema = z2.object({
 function normalizeTags(value) {
   try {
     const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((tag) => typeof tag === "string") : [];
+    return Array.isArray(parsed) ? parsed.filter((tag) => typeof tag === "string").slice(0, 100) : [];
   } catch {
     return [];
   }
@@ -1047,7 +1082,10 @@ var appRouter = router({
     })
   }),
   projects: router({
-    listPublic: publicProcedure.query(async () => (await getPublishedProjects()).map(presentProject)),
+    listPublic: publicProcedure.query(async ({ ctx }) => {
+      ctx.res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      return (await getPublishedProjects()).map(presentProject);
+    }),
     listPrivate: adminProcedure.query(async () => (await getAllProjects()).map(presentProject)),
     create: adminProcedure.input(projectInputSchema).mutation(async ({ input }) => {
       const created = await createProject2(toProjectValues(input));
@@ -1121,6 +1159,23 @@ function registerOAuthRoutes(app2) {
 // server/_core/storageProxy.ts
 var redirectCache = /* @__PURE__ */ new Map();
 var maxRedirectCacheEntries = 1e3;
+function isUnsafeStorageKey(key) {
+  let candidate = key;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (candidate.includes("\\") || /[\u0000-\u001f\u007f]/.test(candidate) || candidate.split("/").includes("..")) {
+      return true;
+    }
+    let decoded;
+    try {
+      decoded = decodeURIComponent(candidate);
+    } catch {
+      return true;
+    }
+    if (decoded === candidate) return false;
+    candidate = decoded;
+  }
+  return true;
+}
 function cachedUrl(key) {
   const value = redirectCache.get(key);
   if (!value) return null;
@@ -1141,10 +1196,15 @@ function cacheUrl(key, url) {
   });
 }
 function registerStorageProxy(app2) {
-  app2.get("/manus-storage/*", async (req, res) => {
-    const key = req.params[0];
+  app2.get("/manus-storage/{*key}", async (req, res) => {
+    const rawKey = req.params.key;
+    const key = Array.isArray(rawKey) ? rawKey.join("/") : rawKey;
     if (!key) {
       res.status(400).send("Missing storage key");
+      return;
+    }
+    if (isUnsafeStorageKey(key)) {
+      res.status(400).send("Invalid storage key");
       return;
     }
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
@@ -1167,8 +1227,9 @@ function registerStorageProxy(app2) {
         headers: { Authorization: `Bearer ${ENV.forgeApiKey}` }
       });
       if (!forgeResp.ok) {
-        const body = await forgeResp.text().catch(() => "");
-        console.error(`[StorageProxy] forge error: ${forgeResp.status} ${body}`);
+        console.error("[StorageProxy] Forge presign failed", {
+          status: forgeResp.status
+        });
         res.status(502).send("Storage backend error");
         return;
       }
@@ -1180,8 +1241,8 @@ function registerStorageProxy(app2) {
       cacheUrl(key, url);
       res.set("Cache-Control", scalePolicy.storageRedirectCacheControl);
       res.redirect(307, url);
-    } catch (err) {
-      console.error("[StorageProxy] failed:", err);
+    } catch {
+      console.error("[StorageProxy] Request failed");
       res.status(502).send("Storage proxy error");
     }
   });
@@ -1211,12 +1272,15 @@ async function authenticateIndependentRequest(req) {
   if (!independentAuthEnabled()) throw new Error("Independent authentication is not enabled.");
   const token = bearerToken(req);
   if (!token || !ENV.supabaseUrl || !ENV.supabasePublishableKey) throw new Error("Independent session is unavailable.");
-  const response = await fetch(`${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`, {
-    headers: {
-      apikey: ENV.supabasePublishableKey,
-      Authorization: `Bearer ${token}`
-    }
-  });
+  const response = await fetch(
+    `${ENV.supabaseUrl.replace(/\/$/, "")}/auth/v1/user`,
+    withRequestTimeout({
+      headers: {
+        apikey: ENV.supabasePublishableKey,
+        Authorization: `Bearer ${token}`
+      }
+    })
+  );
   if (!response.ok) throw new Error("Independent session is invalid.");
   const values = mapSupabaseIdentity(await response.json());
   await upsertUser2(values);
@@ -1248,10 +1312,92 @@ async function createContext(opts) {
 function createApplication(options = {}) {
   const app2 = express();
   let acceptingTraffic = true;
+  let readinessCache = null;
+  let readinessProbe = null;
+  const checkReadiness = async () => {
+    if (readinessCache && readinessCache.expiresAt > Date.now())
+      return readinessCache.ok;
+    if (!readinessProbe) {
+      readinessProbe = isDatabaseReady().catch(() => false).then((ok) => {
+        readinessCache = {
+          ok,
+          expiresAt: Date.now() + scalePolicy.readinessCacheTtlMs
+        };
+        return ok;
+      }).finally(() => {
+        readinessProbe = null;
+      });
+    }
+    return readinessProbe;
+  };
   app2.disable("x-powered-by");
   app2.set("trust proxy", 1);
+  const allowedOrigins = new Set(
+    [
+      "https://mhini.vercel.app",
+      process.env.PUBLIC_APP_ORIGIN,
+      process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : void 0,
+      "http://localhost:3000",
+      "http://127.0.0.1:3000"
+    ].filter((origin) => Boolean(origin))
+  );
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const contentSecurityPolicy = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    `script-src 'self'${isDevelopment ? " 'unsafe-inline'" : ""} https://manus-analytics.com`,
+    "script-src-attr 'none'",
+    "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
+    "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
+    "img-src 'self' data: blob: https://files.manuscdn.com https://manus-analytics.com https://i.pinimg.com",
+    `connect-src 'self' https://manus-analytics.com https://*.supabase.co${isDevelopment ? " ws://localhost:* ws://127.0.0.1:*" : ""}`,
+    "media-src 'self' https://files.manuscdn.com",
+    "frame-src https://assets.pinterest.com",
+    "upgrade-insecure-requests"
+  ].join("; ");
+  app2.use((req, res, next) => {
+    res.setHeader(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains"
+    );
+    res.setHeader("Content-Security-Policy", contentSecurityPolicy);
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=(), payment=()"
+    );
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.has(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, X-Requested-With"
+      );
+      res.setHeader("Access-Control-Max-Age", "600");
+    }
+    if (req.method === "OPTIONS") {
+      if (!origin || !allowedOrigins.has(origin)) {
+        res.status(403).json({ error: "origin not allowed" });
+        return;
+      }
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
   app2.use(express.json({ limit: scalePolicy.jsonPayloadLimit }));
-  app2.use(express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true }));
+  app2.use(
+    express.urlencoded({ limit: scalePolicy.jsonPayloadLimit, extended: true })
+  );
   app2.get(["/healthz", "/api/healthz"], (_req, res) => {
     res.status(acceptingTraffic ? 200 : 503).json({ ok: acceptingTraffic });
   });
@@ -1261,14 +1407,17 @@ function createApplication(options = {}) {
       return;
     }
     try {
-      if (!await isDatabaseReady()) throw new Error("database unavailable");
+      if (!await checkReadiness()) throw new Error("database unavailable");
       res.status(200).json({ ok: true });
     } catch {
       res.status(503).json({ ok: false, reason: "database unavailable" });
     }
   });
   app2.post("/api/scheduled/recoverySnapshot", runScheduledRecoverySnapshot);
-  app2.get("/api/cron/recoverySnapshot", options.vercelRecoveryHandler ?? runVercelRecoverySnapshot);
+  app2.get(
+    "/api/cron/recoverySnapshot",
+    options.vercelRecoveryHandler ?? runVercelRecoverySnapshot
+  );
   registerStorageProxy(app2);
   registerOAuthRoutes(app2);
   app2.use(
@@ -1278,11 +1427,16 @@ function createApplication(options = {}) {
       createContext
     })
   );
-  app2.use((error, _req, res, next) => {
-    console.error("[Application] Unhandled request error", error);
-    if (res.headersSent) return next(error);
-    res.status(500).json({ error: "internal server error" });
+  app2.use("/api", (_req, res) => {
+    res.status(404).json({ error: "not found" });
   });
+  app2.use(
+    (error, _req, res, next) => {
+      console.error("[Application] Unhandled request error", error);
+      if (res.headersSent) return next(error);
+      res.status(500).json({ error: "internal server error" });
+    }
+  );
   return {
     app: app2,
     stopAcceptingTraffic: () => {
