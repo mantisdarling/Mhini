@@ -1,5 +1,9 @@
 // @vitest-environment jsdom
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import React, { act } from "react";
+
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import Home, { safeExternalUrl } from "./Home";
@@ -58,6 +62,20 @@ describe("rebuilt Mantis Home page", () => {
         { label: "Instagram", url: "https://www.instagram.com/mantisdarling/" },
       ])
     );
+  });
+
+  it("scopes the mobile typography correction to phone widths", () => {
+    const styles = readFileSync(
+      resolve(process.cwd(), "client/src/index.css"),
+      "utf8"
+    );
+    expect(styles).toContain(
+      "@media screen and (max-width: 700px) {\n  .rebuild-intro,"
+    );
+    expect(styles).toContain(
+      ".rebuild-project-meta > span:last-child {\n    max-width: 48%;"
+    );
+    expect(styles).not.toContain("body.rebuild-touch-layout");
   });
 
   it("keeps the compact navigation connected to its menu control", () => {
