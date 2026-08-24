@@ -55,6 +55,27 @@ import ChapterRail from "@/components/portfolio/ChapterRail";
 import HeroTelemetryField from "@/components/portfolio/HeroTelemetryField";
 import PortfolioBoundary from "@/components/portfolio/PortfolioBoundary";
 
+export function shouldUseDesktopTouchLayout() {
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
+    return false;
+  }
+
+  const isIpad =
+    navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  const isMobilePlatform = /Android|iPhone|iPad|iPod|Mobile/i.test(
+    navigator.userAgent
+  );
+  const isCoarsePointer =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(pointer: coarse)").matches;
+
+  return (
+    window.innerWidth > 700 &&
+    (isMobilePlatform || isIpad) &&
+    (navigator.maxTouchPoints > 0 || isCoarsePointer)
+  );
+}
+
 export default function Home() {
   const publicProjectsQuery = trpc.projects.listPublic.useQuery();
   const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(
@@ -73,6 +94,22 @@ export default function Home() {
     () => [...resumeProjects, ...(publicProjectsQuery.data ?? [])],
     [publicProjectsQuery.data]
   );
+
+  useEffect(() => {
+    const updateTouchLayout = () => {
+      document.body.classList.toggle(
+        "rebuild-desktop-touch-mode",
+        shouldUseDesktopTouchLayout()
+      );
+    };
+
+    updateTouchLayout();
+    window.addEventListener("resize", updateTouchLayout, { passive: true });
+    return () => {
+      window.removeEventListener("resize", updateTouchLayout);
+      document.body.classList.remove("rebuild-desktop-touch-mode");
+    };
+  }, []);
 
   useEffect(() => {
     const sections = navItems

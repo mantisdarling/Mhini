@@ -8364,3 +8364,104 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     max-width: 48%;
   }
 }
+
+/* Desktop-mode phone art direction: touch phones with a wide viewport use the reference composition. */
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-carousel-hint,
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-position {
+  display: none;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-card,
+body.rebuild-desktop-touch-mode
+  .rebuild-work
+  .rebuild-project-card.is-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-column: auto;
+  width: 100%;
+  min-height: 0;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-visual,
+body.rebuild-desktop-touch-mode
+  .rebuild-work
+  .rebuild-project-card.is-featured
+  .rebuild-project-visual {
+  min-height: 0;
+  aspect-ratio: 1.7;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy {
+  min-height: 8.5rem;
+  padding: 1rem 1.1rem 1.2rem;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy h3 {
+  max-width: 24ch;
+  margin-top: 1rem;
+  font-size: clamp(1.45rem, 3.5vw, 2.2rem);
+  line-height: 0.96;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy p {
+  max-width: 56ch;
+  min-height: 0;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-meta {
+  font-size: 0.55rem;
+}
+
+@media (min-width: 1200px) {
+  body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-card,
+  body.rebuild-desktop-touch-mode
+    .rebuild-work
+    .rebuild-project-card.is-featured {
+    grid-template-columns: minmax(0, 1.65fr) minmax(220px, 0.75fr);
+  }
+
+  body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+  }
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work {
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1.15rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-section-heading > p {
+  width: min(100%, 42ch);
+  max-width: none;
+  margin: 0;
+}
+
+body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-visual,
+body.rebuild-desktop-touch-mode
+  .rebuild-work
+  .rebuild-project-card.is-featured
+  .rebuild-project-visual {
+  aspect-ratio: 1.28;
+}
