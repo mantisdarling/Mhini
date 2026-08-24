@@ -83,7 +83,6 @@ function compileShader(
 
 export default function HeroTelemetryField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fpsReadoutRef = useRef<HTMLOutputElement>(null);
   const [reducedMotion, setReducedMotion] = useState(reducedMotionPreference);
   const [visualState, setVisualState] = useState<VisualState>("checking");
 
@@ -182,10 +181,7 @@ export default function HeroTelemetryField() {
     let pointerY = 0;
     let targetPointerX = 0;
     let targetPointerY = 0;
-    let lastFrameAt = performance.now();
-    let frameCount = 0;
-    let fpsWindowStartedAt = lastFrameAt;
-    const startedAt = lastFrameAt;
+    const startedAt = performance.now();
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -225,16 +221,6 @@ export default function HeroTelemetryField() {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-      frameCount += 1;
-      if (now - fpsWindowStartedAt >= 1000 && fpsReadoutRef.current) {
-        const fps = Math.round(
-          (frameCount * 1000) / (now - fpsWindowStartedAt)
-        );
-        fpsReadoutRef.current.textContent = `WEBGL · ${fps} FPS`;
-        frameCount = 0;
-        fpsWindowStartedAt = now;
-      }
-      lastFrameAt = now;
       frame = requestAnimationFrame(render);
     };
 
@@ -265,16 +251,6 @@ export default function HeroTelemetryField() {
         aria-hidden="true"
         data-visual-state={visualState}
       />
-      {import.meta.env.DEV && (
-        <output
-          ref={fpsReadoutRef}
-          className="hero-telemetry-readout"
-          aria-label="WebGL frame rate"
-          aria-live="off"
-        >
-          WEBGL · -- FPS
-        </output>
-      )}
     </>
   );
 }

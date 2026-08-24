@@ -5921,10 +5921,6 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
   inset: 0;
   z-index: 1 !important;
 }
-.cinematic-hero > .hero-telemetry-readout {
-  position: absolute !important;
-  z-index: 3 !important;
-}
 .cinematic-scene-backdrop,
 .cinematic-video-backdrop {
   position: absolute;
@@ -7997,27 +7993,9 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
 .hero-telemetry-field[data-visual-state="active"] {
   opacity: 0.32;
 }
-.hero-telemetry-readout {
-  position: absolute;
-  top: clamp(5.5rem, 10vw, 7.5rem);
-  right: clamp(1.25rem, 4vw, 4.5rem);
-  z-index: 4;
-  margin: 0;
-  padding: 0.32rem 0.45rem;
-  border: 1px solid rgba(233, 231, 225, 0.18);
-  background: rgba(21, 21, 21, 0.5);
-  color: rgba(233, 231, 225, 0.62);
-  font:
-    600 0.5rem/1 "IBM Plex Mono",
-    monospace;
-  letter-spacing: 0.13em;
-}
 @media (max-width: 700px) {
   .hero-telemetry-field {
     opacity: 0;
-  }
-  .hero-telemetry-readout {
-    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
