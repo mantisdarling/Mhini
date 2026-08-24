@@ -29,6 +29,8 @@ jobs:
         run: pnpm run check:unused-exports
       - name: Check service-worker policy
         run: pnpm run check:service-worker
+      - name: Check debug-log privacy
+        run: pnpm run check:debug-privacy
       - name: Type check
         run: pnpm run check
       - name: Run tests

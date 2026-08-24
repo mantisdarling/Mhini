@@ -11,6 +11,7 @@
     "check": "tsc --noEmit",
     "check:unused-exports": "node scripts/check-unused-exports.mjs",
     "check:service-worker": "node scripts/check-service-worker.mjs",
+    "check:debug-privacy": "node scripts/check-debug-privacy.mjs",
     "format": "prettier --write .",
     "test": "vitest run",
     "security:secrets": "node scripts/check-secrets.mjs"

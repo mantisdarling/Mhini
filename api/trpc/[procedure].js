@@ -1159,6 +1159,23 @@ function registerOAuthRoutes(app2) {
 // server/_core/storageProxy.ts
 var redirectCache = /* @__PURE__ */ new Map();
 var maxRedirectCacheEntries = 1e3;
+function isUnsafeStorageKey(key) {
+  let candidate = key;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (candidate.includes("\\") || /[\u0000-\u001f\u007f]/.test(candidate) || candidate.split("/").includes("..")) {
+      return true;
+    }
+    let decoded;
+    try {
+      decoded = decodeURIComponent(candidate);
+    } catch {
+      return true;
+    }
+    if (decoded === candidate) return false;
+    candidate = decoded;
+  }
+  return true;
+}
 function cachedUrl(key) {
   const value = redirectCache.get(key);
   if (!value) return null;
@@ -1186,7 +1203,7 @@ function registerStorageProxy(app2) {
       res.status(400).send("Missing storage key");
       return;
     }
-    if (key.includes("\0") || key.split("/").includes("..")) {
+    if (isUnsafeStorageKey(key)) {
       res.status(400).send("Invalid storage key");
       return;
     }
@@ -1210,7 +1227,9 @@ function registerStorageProxy(app2) {
         headers: { Authorization: `Bearer ${ENV.forgeApiKey}` }
       });
       if (!forgeResp.ok) {
-        console.error("[StorageProxy] Forge presign failed", { status: forgeResp.status });
+        console.error("[StorageProxy] Forge presign failed", {
+          status: forgeResp.status
+        });
         res.status(502).send("Storage backend error");
         return;
       }
@@ -1408,6 +1427,9 @@ function createApplication(options = {}) {
       createContext
     })
   );
+  app2.use("/api", (_req, res) => {
+    res.status(404).json({ error: "not found" });
+  });
   app2.use(
     (error, _req, res, next) => {
       console.error("[Application] Unhandled request error", error);

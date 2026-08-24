@@ -7,6 +7,28 @@ type CachedRedirect = { expiresAt: number; url: string };
 const redirectCache = new Map<string, CachedRedirect>();
 const maxRedirectCacheEntries = 1000;
 
+function isUnsafeStorageKey(key: string) {
+  let candidate = key;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (
+      candidate.includes("\\") ||
+      /[\u0000-\u001f\u007f]/.test(candidate) ||
+      candidate.split("/").includes("..")
+    ) {
+      return true;
+    }
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(candidate);
+    } catch {
+      return true;
+    }
+    if (decoded === candidate) return false;
+    candidate = decoded;
+  }
+  return true;
+}
+
 function cachedUrl(key: string) {
   const value = redirectCache.get(key);
   if (!value) return null;
@@ -36,7 +58,7 @@ export function registerStorageProxy(app: Express) {
       res.status(400).send("Missing storage key");
       return;
     }
-    if (key.includes("\0") || key.split("/").includes("..")) {
+    if (isUnsafeStorageKey(key)) {
       res.status(400).send("Invalid storage key");
       return;
     }
@@ -56,7 +78,7 @@ export function registerStorageProxy(app: Express) {
     try {
       const forgeUrl = new URL(
         "v1/storage/presign/get",
-        ENV.forgeApiUrl.replace(/\/+$/, "") + "/",
+        ENV.forgeApiUrl.replace(/\/+$/, "") + "/"
       );
       forgeUrl.searchParams.set("path", key);
 
@@ -65,7 +87,9 @@ export function registerStorageProxy(app: Express) {
       });
 
       if (!forgeResp.ok) {
-        console.error("[StorageProxy] Forge presign failed", { status: forgeResp.status });
+        console.error("[StorageProxy] Forge presign failed", {
+          status: forgeResp.status,
+        });
         res.status(502).send("Storage backend error");
         return;
       }

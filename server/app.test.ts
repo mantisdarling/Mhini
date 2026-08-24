@@ -36,6 +36,9 @@ describe("Vercel Express application", () => {
       `${baseUrl}/api/trpc/auth.me?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%7D%7D`
     );
     const missingApi = await fetch(`${baseUrl}/api/not-a-route`);
+    const encodedTraversal = await fetch(
+      `${baseUrl}/manus-storage/%252e%252e%252fprivate`
+    );
 
     expect(health.status).toBe(200);
     await expect(health.json()).resolves.toEqual({ ok: true });
@@ -43,6 +46,10 @@ describe("Vercel Express application", () => {
     await expect(vercelHealth.json()).resolves.toEqual({ ok: true });
     expect(trpcAuth.status).not.toBe(404);
     expect(missingApi.status).toBe(404);
+    expect(missingApi.headers.get("content-type")).toContain(
+      "application/json"
+    );
+    expect(encodedTraversal.status).toBe(400);
   });
 
   it("coalesces concurrent readiness probes", async () => {

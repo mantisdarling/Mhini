@@ -141,6 +141,9 @@ export function createApplication(options: ApplicationOptions = {}) {
       createContext,
     })
   );
+  app.use("/api", (_req, res) => {
+    res.status(404).json({ error: "not found" });
+  });
   app.use(
     (
       error: unknown,
