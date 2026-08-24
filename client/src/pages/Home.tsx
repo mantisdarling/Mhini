@@ -40,6 +40,7 @@ export { safeExternalUrl } from "@/components/portfolio/model";
 import {
   DetailBlock,
   EvidenceDossier,
+  FooterCopyLink,
   ExternalLink,
   ProjectCard,
   ProjectCardSkeleton,
@@ -747,6 +748,7 @@ export default function Home() {
       <footer className="rebuild-footer">
         <span data-text-reveal>© 2026 MANTIS / BUILT WITH DISCIPLINE</span>
         <span data-text-reveal="delayed">HARSHIT KUMAR / EAST INDIA</span>
+        <FooterCopyLink />
         <a data-text-reveal="delayed" href="#top">
           RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" />
         </a>

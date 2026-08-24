@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronDown, Link2, Share2 } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Copy, Link2, Share2 } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ASSETS, safeExternalUrl, type DisplayProject } from "./model";
 
@@ -173,6 +173,77 @@ export function ProjectShareActions({ project }: { project: DisplayProject }) {
         </div>
       )}
     </div>
+  );
+}
+
+export function FooterCopyLink() {
+  const [feedback, setFeedback] = useState("");
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+  const feedbackTimer = useRef<number | null>(null);
+  const feedbackRemoveTimer = useRef<number | null>(null);
+
+  const clearFeedbackTimers = () => {
+    if (feedbackTimer.current !== null)
+      window.clearTimeout(feedbackTimer.current);
+    if (feedbackRemoveTimer.current !== null)
+      window.clearTimeout(feedbackRemoveTimer.current);
+    feedbackTimer.current = null;
+    feedbackRemoveTimer.current = null;
+  };
+
+  const showFeedback = (message: string) => {
+    clearFeedbackTimers();
+    setFeedback(message);
+    setFeedbackVisible(true);
+    feedbackTimer.current = window.setTimeout(() => {
+      setFeedbackVisible(false);
+      feedbackTimer.current = null;
+      feedbackRemoveTimer.current = window.setTimeout(() => {
+        setFeedback("");
+        feedbackRemoveTimer.current = null;
+      }, 240);
+    }, 2200);
+  };
+
+  useEffect(() => () => clearFeedbackTimers(), []);
+
+  const copyLink = async () => {
+    if (!navigator.clipboard?.writeText) {
+      showFeedback("Copy unavailable");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showFeedback("Link copied");
+    } catch {
+      showFeedback("Copy unavailable");
+    }
+  };
+
+  return (
+    <span className="rebuild-footer-copy-wrap">
+      <button
+        className="rebuild-footer-copy"
+        type="button"
+        onClick={copyLink}
+        aria-label="Copy the Mantis website link"
+        title="Copy website link"
+      >
+        <Copy size={14} aria-hidden="true" />
+        Copy link
+      </button>
+      {feedback && (
+        <span
+          className={`rebuild-footer-copy-toast ${feedback === "Link copied" ? "is-success" : "is-error"}${feedbackVisible ? " is-visible" : ""}`}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <i className="rebuild-footer-copy-toast-mark" aria-hidden="true" />
+          {feedback}
+        </span>
+      )}
+    </span>
   );
 }
 

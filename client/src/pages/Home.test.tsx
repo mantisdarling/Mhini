@@ -492,6 +492,39 @@ describe("rebuilt Mantis Home page", () => {
     }
   });
 
+  it("copies the current website link from the footer", async () => {
+    const previousClipboard = navigator.clipboard;
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      renderHome();
+      const copyButton = container?.querySelector<HTMLButtonElement>(
+        ".rebuild-footer-copy"
+      );
+      expect(copyButton?.getAttribute("aria-label")).toBe(
+        "Copy the Mantis website link"
+      );
+      await act(async () => {
+        copyButton?.click();
+        await Promise.resolve();
+      });
+
+      expect(writeText).toHaveBeenCalledWith(window.location.href);
+      expect(
+        container?.querySelector(".rebuild-footer-copy-toast")?.textContent
+      ).toBe("Link copied");
+    } finally {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: previousClipboard,
+      });
+    }
+  });
+
   it("rejects unsafe external URL schemes", () => {
     expect(safeExternalUrl("javascript:alert(1)")).toBeNull();
     expect(safeExternalUrl("data:text/html,unsafe")).toBeNull();
