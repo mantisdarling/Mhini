@@ -8401,15 +8401,15 @@ body.rebuild-desktop-touch-mode
 }
 
 body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy {
-  min-height: 8.5rem;
-  padding: 1rem 1.1rem 1.2rem;
+  min-height: 7.25rem;
+  padding: 1rem 1.15rem 1.1rem;
 }
 
 body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy h3 {
-  max-width: 24ch;
-  margin-top: 1rem;
-  font-size: clamp(1.45rem, 3.5vw, 2.2rem);
-  line-height: 0.96;
+  max-width: 28ch;
+  margin-top: 0.75rem;
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  line-height: 0.95;
 }
 
 body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy p {
@@ -8463,7 +8463,7 @@ body.rebuild-desktop-touch-mode
   .rebuild-work
   .rebuild-project-card.is-featured
   .rebuild-project-visual {
-  aspect-ratio: 1.28;
+  aspect-ratio: 3.2;
 }
 
 /* Scoped Stack field restoration: the artwork stays behind the complete chapter and remains legible on deployed builds. */
@@ -8562,19 +8562,19 @@ body.rebuild-desktop-touch-mode
   .rebuild-work .rebuild-project-visual,
   .rebuild-work .rebuild-project-card.is-featured .rebuild-project-visual {
     min-height: 0;
-    aspect-ratio: 1.28;
+    aspect-ratio: 3.2;
   }
 
   .rebuild-work .rebuild-project-copy {
-    min-height: 8.5rem;
-    padding: 1rem 1.1rem 1.2rem;
+    min-height: 7.25rem;
+    padding: 1rem 1.15rem 1.1rem;
   }
 
   .rebuild-work .rebuild-project-copy h3 {
-    max-width: 24ch;
-    margin-top: 1rem;
-    font-size: clamp(1.45rem, 3.5vw, 2.2rem);
-    line-height: 0.96;
+    max-width: 28ch;
+    margin-top: 0.75rem;
+    font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+    line-height: 0.95;
   }
 
   .rebuild-work .rebuild-project-copy p {
