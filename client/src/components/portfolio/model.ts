@@ -29,7 +29,8 @@ export const ASSETS = {
     "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/SzCbbuLdJOszlBMq.webp",
   caseStudy:
     "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/USqfDrBUsSRPObfw.webp",
-  stackBackdrop: "/manus-storage/mantis-stack-mountain-waterfall_e3d55c7e.jpg",
+  stackBackdrop:
+    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/GUhrgvfWzLexkMAI.jpg",
   story: {
     motion:
       "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/dXOMgdKzODAwcXzG.webp",

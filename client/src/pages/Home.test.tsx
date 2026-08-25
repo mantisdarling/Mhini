@@ -327,7 +327,9 @@ describe("rebuilt Mantis Home page", () => {
       container
         ?.querySelector("#stack > .cinematic-scene-backdrop img")
         ?.getAttribute("src")
-    ).toBe("/manus-storage/mantis-stack-mountain-waterfall_e3d55c7e.jpg");
+    ).toBe(
+      "https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/GUhrgvfWzLexkMAI.jpg"
+    );
     expect(
       container?.querySelectorAll("#stack > .cinematic-scene-backdrop")
     ).toHaveLength(1);
