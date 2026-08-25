@@ -8777,3 +8777,16 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     background: rgba(229, 227, 220, 0.97);
   }
 }
+
+/* Evidence mobile accordion art: the single backdrop must grow with the section's opened panels. */
+@media (max-width: 700px) {
+  .cinematic-section#evidence > .cinematic-scene-backdrop,
+  .cinematic-section#evidence > .cinematic-scene-backdrop picture {
+    height: 100%;
+    min-height: 100%;
+  }
+  .cinematic-section#evidence > .cinematic-scene-backdrop img {
+    min-height: 100%;
+    object-fit: cover;
+  }
+}
