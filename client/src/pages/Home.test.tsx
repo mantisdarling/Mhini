@@ -64,6 +64,40 @@ describe("rebuilt Mantis Home page", () => {
     );
   });
 
+  it("keeps judge-facing project records concise and links safe", () => {
+    expect(projects).toHaveLength(7);
+    expect(projects.map(project => project.name)).toEqual([
+      "Cosmic",
+      "NeuroSched",
+      "XY: Team Portfolio",
+      "Russian in India Resource Guide",
+      "Ultraviolette Website Clone",
+      "MANTIS: Mentorship Marketplace",
+      "Buzz: AI Misinformation Detector",
+    ]);
+    projects.forEach(project => {
+      expect(project.description.length).toBeLessThan(700);
+      [project.liveUrl, project.githubUrl]
+        .filter((url): url is string => Boolean(url))
+        .forEach(url => expect(new URL(url).protocol).toBe("https:"));
+    });
+    expect(
+      projects.find(project => project.id === "xy-team-portfolio")?.tagline
+    ).toContain("5,000+ concurrent users");
+    expect(profile.links).toEqual(
+      expect.arrayContaining([
+        {
+          label: "LinkedIn",
+          url: "https://www.linkedin.com/in/mantisdarling/",
+        },
+        {
+          label: "NVIDIA Dev Forums",
+          url: "https://forums.developer.nvidia.com/",
+        },
+      ])
+    );
+  });
+
   it("scopes the mobile typography correction to phone widths", () => {
     const styles = readFileSync(
       resolve(process.cwd(), "client/src/index.css"),
