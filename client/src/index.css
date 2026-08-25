@@ -3719,6 +3719,30 @@ html.motion-off .hero-field {
   margin-top: 0.8rem;
   box-shadow: none !important;
 }
+.studio-magic-feedback {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+  border-left: 2px solid var(--gold);
+  padding: 0.8rem 0.9rem;
+  background: rgba(242, 239, 233, 0.06);
+  color: var(--muted-ivory);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.studio-magic-feedback strong {
+  color: var(--ivory);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.studio-magic-feedback-error {
+  border-left-color: var(--red);
+}
+.studio-magic-feedback-success {
+  border-left-color: var(--gold);
+}
 .studio-gate-foot {
   display: flex;
   justify-content: space-between;
@@ -3756,6 +3780,11 @@ html.motion-off .hero-field {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .studio-sidebar [data-sidebar="menu-button"],
+  .studio-submit-button,
+  .studio-magic-feedback {
+    transition: none !important;
+  }
   .studio-sidebar [data-sidebar="menu-button"],
   .studio-submit-button {
     transition: none !important;

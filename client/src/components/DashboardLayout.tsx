@@ -20,12 +20,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
-import { independentAuthEnabled, requestIndependentMagicLink } from "@/lib/independentAuth";
+import {
+  getMagicLinkFailureMessage,
+  independentAuthEnabled,
+  requestIndependentMagicLink,
+} from "@/lib/independentAuth";
 import { useIsMobile } from "@/hooks/useMobile";
 import { ExternalLink, Gauge, LogOut, PanelLeft } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
+import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -50,13 +54,18 @@ export default function DashboardLayout({
   const { loading, user } = useAuth();
   const [email, setEmail] = useState("");
   const [sendingLink, setSendingLink] = useState(false);
+  const [magicLinkFeedback, setMagicLinkFeedback] = useState<
+    | { kind: "success"; title: string; body: string }
+    | { kind: "error"; title: string; body: string }
+    | null
+  >(null);
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
   }, [sidebarWidth]);
 
   if (loading) {
-    return <DashboardLayoutSkeleton />
+    return <DashboardLayoutSkeleton />;
   }
 
   if (!user) {
@@ -65,36 +74,88 @@ export default function DashboardLayout({
       <div className="studio-gate">
         <div className="studio-gate-panel">
           <div className="studio-gate-brand">
-            <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png" alt="Mantis blade monogram" />
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png"
+              alt="Mantis blade monogram"
+            />
             <span>MANTIS / STUDIO</span>
           </div>
           <div className="studio-gate-heading">
             <p className="studio-eyebrow">PRIVATE CHANNEL / OWNER ACCESS</p>
             <h1>Sign in to continue</h1>
             <p>
-              {independent ? "Use your owner email to receive a one-time secure sign-in link." : "Access to this dashboard requires authentication. Continue to launch the login flow."}
+              {independent
+                ? "Use your owner email to receive a one-time secure sign-in link."
+                : "Access to this dashboard requires authentication. Continue to launch the login flow."}
             </p>
           </div>
           {independent ? (
-            <form className="flex w-full flex-col gap-3" onSubmit={async event => {
-              event.preventDefault();
-              setSendingLink(true);
-              try {
-                await requestIndependentMagicLink(email.trim());
-                window.alert("A secure sign-in link was sent. Open it in this browser to continue.");
-              } catch (error) {
-                window.alert(error instanceof Error ? error.message : "Could not send the sign-in link.");
-              } finally {
-                setSendingLink(false);
-              }
-            }}>
-              <label className="studio-field-label">OWNER EMAIL<input className="studio-email-input" type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="owner@example.com" required /></label>
-              <Button type="submit" disabled={sendingLink} size="lg" className="studio-submit-button">{sendingLink ? "Sending secure link…" : "Send secure sign-in link"}</Button>
+            <form
+              className="flex w-full flex-col gap-3"
+              onSubmit={async event => {
+                event.preventDefault();
+                setMagicLinkFeedback(null);
+                setSendingLink(true);
+                try {
+                  await requestIndependentMagicLink(email);
+                  setMagicLinkFeedback({
+                    kind: "success",
+                    title: "Secure link sent",
+                    body: "Open the link from this browser to continue. If it does not arrive soon, check your spam folder before trying again.",
+                  });
+                } catch (error) {
+                  const message = getMagicLinkFailureMessage(error);
+                  setMagicLinkFeedback({ kind: "error", ...message });
+                } finally {
+                  setSendingLink(false);
+                }
+              }}
+            >
+              <label className="studio-field-label">
+                OWNER EMAIL
+                <input
+                  className="studio-email-input"
+                  type="email"
+                  value={email}
+                  onChange={event => setEmail(event.target.value)}
+                  placeholder="owner@example.com"
+                  required
+                />
+              </label>
+              <Button
+                type="submit"
+                disabled={sendingLink}
+                size="lg"
+                className="studio-submit-button"
+              >
+                {sendingLink
+                  ? "Sending secure link…"
+                  : "Send secure sign-in link"}
+              </Button>
+              {magicLinkFeedback ? (
+                <div
+                  className={`studio-magic-feedback studio-magic-feedback-${magicLinkFeedback.kind}`}
+                  role={magicLinkFeedback.kind === "error" ? "alert" : "status"}
+                  aria-live="polite"
+                >
+                  <strong>{magicLinkFeedback.title}</strong>
+                  <span>{magicLinkFeedback.body}</span>
+                </div>
+              ) : null}
             </form>
           ) : (
-            <Button onClick={() => startLogin()} size="lg" className="studio-submit-button">Sign in</Button>
+            <Button
+              onClick={() => startLogin()}
+              size="lg"
+              className="studio-submit-button"
+            >
+              Sign in
+            </Button>
           )}
-          <div className="studio-gate-foot"><span>AUTH / READY</span><span>LINKS EXPIRE AFTER USE</span></div>
+          <div className="studio-gate-foot">
+            <span>AUTH / READY</span>
+            <span>LINKS EXPIRE AFTER USE</span>
+          </div>
         </div>
       </div>
     );
@@ -190,8 +251,14 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                    <img className="studio-sidebar-mark" src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png" alt="" />
-                    <span className="studio-sidebar-wordmark">MANTIS <i /> CONTROL</span>
+                  <img
+                    className="studio-sidebar-mark"
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663723812308/UymLNLvVjhliLKJj.png"
+                    alt=""
+                  />
+                  <span className="studio-sidebar-wordmark">
+                    MANTIS <i /> CONTROL
+                  </span>
                 </div>
               ) : null}
             </div>
