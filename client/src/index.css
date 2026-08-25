@@ -8692,3 +8692,45 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     display: none;
   }
 }
+
+/* Reference preview: keep the Closing Motion video as one wide rectangle with copy layered above it. */
+.cinematic-finale {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  padding-block: clamp(3rem, 8vw, 7rem);
+}
+.cinematic-finale > .cinematic-video-backdrop {
+  position: relative;
+  inset: auto;
+  grid-area: 1 / 1;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  border: 1px solid rgba(245, 243, 237, 0.14);
+}
+.cinematic-finale > .rebuild-finale-copy {
+  grid-area: 1 / 1;
+  align-self: center;
+  max-width: min(27rem, 48%);
+  margin: 0;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  z-index: 3;
+}
+@media (max-width: 800px) {
+  .cinematic-finale {
+    padding-block: 2.25rem 3.5rem;
+  }
+  .cinematic-finale > .cinematic-video-backdrop {
+    aspect-ratio: 16 / 10;
+  }
+  .cinematic-finale > .rebuild-finale-copy {
+    max-width: min(19rem, 76%);
+    padding: 1.15rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-finale > .cinematic-video-backdrop video {
+    transform: none;
+  }
+}
