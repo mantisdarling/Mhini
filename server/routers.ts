@@ -10,19 +10,38 @@ import {
   reorderProjects,
   updateProject,
 } from "./db";
-import { createRecoverySnapshot, listRecoverySnapshots } from "./recoverySnapshot";
-import { projectInputSchema, projectReorderSchema, projectUpdateSchema, type ProjectInput } from "./projectSchemas";
+import {
+  createRecoverySnapshot,
+  listRecoverySnapshots,
+} from "./recoverySnapshot";
+import {
+  projectInputSchema,
+  projectReorderSchema,
+  projectUpdateSchema,
+  type ProjectInput,
+} from "./projectSchemas";
 
-function normalizeTags(value: string) {
+export function normalizeTags(value: string) {
   try {
     const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string").slice(0, 100) : [];
+    if (!Array.isArray(parsed)) return [];
+    return Array.from(
+      new Set(
+        parsed
+          .filter((tag): tag is string => typeof tag === "string")
+          .map(tag => tag.trim())
+          .filter(Boolean)
+          .map(tag => tag.slice(0, 28))
+      )
+    ).slice(0, 8);
   } catch {
     return [];
   }
 }
 
-function presentProject(project: NonNullable<Awaited<ReturnType<typeof getAllProjects>>[number]>) {
+function presentProject(
+  project: NonNullable<Awaited<ReturnType<typeof getAllProjects>>[number]>
+) {
   return { ...project, tags: normalizeTags(project.tags) };
 }
 
@@ -51,23 +70,36 @@ export const appRouter = router({
   }),
   projects: router({
     listPublic: publicProcedure.query(async ({ ctx }) => {
-      ctx.res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      ctx.res.setHeader(
+        "Cache-Control",
+        "public, s-maxage=60, stale-while-revalidate=300"
+      );
       return (await getPublishedProjects()).map(presentProject);
     }),
-    listPrivate: adminProcedure.query(async () => (await getAllProjects()).map(presentProject)),
-    create: adminProcedure.input(projectInputSchema).mutation(async ({ input }) => {
-      const created = await createProject(toProjectValues(input));
-      if (!created) throw new Error("Project could not be created.");
-      return presentProject(created);
-    }),
-    update: adminProcedure.input(projectUpdateSchema).mutation(async ({ input }) => {
-      const { id, ...values } = input;
-      const updated = await updateProject(id, toProjectValues(values));
-      if (!updated) throw new Error("Project could not be found.");
-      return presentProject(updated);
-    }),
-    remove: adminProcedure.input(projectUpdateSchema.pick({ id: true })).mutation(({ input }) => deleteProject(input.id)),
-    reorder: adminProcedure.input(projectReorderSchema).mutation(({ input }) => reorderProjects(input.items)),
+    listPrivate: adminProcedure.query(async () =>
+      (await getAllProjects()).map(presentProject)
+    ),
+    create: adminProcedure
+      .input(projectInputSchema)
+      .mutation(async ({ input }) => {
+        const created = await createProject(toProjectValues(input));
+        if (!created) throw new Error("Project could not be created.");
+        return presentProject(created);
+      }),
+    update: adminProcedure
+      .input(projectUpdateSchema)
+      .mutation(async ({ input }) => {
+        const { id, ...values } = input;
+        const updated = await updateProject(id, toProjectValues(values));
+        if (!updated) throw new Error("Project could not be found.");
+        return presentProject(updated);
+      }),
+    remove: adminProcedure
+      .input(projectUpdateSchema.pick({ id: true }))
+      .mutation(({ input }) => deleteProject(input.id)),
+    reorder: adminProcedure
+      .input(projectReorderSchema)
+      .mutation(({ input }) => reorderProjects(input.items)),
   }),
   recovery: router({
     createSnapshot: adminProcedure.mutation(() => createRecoverySnapshot()),

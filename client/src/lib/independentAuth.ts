@@ -1,11 +1,18 @@
 const provider = import.meta.env.VITE_AUTH_PROVIDER ?? "manus";
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.SUPABASE_VITE_SUPABASE_URL ?? "";
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL ??
+  import.meta.env.SUPABASE_VITE_SUPABASE_URL ??
+  "";
 const supabasePublishableKey =
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.SUPABASE_VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+  import.meta.env.SUPABASE_VITE_SUPABASE_PUBLISHABLE_KEY ??
+  "";
 const sessionKey = "independent-access-token";
 
 export function independentAuthEnabled() {
-  return provider === "supabase" && Boolean(supabaseUrl && supabasePublishableKey);
+  return (
+    provider === "supabase" && Boolean(supabaseUrl && supabasePublishableKey)
+  );
 }
 
 export function getIndependentAccessToken() {
@@ -30,7 +37,11 @@ export function captureIndependentSessionFromUrl() {
   if (!token) return false;
   try {
     sessionStorage.setItem(sessionKey, token);
-    window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`);
+    window.history.replaceState(
+      {},
+      document.title,
+      `${window.location.pathname}${window.location.search}`
+    );
     return true;
   } catch {
     return false;
@@ -38,15 +49,39 @@ export function captureIndependentSessionFromUrl() {
 }
 
 export async function requestIndependentMagicLink(email: string) {
-  if (!independentAuthEnabled()) throw new Error("Independent authentication is not configured yet.");
-  const response = await fetch(`${supabaseUrl.replace(/\/$/, "")}/auth/v1/otp`, {
-    method: "POST",
-    headers: { apikey: supabasePublishableKey, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email,
-      create_user: true,
-      redirect_to: `${window.location.origin}/studio`,
-    }),
-  });
-  if (!response.ok) throw new Error(`Could not send the sign-in link: ${await response.text()}`);
+  if (!independentAuthEnabled()) {
+    throw new Error("Independent authentication is not configured yet.");
+  }
+  const normalizedEmail = email.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+    throw new Error("Enter a valid email address.");
+  }
+
+  try {
+    const response = await fetch(
+      `${supabaseUrl.replace(/\/$/, "")}/auth/v1/otp`,
+      {
+        method: "POST",
+        headers: {
+          apikey: supabasePublishableKey,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(10_000),
+        body: JSON.stringify({
+          email: normalizedEmail,
+          create_user: true,
+          redirect_to: `${window.location.origin}/studio`,
+        }),
+      }
+    );
+    if (!response.ok) throw new Error("provider rejected request");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "Enter a valid email address."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not send the sign-in link. Please try again.");
+  }
 }

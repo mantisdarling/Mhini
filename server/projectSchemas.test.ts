@@ -6,7 +6,8 @@ describe("project input schema", () => {
     const project = projectInputSchema.parse({
       title: "Signal / 24",
       category: "Data platform",
-      description: "A concise operating layer for teams making time-sensitive decisions.",
+      description:
+        "A concise operating layer for teams making time-sensitive decisions.",
       imageUrl: "https://example.com/signal.webp",
       projectUrl: "https://example.com/signal",
       tags: ["Systems", "Product"],
@@ -19,16 +20,45 @@ describe("project input schema", () => {
   });
 
   it("rejects a project with a missing title or invalid external URL", () => {
-    expect(() => projectInputSchema.parse({
-      title: "",
-      category: "Build",
+    expect(() =>
+      projectInputSchema.parse({
+        title: "",
+        category: "Build",
+        description: "A real description that is long enough to be meaningful.",
+        imageUrl: "not-a-url",
+        projectUrl: "",
+        tags: [],
+        status: "draft",
+        sortOrder: 0,
+      })
+    ).toThrow();
+  });
+
+  it("deduplicates tags and rejects credential-bearing URLs", () => {
+    const project = projectInputSchema.parse({
+      title: "Signal / 24",
+      category: "Data platform",
       description: "A real description that is long enough to be meaningful.",
-      imageUrl: "not-a-url",
-      projectUrl: "",
-      tags: [],
+      imageUrl: "https://example.com/signal.webp",
+      projectUrl: "https://example.com/signal",
+      tags: ["Systems", "Systems", "Product"],
       status: "draft",
       sortOrder: 0,
-    })).toThrow();
+    });
+
+    expect(project.tags).toEqual(["Systems", "Product"]);
+    expect(() =>
+      projectInputSchema.parse({
+        title: "Signal / 24",
+        category: "Data platform",
+        description: "A real description that is long enough to be meaningful.",
+        imageUrl: "https://user:password@example.com/image.webp",
+        projectUrl: "",
+        tags: [],
+        status: "draft",
+        sortOrder: 0,
+      })
+    ).toThrow("without credentials");
   });
 
   it("rejects executable and non-web URL schemes", () => {
@@ -43,8 +73,14 @@ describe("project input schema", () => {
       sortOrder: 0,
     };
 
-    expect(() => projectInputSchema.parse({ ...base, imageUrl: "javascript:alert(1)" })).toThrow("HTTP or HTTPS");
-    expect(() => projectInputSchema.parse({ ...base, projectUrl: "data:text/html,unsafe" })).toThrow("HTTP or HTTPS");
-    expect(() => projectInputSchema.parse({ ...base, projectUrl: "//example.com/project" })).toThrow("HTTP or HTTPS");
+    expect(() =>
+      projectInputSchema.parse({ ...base, imageUrl: "javascript:alert(1)" })
+    ).toThrow("HTTP or HTTPS");
+    expect(() =>
+      projectInputSchema.parse({ ...base, projectUrl: "data:text/html,unsafe" })
+    ).toThrow("HTTP or HTTPS");
+    expect(() =>
+      projectInputSchema.parse({ ...base, projectUrl: "//example.com/project" })
+    ).toThrow("HTTP or HTTPS");
   });
 });
