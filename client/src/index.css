@@ -8790,3 +8790,95 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
     object-fit: cover;
   }
 }
+
+/* Phone final-chapter rebuild: one continuous handoff, one readable media frame, no artwork overrun. */
+@media screen and (max-width: 700px) {
+  .rebuild-evidence {
+    padding-bottom: 1.5rem;
+  }
+
+  .cinematic-finale {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 1.25rem 0 2.5rem;
+  }
+
+  .cinematic-finale > .cinematic-video-backdrop {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    border: 1px solid rgba(245, 243, 237, 0.18);
+    border-inline: 0;
+  }
+
+  .cinematic-finale > .rebuild-finale-copy {
+    grid-area: 1 / 1;
+    align-self: end;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    padding: 1rem 1rem 1.15rem;
+    z-index: 3;
+  }
+
+  .cinematic-finale > .rebuild-finale-copy h2 {
+    max-width: 8ch;
+    font-size: clamp(2.7rem, 13vw, 4.8rem);
+    line-height: 0.84;
+    text-wrap: balance;
+  }
+
+  .cinematic-finale > .rebuild-finale-copy p {
+    max-width: 28ch;
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    line-height: 1.48;
+  }
+
+  .rebuild-contact {
+    min-height: 0;
+    padding: 3.5rem 1rem 2.75rem;
+  }
+
+  .rebuild-contact::before {
+    background-position: 82% top;
+    background-size: auto 46%;
+    opacity: 0.3;
+  }
+
+  .rebuild-contact > div:first-child,
+  .rebuild-contact-card {
+    position: relative;
+    z-index: 2;
+  }
+
+  .rebuild-contact > div:first-child {
+    background: linear-gradient(
+      90deg,
+      rgba(245, 243, 237, 0.78),
+      rgba(245, 243, 237, 0.42) 68%,
+      rgba(245, 243, 237, 0.12)
+    );
+  }
+
+  .rebuild-contact > div:first-child > p:last-child {
+    max-width: 28ch;
+    margin-top: 1.3rem;
+  }
+
+  .rebuild-contact h2 {
+    max-width: 10ch;
+    font-size: clamp(2.7rem, 13vw, 4.8rem);
+    line-height: 0.86;
+    text-wrap: balance;
+  }
+
+  .rebuild-contact-card {
+    margin-top: 1.75rem;
+  }
+}
