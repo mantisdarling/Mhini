@@ -270,6 +270,7 @@ export default function Home() {
         items={chapterItems}
         activeId={activeSection ?? chapterItems[0].id}
         onNavigate={scrollTo}
+        placement="overlay"
       />
 
       <main id="main-content" tabIndex={-1}>
@@ -792,6 +793,15 @@ export default function Home() {
           RETURN TO TOP <ArrowUpRight size={14} aria-hidden="true" />
         </a>
       </footer>
+
+      <div className="rebuild-mobile-chapter-rail">
+        <ChapterRail
+          items={chapterItems}
+          activeId={activeSection ?? chapterItems[0].id}
+          onNavigate={scrollTo}
+          placement="flow"
+        />
+      </div>
 
       <AnimatePresence>
         {selectedProject && (

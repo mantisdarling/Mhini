@@ -6,17 +6,20 @@ type ChapterRailProps = {
   items: readonly ChapterItem[];
   activeId: string;
   onNavigate: (id: string) => void;
+  placement?: "overlay" | "flow";
 };
 
 export default function ChapterRail({
   items,
   activeId,
   onNavigate,
+  placement = "overlay",
 }: ChapterRailProps) {
-  if (typeof document === "undefined") return null;
-
-  return createPortal(
-    <nav className="rebuild-chapter-rail" aria-label="Chapter progress">
+  const navigation = (
+    <nav
+      className={`rebuild-chapter-rail rebuild-chapter-rail--${placement}`}
+      aria-label="Chapter progress"
+    >
       <p className="rebuild-chapter-rail-title">Navigate the record</p>
       <ol>
         {items.map(item => {
@@ -42,7 +45,11 @@ export default function ChapterRail({
           );
         })}
       </ol>
-    </nav>,
-    document.body
+    </nav>
   );
+
+  if (placement === "flow") return navigation;
+  if (typeof document === "undefined") return null;
+
+  return createPortal(navigation, document.body);
 }

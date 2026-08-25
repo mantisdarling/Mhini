@@ -82,9 +82,13 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).toContain(".rebuild-work .rebuild-project-grid");
     expect(styles).toContain("aspect-ratio: 3.2;");
     expect(styles).toContain("min-height: 7.25rem;");
-    expect(styles).toContain(".rebuild-chapter-rail {\n    display: none;");
+    expect(styles).toContain(
+      ".rebuild-chapter-rail--overlay {\n    display: none;"
+    );
     expect(styles).toContain("gap: 1px;");
-    expect(styles).toContain(".rebuild-work .rebuild-project-grid::before,");
+    expect(styles).toContain(
+      ".rebuild-mobile-chapter-rail {\n    display: block;"
+    );
     expect(styles).toContain("display: none;");
     expect(styles).not.toContain(
       "gap: 0;\n    border: 0;\n    background: transparent;"
@@ -221,6 +225,22 @@ describe("rebuilt Mantis Home page", () => {
     scrollIntoView.mockRestore();
   });
 
+  it("keeps touch navigation in page flow for the end of the mobile page", () => {
+    renderHome();
+    const rails = Array.from(
+      document.querySelectorAll<HTMLElement>('[aria-label="Chapter progress"]')
+    );
+    expect(rails).toHaveLength(2);
+    expect(
+      document.querySelector(
+        ".rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow"
+      )
+    ).toBeTruthy();
+    expect(
+      document.querySelector(".rebuild-chapter-rail--overlay")
+    ).toBeTruthy();
+  });
+
   it("provides a skip link and dismisses the mobile menu with Escape", () => {
     renderHome();
     const skipLink =
@@ -317,9 +337,15 @@ describe("rebuilt Mantis Home page", () => {
       "utf8"
     );
     expect(styles).toContain(
-      ".cinematic-stack-field > .cinematic-scene-backdrop {\n  opacity: 0.74 !important;"
+      ".cinematic-stack-field > .cinematic-scene-backdrop {\n  opacity: 0.56 !important;"
     );
-    expect(styles).toContain("opacity: 0.82 !important;");
+    expect(styles).toContain("opacity: 0.58 !important;");
+    expect(styles).toContain(
+      ".cinematic-stack-field .rebuild-section-heading {\n    display: grid;"
+    );
+    expect(styles).toContain(
+      ".rebuild-chapter-rail--overlay {\n    display: none !important;"
+    );
     expect(
       container?.querySelector("#stack .rebuild-section-atmosphere-stack")
     ).toBeNull();

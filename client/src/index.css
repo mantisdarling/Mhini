@@ -8541,6 +8541,144 @@ body.rebuild-desktop-touch-mode
   }
 }
 
+/* Mobile Stack and navigation repair: keep the artwork legible and the chapter rail in page flow. */
+.cinematic-stack-field > .cinematic-scene-backdrop {
+  opacity: 0.56 !important;
+}
+
+.cinematic-stack-field > .cinematic-scene-backdrop span {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.88) 0%,
+      rgba(17, 17, 17, 0.58) 50%,
+      rgba(17, 17, 17, 0.18) 100%
+    ),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.42), rgba(17, 17, 17, 0.7));
+}
+
+.cinematic-stack-field .rebuild-section-heading {
+  align-items: start;
+}
+
+.cinematic-stack-field .rebuild-section-heading > p {
+  max-width: 32ch;
+  color: rgba(233, 231, 225, 0.86);
+}
+
+.cinematic-stack-field .rebuild-stack-list {
+  background: rgba(17, 17, 17, 0.48);
+  border-color: rgba(233, 231, 225, 0.28);
+}
+
+.cinematic-stack-field .rebuild-stack-row {
+  border-color: rgba(233, 231, 225, 0.28);
+}
+
+.cinematic-stack-field .rebuild-stack-row > button {
+  color: var(--paper);
+  text-shadow: 0 0.08em 0.7em rgba(17, 17, 17, 0.7);
+}
+
+.cinematic-stack-field .rebuild-stack-row > button strong {
+  color: inherit;
+}
+
+.rebuild-mobile-chapter-rail {
+  display: none;
+}
+
+.rebuild-chapter-rail--flow {
+  position: static;
+  inset: auto;
+  width: auto;
+  margin: 0;
+  transform: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+@media (max-width: 700px), (pointer: coarse) {
+  .cinematic-stack-field > .cinematic-scene-backdrop {
+    opacity: 0.58 !important;
+  }
+
+  .cinematic-stack-field .rebuild-section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cinematic-stack-field .rebuild-section-heading h2 {
+    max-width: 8ch;
+    font-size: clamp(3.1rem, 13vw, 4.8rem);
+    letter-spacing: -0.08em;
+    line-height: 0.82;
+    text-wrap: balance;
+  }
+
+  .cinematic-stack-field .rebuild-section-heading > p {
+    max-width: 30ch;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .cinematic-stack-field .rebuild-stack-list {
+    margin-top: 0;
+    background: rgba(17, 17, 17, 0.56);
+  }
+
+  .cinematic-stack-field .rebuild-stack-row > button,
+  .cinematic-stack-field .rebuild-stack-row > button strong {
+    color: var(--paper);
+  }
+
+  .rebuild-chapter-rail--overlay {
+    display: none !important;
+  }
+
+  .rebuild-mobile-chapter-rail {
+    display: block;
+    padding: 0 1rem 1rem;
+    background: var(--charcoal);
+  }
+
+  .rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow {
+    display: block;
+    padding: 0.8rem 0.9rem 0.7rem;
+    border: 1px solid rgba(233, 231, 225, 0.18);
+    background: rgba(21, 21, 21, 0.94);
+  }
+
+  .rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow ol {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .rebuild-mobile-chapter-rail
+    .rebuild-chapter-rail--flow
+    ol::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow li {
+    flex: 1 0 auto;
+  }
+
+  .rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow li::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebuild-mobile-chapter-rail .rebuild-chapter-rail--flow button {
+    transition: none;
+  }
+}
+
 /* CSS fallback for desktop-site phone emulation: do not wait for the user-agent detector to finish. */
 @media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px) {
   .rebuild-work .rebuild-project-grid {
@@ -8585,7 +8723,7 @@ body.rebuild-desktop-touch-mode
     line-height: 1.45;
   }
 
-  .rebuild-chapter-rail {
+  .rebuild-chapter-rail--overlay {
     display: none;
   }
 
