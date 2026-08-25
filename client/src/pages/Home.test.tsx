@@ -99,6 +99,19 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).not.toContain("body.rebuild-touch-layout");
   });
 
+  it("locks the phone final chapters to one continuous, text-safe composition", () => {
+    const styles = readFileSync(
+      resolve(process.cwd(), "client/src/index.css"),
+      "utf8"
+    );
+    expect(styles).toContain("/* Phone final-chapter rebuild:");
+    expect(styles).toContain("padding: 1.25rem 0 2.5rem;");
+    expect(styles).toContain("aspect-ratio: 4 / 5;");
+    expect(styles).toContain("background-position: 82% top;");
+    expect(styles).toContain("background-size: auto 46%;");
+    expect(styles).toContain("rgba(245, 243, 237, 0.78)");
+  });
+
   it("detects desktop mode on a physical touch phone without classifying normal phone mode", () => {
     const originalWidth = Object.getOwnPropertyDescriptor(window, "innerWidth");
     const originalUserAgent = Object.getOwnPropertyDescriptor(
