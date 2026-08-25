@@ -112,6 +112,17 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).toContain("rgba(245, 243, 237, 0.78)");
   });
 
+  it("uses an eased mobile slide for Evidence panels with a reduced-motion fallback", () => {
+    const styles = readFileSync(
+      resolve(process.cwd(), "client/src/index.css"),
+      "utf8"
+    );
+    expect(styles).toContain("max-height 480ms cubic-bezier(0.23, 1, 0.32, 1)");
+    expect(styles).toContain("transform: translate3d(0, 0.55rem, 0);");
+    expect(styles).toContain("transition-delay: 55ms;");
+    expect(styles).toContain(".rebuild-dossier-panel-inner {\n    opacity: 1;");
+  });
+
   it("detects desktop mode on a physical touch phone without classifying normal phone mode", () => {
     const originalWidth = Object.getOwnPropertyDescriptor(window, "innerWidth");
     const originalUserAgent = Object.getOwnPropertyDescriptor(
