@@ -8594,22 +8594,14 @@ body.rebuild-desktop-touch-mode
   }
 }
 
-/* Desktop-mode phone cleanup: keep the reference card rhythm, remove the visible grid treatment. */
+/* Desktop-mode phone cleanup: hide only the decorative overlay; preserve the Work grid structure. */
 @media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px) {
   .rebuild-work .rebuild-project-grid {
-    gap: 0;
-    border: 0;
-    background: transparent;
+    gap: 1px;
   }
 
-  .rebuild-work .rebuild-project-card,
-  .rebuild-work .rebuild-project-card.is-featured {
-    border: 0;
-    box-shadow: none;
-  }
-
-  .rebuild-work .rebuild-project-copy,
-  .rebuild-work .rebuild-project-visual {
-    border-inline: 0;
+  .rebuild-work .rebuild-project-grid::before,
+  .rebuild-work .rebuild-project-grid::after {
+    display: none;
   }
 }
