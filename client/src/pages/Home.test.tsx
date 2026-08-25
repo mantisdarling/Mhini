@@ -75,9 +75,11 @@ describe("rebuilt Mantis Home page", () => {
     expect(styles).toContain(
       ".rebuild-project-meta > span:last-child {\n    max-width: 48%;"
     );
-    expect(styles).toContain("body.rebuild-desktop-touch-mode .rebuild-work");
     expect(styles).toContain(
       "@media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px)"
+    );
+    expect(styles).not.toContain(
+      "body.rebuild-desktop-touch-mode .rebuild-work"
     );
     expect(styles).toContain(".rebuild-work .rebuild-project-grid");
     expect(styles).toContain("aspect-ratio: 3.2;");

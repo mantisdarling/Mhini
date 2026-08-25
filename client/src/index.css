@@ -8365,125 +8365,80 @@ body.rebuild-body aside[aria-label="Privacy choices"] button:last-child {
   }
 }
 
-/* Desktop-mode phone art direction: touch phones with a wide viewport use the reference composition. */
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-carousel-hint,
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-position {
-  display: none;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1px;
-  margin: 0;
-  padding: 0;
-  overflow: visible;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-card,
-body.rebuild-desktop-touch-mode
-  .rebuild-work
-  .rebuild-project-card.is-featured {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-column: auto;
-  width: 100%;
-  min-height: 0;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-visual,
-body.rebuild-desktop-touch-mode
-  .rebuild-work
-  .rebuild-project-card.is-featured
-  .rebuild-project-visual {
-  min-height: 0;
-  aspect-ratio: 1.7;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy {
-  min-height: 7.25rem;
-  padding: 1rem 1.15rem 1.1rem;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy h3 {
-  max-width: 28ch;
-  margin-top: 0.75rem;
-  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
-  line-height: 0.95;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy p {
-  max-width: 56ch;
-  min-height: 0;
-  margin-top: 0.6rem;
-  font-size: 0.78rem;
-  line-height: 1.45;
-}
-
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-meta {
-  font-size: 0.55rem;
-}
-
-@media (min-width: 1200px) {
-  body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-card,
-  body.rebuild-desktop-touch-mode
-    .rebuild-work
-    .rebuild-project-card.is-featured {
-    grid-template-columns: minmax(0, 1.65fr) minmax(220px, 0.75fr);
+/* Desktop-mode phone art direction: one authoritative touch-phone composition. */
+@media (pointer: coarse) and (min-width: 701px) and (max-width: 1100px) {
+  .rebuild-work {
+    padding-inline: clamp(1rem, 3vw, 2.5rem);
   }
 
-  body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-copy {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100%;
+  .rebuild-work .rebuild-project-carousel-hint,
+  .rebuild-work .rebuild-project-position {
+    display: none;
   }
-}
 
-body.rebuild-desktop-touch-mode .rebuild-work {
-  padding-inline: clamp(1rem, 3vw, 2.5rem);
-}
+  .rebuild-work .rebuild-section-heading,
+  .rebuild-work .rebuild-project-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-section-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: 1.15rem;
-  margin-bottom: clamp(2rem, 4vw, 3.5rem);
-}
+  .rebuild-work .rebuild-section-heading {
+    align-items: start;
+    gap: 1.15rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
 
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-section-heading > p {
-  width: min(100%, 42ch);
-  max-width: none;
-  margin: 0;
-}
+  .rebuild-work .rebuild-section-heading > p {
+    width: min(100%, 42ch);
+    max-width: none;
+    margin: 0;
+  }
 
-body.rebuild-desktop-touch-mode .rebuild-work .rebuild-project-visual,
-body.rebuild-desktop-touch-mode
-  .rebuild-work
-  .rebuild-project-card.is-featured
-  .rebuild-project-visual {
-  aspect-ratio: 3.2;
-}
+  .rebuild-work .rebuild-project-grid {
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
 
-/* Scoped Stack field restoration: keep the artwork visible behind the complete chapter. */
-.cinematic-stack-field > .cinematic-scene-backdrop {
-  opacity: 0.74 !important;
-}
+  .rebuild-work .rebuild-project-card,
+  .rebuild-work .rebuild-project-card.is-featured {
+    display: grid;
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+  }
 
-.cinematic-stack-field > .cinematic-scene-backdrop img {
-  filter: grayscale(0.42) saturate(0.7) contrast(1.08);
-}
+  .rebuild-work .rebuild-project-visual,
+  .rebuild-work .rebuild-project-card.is-featured .rebuild-project-visual {
+    min-height: 0;
+    aspect-ratio: 3.2;
+  }
 
-.cinematic-stack-field > .cinematic-scene-backdrop span {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(17, 17, 17, 0.64) 0%,
-      rgba(17, 17, 17, 0.34) 45%,
-      rgba(17, 17, 17, 0.1) 100%
-    ),
-    linear-gradient(180deg, rgba(17, 17, 17, 0.24), rgba(17, 17, 17, 0.48));
+  .rebuild-work .rebuild-project-copy {
+    min-height: 7.25rem;
+    padding: 1rem 1.15rem 1.1rem;
+  }
+
+  .rebuild-work .rebuild-project-copy h3 {
+    max-width: 28ch;
+    margin-top: 0.75rem;
+    font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+    line-height: 0.95;
+  }
+
+  .rebuild-work .rebuild-project-copy p {
+    max-width: 56ch;
+    min-height: 0;
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .rebuild-work .rebuild-project-meta {
+    font-size: 0.55rem;
+  }
 }
 
 /* Taller project-image skeleton: allocate the final frame and reveal the art after load. */
@@ -8520,17 +8475,6 @@ body.rebuild-desktop-touch-mode
   transition: opacity 240ms ease;
 }
 
-@media (max-width: 700px) {
-  .cinematic-stack-field > .cinematic-scene-backdrop {
-    opacity: 0.82 !important;
-  }
-
-  .cinematic-stack-field > .cinematic-scene-backdrop img {
-    object-position: 68% 22%;
-    filter: grayscale(0.5) saturate(0.65) contrast(1.06);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .rebuild-project-visual > .portfolio-image-shell.is-loading::before {
     animation: none;
@@ -8544,6 +8488,11 @@ body.rebuild-desktop-touch-mode
 /* Mobile Stack and navigation repair: keep the artwork legible and the chapter rail in page flow. */
 .cinematic-stack-field > .cinematic-scene-backdrop {
   opacity: 0.56 !important;
+}
+
+.cinematic-stack-field > .cinematic-scene-backdrop img {
+  object-position: 68% center;
+  filter: grayscale(0.5) saturate(0.65) contrast(1.06);
 }
 
 .cinematic-stack-field > .cinematic-scene-backdrop span {
