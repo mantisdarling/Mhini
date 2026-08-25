@@ -312,6 +312,14 @@ describe("rebuilt Mantis Home page", () => {
     expect(
       container?.querySelector("#stack.cinematic-stack-field")
     ).toBeTruthy();
+    const styles = readFileSync(
+      resolve(process.cwd(), "client/src/index.css"),
+      "utf8"
+    );
+    expect(styles).toContain(
+      ".cinematic-stack-field > .cinematic-scene-backdrop {\n  opacity: 0.74 !important;"
+    );
+    expect(styles).toContain("opacity: 0.82 !important;");
     expect(
       container?.querySelector("#stack .rebuild-section-atmosphere-stack")
     ).toBeNull();

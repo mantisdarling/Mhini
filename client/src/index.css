@@ -8466,9 +8466,9 @@ body.rebuild-desktop-touch-mode
   aspect-ratio: 3.2;
 }
 
-/* Scoped Stack field restoration: the artwork stays behind the complete chapter and remains legible on deployed builds. */
+/* Scoped Stack field restoration: keep the artwork visible behind the complete chapter. */
 .cinematic-stack-field > .cinematic-scene-backdrop {
-  opacity: 0.62;
+  opacity: 0.74 !important;
 }
 
 .cinematic-stack-field > .cinematic-scene-backdrop img {
@@ -8479,11 +8479,11 @@ body.rebuild-desktop-touch-mode
   background:
     linear-gradient(
       90deg,
-      rgba(17, 17, 17, 0.82) 0%,
-      rgba(17, 17, 17, 0.52) 45%,
-      rgba(17, 17, 17, 0.2) 100%
+      rgba(17, 17, 17, 0.64) 0%,
+      rgba(17, 17, 17, 0.34) 45%,
+      rgba(17, 17, 17, 0.1) 100%
     ),
-    linear-gradient(180deg, rgba(17, 17, 17, 0.38), rgba(17, 17, 17, 0.64));
+    linear-gradient(180deg, rgba(17, 17, 17, 0.24), rgba(17, 17, 17, 0.48));
 }
 
 /* Taller project-image skeleton: allocate the final frame and reveal the art after load. */
@@ -8522,7 +8522,7 @@ body.rebuild-desktop-touch-mode
 
 @media (max-width: 700px) {
   .cinematic-stack-field > .cinematic-scene-backdrop {
-    opacity: 0.68;
+    opacity: 0.82 !important;
   }
 
   .cinematic-stack-field > .cinematic-scene-backdrop img {
@@ -8590,7 +8590,7 @@ body.rebuild-desktop-touch-mode
   }
 
   .cinematic-stack-field > .cinematic-scene-backdrop {
-    opacity: 0.68;
+    opacity: 0.82 !important;
   }
 }
 
