@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { storagePut } from "./storage";
 import { createRecoverySnapshotRecord, getAllProjects, listRecoverySnapshotRecords } from "./db";
 import { sdk } from "./_core/sdk";
+import { HttpError } from "../shared/_core/errors";
 
 type RecoveryPayload = {
   formatVersion: 1;
@@ -55,6 +56,13 @@ export async function listRecoverySnapshots(limit = 30) {
   return listRecoverySnapshotRecords(limit);
 }
 
+export function scheduledRecoveryError(error: unknown) {
+  if (error instanceof HttpError && (error.statusCode === 401 || error.statusCode === 403)) {
+    return { statusCode: error.statusCode, body: { error: error.statusCode === 401 ? "unauthorized" : "cron-only" } };
+  }
+  return { statusCode: 500, body: { error: "recovery snapshot failed" } };
+}
+
 export async function runScheduledRecoverySnapshot(req: Request, res: Response) {
   try {
     const user = await sdk.authenticateRequest(req);
@@ -66,7 +74,8 @@ export async function runScheduledRecoverySnapshot(req: Request, res: Response) 
     res.status(200).json({ ok: true, snapshot });
   } catch (error) {
     console.error("[Recovery] Scheduled snapshot failed", { name: error instanceof Error ? error.name : "UnknownError" });
-    res.status(500).json({ error: "recovery snapshot failed" });
+    const failure = scheduledRecoveryError(error);
+    res.status(failure.statusCode).json(failure.body);
   }
 }
 
