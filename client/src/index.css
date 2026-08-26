@@ -3671,6 +3671,34 @@ html.motion-off .hero-field {
   height: 28px;
   object-fit: contain;
 }
+.studio-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+  color: #b9b3aa;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+.studio-back-link span {
+  color: var(--red);
+  font-size: 1rem;
+  line-height: 1;
+}
+.studio-back-link:hover {
+  color: var(--ivory);
+  transform: translateX(-0.2rem);
+}
+.studio-back-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 0.3rem;
+}
 .studio-gate-heading {
   margin-top: 3.3rem;
 }
@@ -3782,6 +3810,7 @@ html.motion-off .hero-field {
 @media (prefers-reduced-motion: reduce) {
   .studio-sidebar [data-sidebar="menu-button"],
   .studio-submit-button,
+  .studio-back-link,
   .studio-magic-feedback {
     transition: none !important;
   }

@@ -27,8 +27,8 @@ import {
 } from "@/lib/independentAuth";
 import { useIsMobile } from "@/hooks/useMobile";
 import { ExternalLink, Gauge, LogOut, PanelLeft } from "lucide-react";
-import { CSSProperties, useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 import { Button } from "./ui/button";
 
@@ -80,6 +80,10 @@ export default function DashboardLayout({
             />
             <span>MANTIS / STUDIO</span>
           </div>
+          <Link href="/" className="studio-back-link">
+            <span aria-hidden="true">←</span>
+            Back to Portfolio
+          </Link>
           <div className="studio-gate-heading">
             <p className="studio-eyebrow">PRIVATE CHANNEL / OWNER ACCESS</p>
             <h1>Sign in to continue</h1>
