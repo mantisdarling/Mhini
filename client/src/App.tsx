@@ -24,27 +24,51 @@ function RouteLoading() {
 
 function RouteTransition({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  return <div key={location} className="route-transition" data-route-transition>{children}</div>;
+  return (
+    <div key={location} className="route-transition" data-route-transition>
+      {children}
+    </div>
+  );
 }
 
 function LazyRoute({ children }: { children: ReactNode }) {
-  return <RouteTransition><Suspense fallback={<RouteLoading />}>{children}</Suspense></RouteTransition>;
+  return (
+    <RouteTransition>
+      <Suspense fallback={<RouteLoading />}>{children}</Suspense>
+    </RouteTransition>
+  );
 }
 
 function HomeRoute() {
-  return <LazyRoute><Home /></LazyRoute>;
+  return (
+    <LazyRoute>
+      <Home />
+    </LazyRoute>
+  );
 }
 
 function StudioRoute() {
-  return <LazyRoute><ProjectConsole /></LazyRoute>;
+  return (
+    <LazyRoute>
+      <ProjectConsole />
+    </LazyRoute>
+  );
 }
 
 function PrivacyRoute() {
-  return <LazyRoute><Privacy /></LazyRoute>;
+  return (
+    <LazyRoute>
+      <Privacy />
+    </LazyRoute>
+  );
 }
 
 function NotFoundRoute() {
-  return <LazyRoute><NotFound /></LazyRoute>;
+  return (
+    <LazyRoute>
+      <NotFound />
+    </LazyRoute>
+  );
 }
 
 function Router() {
