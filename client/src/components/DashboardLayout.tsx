@@ -26,7 +26,13 @@ import {
   requestIndependentMagicLink,
 } from "@/lib/independentAuth";
 import { useIsMobile } from "@/hooks/useMobile";
-import { ExternalLink, Gauge, LogOut, PanelLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  Gauge,
+  LogOut,
+  PanelLeft,
+} from "lucide-react";
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
@@ -81,7 +87,7 @@ export default function DashboardLayout({
             <span>MANTIS / STUDIO</span>
           </div>
           <Link href="/" className="studio-back-link">
-            <span aria-hidden="true">←</span>
+            <ArrowLeft aria-hidden="true" size={14} strokeWidth={1.5} />
             Back to Portfolio
           </Link>
           <div className="studio-gate-heading">

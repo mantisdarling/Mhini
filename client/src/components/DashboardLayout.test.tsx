@@ -46,6 +46,9 @@ describe("Studio sign-in gate", () => {
       container.querySelector<HTMLAnchorElement>(".studio-back-link");
     expect(link?.textContent).toContain("Back to Portfolio");
     expect(link?.getAttribute("href")).toBe("/");
-    expect(link?.querySelector('[aria-hidden="true"]')?.textContent).toBe("←");
+    const arrow = link?.querySelector<SVGElement>('svg[aria-hidden="true"]');
+    expect(arrow).toBeTruthy();
+    expect(arrow?.getAttribute("width")).toBe("14");
+    expect(arrow?.getAttribute("height")).toBe("14");
   });
 });
