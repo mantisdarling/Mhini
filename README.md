@@ -6,8 +6,6 @@ Mantis is a cinematic, image-led portfolio for an AI systems builder at IIT Madr
 
 The site is designed as a public-facing portfolio first. Visitors can explore the record without signing in. An authenticated Studio surface is available for managing portfolio records through the existing Manus OAuth and tRPC application boundary.
 
-[View the repository on GitHub](https://github.com/mantisdarling/Mhini)
-
 ## What the site includes
 
 | Area               | Experience                                                                                                                                              |
